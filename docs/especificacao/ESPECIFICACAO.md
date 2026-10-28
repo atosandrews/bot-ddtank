@@ -147,6 +147,74 @@ Instância" sumiu), com os botões Convide / Troque / Início.
 
 ---
 
+## Estado 9 — Batalha (v1: força e skills)
+
+**Como reconhecer:** rótulo **"Força"** ao lado da barra de força (canto inferior esquerdo).
+Todas as outras posições do HUD são medidas a partir dele.
+
+![Batalha, minha vez](imagens/20_batalha_minha_vez.webp)
+
+| O quê | Como o bot lê |
+|---|---|
+| Minha vez | botão **PASS** na tela |
+| Eu | barra de vida **azul** |
+| Inimigos | barras de vida **vermelhas** (formigas juntas viram um alvo só) |
+| Distância | pixels na horizontal ÷ 100 (a régua verde 0–10 cobre a tela de ~1000 px) |
+| Força do último tiro | marcador vermelho acima da barra |
+
+**Ação na minha vez:**
+1. Escolher o inimigo mais perto na horizontal.
+2. Força = `FORCA_FIXA` (Formigueiro: **10**) ou, sem força fixa, a tabela de `ANGULO` pela distância.
+3. Tocar a seta para o lado do alvo (vira o personagem).
+4. Ler o ângulo pela agulha do relógio e apertar ↑/↓ até `ANGULO` (Formigueiro: **30**).
+5. Apertar as teclas de `SKILLS`, em ordem.
+6. Segurar **Espaço** e soltar quando a barra chegar na força.
+7. Se não achar a mim ou os inimigos: com força fixa, atira alternando os lados;
+   sem força fixa, clica em **PASS**.
+
+**Formigueiro:** as formigas sempre vêm até o personagem, então ângulo 30 e força 10 nos dois
+lados resolvem até todas morrerem. **Formiga colada** exatamente em cima do personagem (a barra
+dela some atrás da minha): força **1**.
+
+**Virar:** o bot só aperta a seta de virar se o personagem estiver olhando para o lado errado
+(a agulha vermelha do relógio aponta para onde ele olha), porque a seta também o faz andar.
+
+---
+
+## Estado 10 — Batalha, estágio 2: Pandora (rainha formiga)
+
+**Como reconhecer:** quadro de missão com **"Derrote Pandora"** (no estágio 1 é "Derrote Formigas").
+
+![Início do estágio 2](imagens/21_pandora_inicio.webp)
+
+![Pandora](imagens/22_pandora.webp)
+
+**Ação em cada turno:**
+1. Virar para a direita (a Pandora fica à direita).
+2. Se o número do relógio já é **30**, não andar nem mexer no ângulo.
+   Se não é, ajustar com ↑/↓; se o chão não deixar chegar em 30 (o número para de mudar),
+   **andar para trás (←)** um pouco e tentar de novo. Chegou em 30: não se mexe mais.
+3. Usar os itens **3 (+2)** e **9 (dano max)**. Sem energia, o jogo ignora o item.
+4. Atirar com força **80**.
+
+Itens da coluna da direita (teclas 1 a 9):
+
+![Itens](imagens/23_itens_1_a_9.png)
+
+Tabelas (força por distância 1 a 20), copiadas da moldura do cliente:
+
+| Âng. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 20 | 10 | 19 | 25 | 30 | 36 | 40 | 44 | 48 | 51 | 54 | 57 | 60 | 63 | 66 | 69 | 72 | 74 | 76 | 78 | 80 |
+| 30 | 14 | 20 | 24 | 28 | 32 | 35 | 38 | 41 | 44 | 47 | 50 | 52 | 55 | 57 | 60 | 62 | 65 | 67 | 69 | 72 |
+| 50 | 14 | 20 | 24 | 28 | 32 | 35 | 39 | 42 | 44 | 48 | 50 | 53 | 55 | 58 | 60 | 63 | 65 | 68 | 70 | 72 |
+| 65 | 13 | 20 | 26 | 31 | 37 | 41 | 44 | 48 | 53 | 56 | 58 | 61 | 64 | 67 | 70 | 73 | 76 | 79 | 82 | 85 |
+
+**Ainda não faz:** ler/ajustar o ângulo (deixe o ponteiro em `ANGULO`), compensar o vento
+(cada 0.5 de vento muda o ângulo um pouco), corrigir altura e obstáculos, PoW, loot.
+
+---
+
 ## Próximos estados
 
-_A definir:_ batalha (turno, mira, tiro) e loot.
+_A definir:_ ângulo e vento na batalha, fim da batalha e loot.

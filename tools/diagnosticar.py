@@ -17,7 +17,7 @@ print("Região da janela:", driver.regiao)
 print("Tamanho do print:", frame.shape[1], "x", frame.shape[0])
 for tela in telas.TELAS:
     pos_r, conf_r = vision.procurar(tela.reconhecer, frame)
-    pos_c, conf_c = vision.procurar(tela.cliques[0].alvo, frame)
+    pos_c, conf_c = vision.procurar(tela.cliques[0].alvo, frame) if tela.cliques else (None, 0.0)
     print(f"  {tela.nome:<18} reconhecer {conf_r:.2f} em {pos_r} | clicar {conf_c:.2f} em {pos_c}")
 tela = telas.identificar(frame, config.LIMIAR)
 print("Tela reconhecida:", tela.nome if tela else None)

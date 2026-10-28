@@ -17,6 +17,8 @@ Para parar: `Ctrl+C` no terminal, ou jogue o mouse num canto da tela.
 ## Ferramentas
 
 - `python tools/testar_prints.py`: testa o reconhecimento nos prints da especificação, sem o jogo.
+- `python tools/testar_batalha.py [print]`: mostra o que o bot lê da batalha e a força que usaria, sem apertar nada.
+- `python tools/diagnosticar.py`: tira um print do jogo e mostra qual tela o bot reconhece, sem clicar.
 - `python tools/listar_janelas.py`: lista os títulos das janelas abertas.
 - `python tools/testar_template.py img/canal_2.png "TITULO DA JANELA"`: testa um template no jogo aberto.
 

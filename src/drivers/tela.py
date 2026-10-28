@@ -8,6 +8,9 @@ import mss
 import numpy as np
 import pyautogui
 
+# Pausa automática do pyautogui depois de cada comando (o padrão de 0.1 s atrasa a força).
+pyautogui.PAUSE = 0.03
+
 
 class DriverTela:
     def __init__(self, regiao=None, hwnd=None):
@@ -15,6 +18,7 @@ class DriverTela:
         # Com hwnd, a região acompanha a área interna da janela a cada captura.
         self.regiao = regiao
         self.hwnd = hwnd
+        self._sct = None
 
     def _atualizar_regiao(self):
         import win32gui
@@ -22,15 +26,54 @@ class DriverTela:
         x, y = win32gui.ClientToScreen(self.hwnd, (l, t))
         self.regiao = {"left": x, "top": y, "width": r - l, "height": b - t}
 
-    def capturar(self):
-        if self.hwnd:
+    def capturar(self, sub=None):
+        """Print da janela inteira, ou só de sub = (x, y, w, h) dentro dela (bem mais rápido)."""
+        if self.hwnd and (sub is None or self.regiao is None):
             self._atualizar_regiao()
-        with mss.mss() as sct:
-            mon = self.regiao or sct.monitors[1]
-            img = np.array(sct.grab(mon))
-            return cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+        if self._sct is None:
+            self._sct = mss.mss()
+        mon = self.regiao or self._sct.monitors[1]
+        if sub:
+            x, y, w, h = sub
+            mon = {"left": mon["left"] + x, "top": mon["top"] + y, "width": w, "height": h}
+        img = np.array(self._sct.grab(mon))
+        return cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+
+    def com_foco(self):
+        """True se o jogo está (ou foi trazido) para primeiro plano.
+
+        Teclas e cliques vão para a janela em primeiro plano: sem esta checagem, o bot
+        digitaria em outra janela (ex.: o chat do Claude) se ela estiver na frente.
+        """
+        if not self.hwnd:
+            return True
+        import win32gui
+        if win32gui.GetForegroundWindow() == self.hwnd:
+            return True
+        trazer_para_frente(self.hwnd)
+        if win32gui.GetForegroundWindow() == self.hwnd:
+            return True
+        print("Aviso: o jogo não está em primeiro plano; não vou apertar nada.", flush=True)
+        return False
+
+    def tecla(self, nome, segundos=0.05):
+        """Aperta e solta uma tecla (nomes do pyautogui: "space", "left", "1"...)."""
+        if not self.com_foco():
+            return
+        pyautogui.keyDown(nome)
+        time.sleep(segundos)
+        pyautogui.keyUp(nome)
+
+    def segurar(self, nome):
+        if self.com_foco():
+            pyautogui.keyDown(nome)
+
+    def soltar(self, nome):
+        pyautogui.keyUp(nome)
 
     def clicar(self, x, y):
+        if not self.com_foco():
+            return
         ox = self.regiao["left"] if self.regiao else 0
         oy = self.regiao["top"] if self.regiao else 0
         # Alguns jogos ignoram clique sem o mouse "passar" antes por cima do botão.
@@ -71,7 +114,14 @@ def trazer_para_frente(hwnd):
     try:
         win32gui.SetForegroundWindow(hwnd)
     except Exception:
-        print("Aviso: não consegui trazer a janela para frente; clique nela uma vez.")
+        # O Windows só deixa trocar a janela da frente depois de uma tecla; um Alt destrava.
+        import win32api
+        win32api.keybd_event(win32con.VK_MENU, 0, 0, 0)
+        win32api.keybd_event(win32con.VK_MENU, 0, win32con.KEYEVENTF_KEYUP, 0)
+        try:
+            win32gui.SetForegroundWindow(hwnd)
+        except Exception:
+            print("Aviso: não consegui trazer a janela para frente; clique nela uma vez.")
     time.sleep(0.5)
 
 

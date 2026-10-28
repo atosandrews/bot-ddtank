@@ -20,6 +20,11 @@ ESPERADO = {
     "16_tela_sala_janela_real.png": "SALA_SEM_INSTANCIA",
     "17_tela_configuracao_sala.png": "SELECAO_INSTANCIA",
     "18_configuracao_sala_janela_real.png": "SELECAO_INSTANCIA",
+    "19_batalha_inicio_janela_real.png": "BATALHA",
+    "20_batalha_minha_vez.webp": "BATALHA",
+    "22_pandora.webp": "BATALHA",
+    "24_formigas_minha_vez_janela_real.png": "BATALHA",
+    "25_clique_no_jogo_janela_real.png": "SEM_FOCO",
     # Recortes parciais (não há print da tela inteira): só confirmam o reconhecimento.
     "14_botoes_convide_troque_inicio.png": "SALA_PRONTA",
     "15_popup_lembrete.png": "LEMBRETE",

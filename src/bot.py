@@ -4,8 +4,10 @@ from datetime import datetime
 from pathlib import Path
 
 import cv2
+import pyautogui
 
 from . import config, telas, vision
+from .batalha import Batalha
 
 LOGS = Path(__file__).resolve().parent.parent / "logs"
 
@@ -17,6 +19,7 @@ class Bot:
         self.estado = "INICIO"
         self.repeticoes = 0
         self.sem_tela = 0
+        self.batalha = Batalha(driver, self.log, self.salvar_debug)
 
     def log(self, msg):
         print(f"[{datetime.now():%H:%M:%S}] [{self.nome}] [{self.estado}] {msg}", flush=True)
@@ -53,15 +56,31 @@ class Bot:
             return True
         self.sem_tela = 0
 
+        # Saiu da batalha depois de jogar o último estágio: a instância acabou.
+        if (config.PARAR_DEPOIS_DA_INSTANCIA and not tela.batalha and tela.nome != "SEM_FOCO"
+                and self.batalha.estagio == config.ULTIMO_ESTAGIO):
+            self.log(f"instância terminada (passou do estágio {config.ULTIMO_ESTAGIO}); parando")
+            self.salvar_debug(frame, "fim_da_instancia")
+            return False
+
         if tela.nome == self.estado:
             self.repeticoes += 1
-            if self.repeticoes == config.REPETICOES_MAX:
+            if self.repeticoes == config.REPETICOES_MAX and not tela.batalha:
                 self.log("a tela não mudou depois de vários cliques (clique no lugar errado?)")
                 self.salvar_debug(frame, "travado")
         else:
             self.estado = tela.nome
             self.repeticoes = 0
             self.log("tela reconhecida")
+            if tela.batalha:
+                ajuste = "eu ajusto" if config.AJUSTAR_ANGULO else "ajuste à mão com ↑/↓"
+                self.log(f"batalha: ângulo {ajuste}; começo em {config.PAUSA_INICIO_BATALHA} s")
+                time.sleep(config.PAUSA_INICIO_BATALHA)
+                return True
+
+        if tela.batalha:
+            self.batalha.passo(frame)
+            return True
 
         for clique in tela.cliques:
             pos, frame = self.esperar_alvo(clique.alvo, frame)
@@ -97,4 +116,11 @@ class Bot:
                 pass
         except KeyboardInterrupt:
             self.log("parado pelo usuário")
+        except pyautogui.FailSafeException:
+            self.log("parado: mouse no canto da tela")
+        finally:
+            # Nunca deixar uma tecla presa se o bot parar no meio de um tiro.
+            for tecla in (config.TECLA_ATIRAR, config.TECLA_ESQUERDA, config.TECLA_DIREITA,
+                          config.TECLA_ANGULO_SOBE, config.TECLA_ANGULO_DESCE):
+                pyautogui.keyUp(tecla)
         self.log("encerrado")
