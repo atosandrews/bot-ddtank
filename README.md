@@ -32,4 +32,5 @@ pip install -r requirements.txt
 - `src/bot.py`: máquina de estados
 - `src/main.py`: ponto de entrada
 - `tools/`: scripts auxiliares
+- `NOTAS.md`: contexto e progresso do projeto
 - `img/`: templates; `logs/`: screenshots de debug
