@@ -3,20 +3,28 @@
 Projeto de estudo: automação do cliente DDTank Clássico com visão computacional.
 Use apenas em servidor privado ou conta descartável (automação pode violar os termos de uso).
 
-## Instalação (Windows)
+## Como rodar (Windows)
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
+1. Instale o Python 3 (marque "Add python.exe to PATH").
+2. Abra o jogo na tela de seleção de canal.
+3. Dê duplo clique em `rodar_bot.bat`. Na primeira vez ele cria o `.venv` e instala as dependências.
+4. Escolha a janela do jogo na lista (ou salve o título em `src/config.py`).
 
-## Passo a passo
+O bot segue o fluxo de `docs/especificacao/ESPECIFICACAO.md`:
+seleção de canal → (popup "aluno recomendado") → lobby → Central → Cais de expedição → Jogar.
+Para parar: `Ctrl+C` no terminal, ou jogue o mouse num canto da tela.
 
-1. Abra o jogo e rode `python tools/listar_janelas.py` para achar o título e o hwnd.
-2. Tire prints dos botões (recortes pequenos) e salve em `img/` (ex.: `botao_iniciar.png`).
-3. Teste um template: `python tools/testar_template.py img/botao_iniciar.png "TITULO DA JANELA"`
-4. Rode o bot: `python -m src.main "TITULO DA JANELA"`
+## Ferramentas
+
+- `python tools/testar_prints.py`: testa o reconhecimento nos prints da especificação, sem o jogo.
+- `python tools/listar_janelas.py`: lista os títulos das janelas abertas.
+- `python tools/testar_template.py img/canal_2.png "TITULO DA JANELA"`: testa um template no jogo aberto.
+
+## Adicionar uma tela nova
+
+1. Recorte um pedaço que identifica a tela e o botão a clicar; salve em `img/`.
+2. Adicione uma linha em `TELAS` (`src/telas.py`).
+3. Coloque o print da tela em `docs/especificacao/imagens/` e em `tools/testar_prints.py`.
 
 ## Fases
 
@@ -29,8 +37,11 @@ pip install -r requirements.txt
 
 - `src/drivers/`: como ver e agir na tela (trocável)
 - `src/vision.py`: template matching
-- `src/bot.py`: máquina de estados
+- `src/telas.py`: telas conhecidas e a ação de cada uma
+- `src/bot.py`: laço principal (reconhece a tela, clica, confere se mudou)
+- `src/config.py`: título da janela, limiar e esperas
 - `src/main.py`: ponto de entrada
+- `docs/especificacao/`: especificação do fluxo e prints do jogo
 - `tools/`: scripts auxiliares
 - `NOTAS.md`: contexto e progresso do projeto
 - `img/`: templates; `logs/`: screenshots de debug
