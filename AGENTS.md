@@ -1,8 +1,8 @@
 # Instruções para agentes — bot-ddtank
 
-Leia o [AGENTS do workspace](../AGENTS.md), o [contexto](docs/CONTEXTO.md), o [guia de desenvolvimento](docs/DESENVOLVIMENTO.md) e o [guia de testes](docs/TESTES.md).
+Leia o [contexto](docs/CONTEXTO.md), o [guia de desenvolvimento](docs/DESENVOLVIMENTO.md) e o [guia de testes](docs/TESTES.md).
 
-- Papéis: [desenvolvedor](../agents/desenvolvedor.md) e [tester](../agents/tester.md). Skills compartilhadas: [catálogo](../docs/SKILLS.md), armazenadas em `../.agents/skills/`.
+- Papéis: [desenvolvedor](agents/desenvolvedor.md) e [tester](agents/tester.md), também disponíveis como subagentes do Claude Code em `.claude/agents/`. Skills: [catálogo](docs/SKILLS.md), armazenadas em `.agents/skills/`. Projeto irmão OCR: [DDDDOCR.md](docs/DDDDOCR.md).
 - Use o código como fonte do comportamento atual. A [especificação ilustrada](docs/especificacao/ESPECIFICACAO.md) cobre a entrada; [NOTAS.md](NOTAS.md) conserva histórico e próximos passos antigos.
 - Não execute `src.main`, `src.grupo`, arquivos `.bat` ou ferramentas de captura durante tarefas documentais ou validação offline. Os drivers podem trazer janelas para frente e enviar mouse/teclado reais.
 - Preserve controle de foco e liberação das teclas. A verificação é automática por solicitação do usuário: SDK local, cliques verificados, tentativas sem limite fixo e nenhuma repetição do mesmo candidato rejeitado na mesma imagem. Consulte [VERIFICACAO_OCR.md](docs/VERIFICACAO_OCR.md).

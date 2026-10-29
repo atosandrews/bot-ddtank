@@ -53,4 +53,4 @@ Mouse/teclado são compartilhados. Controles incluem verificação de foco, inte
 
 Informe mudança, imagens, comandos, códigos de saída e pendências. Registre resolução, DPI/escala, contas, flags e se houve captura ou ação real. Compare template/screenshot antes de reduzir limiar; confira atualização da imagem e foco antes de alterar estratégia do grupo.
 
-Atualize os guias quando o comportamento mudar. Preserve [NOTAS.md](../NOTAS.md) como histórico e acrescente evidências datadas. Consulte o [catálogo de skills](../../docs/SKILLS.md).
+Atualize os guias quando o comportamento mudar. Preserve [NOTAS.md](../NOTAS.md) como histórico e acrescente evidências datadas. Consulte o [catálogo de skills](SKILLS.md).

@@ -57,4 +57,6 @@ Para parar: `Ctrl+C` no terminal, ou jogue o mouse num canto da tela.
 - [Contexto atual e arquitetura](docs/CONTEXTO.md)
 - [Ambiente e desenvolvimento](docs/DESENVOLVIMENTO.md)
 - [Testes e evidências](docs/TESTES.md)
-- [Catálogo compartilhado de skills](../docs/SKILLS.md)
+- [Catálogo de skills](docs/SKILLS.md)
+- [Papéis: desenvolvedor](agents/desenvolvedor.md) e [tester](agents/tester.md)
+- [Projeto irmão ddddocr: uso, desenvolvimento e testes](docs/DDDDOCR.md)

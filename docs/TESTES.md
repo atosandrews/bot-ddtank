@@ -1,6 +1,6 @@
 # Testes do bot DDTank
 
-Este guia separa os scripts existentes dos cenários de regressão propostos. Leia também [CONTEXTO](CONTEXTO.md), [DESENVOLVIMENTO](DESENVOLVIMENTO.md), as [instruções do projeto](../AGENTS.md), o [papel do tester](../../agents/tester.md) e o [catálogo de skills](../../docs/SKILLS.md).
+Este guia separa os scripts existentes dos cenários de regressão propostos. Leia também [CONTEXTO](CONTEXTO.md), [DESENVOLVIMENTO](DESENVOLVIMENTO.md), as [instruções do projeto](../AGENTS.md), o [papel do tester](../agents/tester.md) e o [catálogo de skills](SKILLS.md).
 
 ## Estado verificado em 2026-10-29
 

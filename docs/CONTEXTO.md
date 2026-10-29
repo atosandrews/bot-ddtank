@@ -37,4 +37,4 @@ As flags atuais `SO_PRINCIPAL_JOGA = True` e `CONVIDAR_SO_NO_ESTAGIO_2 = True` l
 
 Investigações sugeridas pela inspeção e pelo histórico: leitura da força, foco/atualização das janelas do grupo, transições de Pronto e caminhos alternativos de estratégia. Alguns relatos receberam correções posteriores; reproduzir antes de classificar como defeito atual.
 
-Continue pelo [guia de desenvolvimento](DESENVOLVIMENTO.md), [testes](TESTES.md), [skills](../../docs/SKILLS.md) e papéis [desenvolvedor](../../agents/desenvolvedor.md)/[tester](../../agents/tester.md).
+Continue pelo [guia de desenvolvimento](DESENVOLVIMENTO.md), [testes](TESTES.md), [skills](SKILLS.md) e papéis [desenvolvedor](../agents/desenvolvedor.md)/[tester](../agents/tester.md).
