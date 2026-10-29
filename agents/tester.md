@@ -30,7 +30,7 @@ Na raiz de `bot-ddtank`:
 .\.venv\Scripts\python.exe tools/testar_batalha.py docs/especificacao/imagens/22_pandora.webp
 ```
 
-Códigos de saída: `pytest` e `testar_prints.py` 0 = ok; `testar_verificacao.py` 0 = quadro válido, 1 = erro/quadro ausente, 2 = OCR sem candidato elegível (hoje esperado na imagem 38 com OCR habilitado). `testar_batalha.py` não tem asserções: compare a leitura com a imagem.
+Códigos de saída: `pytest` e `testar_prints.py` 0 = ok; `testar_verificacao.py` 0 = quadro válido, 1 = erro/quadro ausente, 2 = OCR sem candidato elegível (a imagem 38 deve dar 0, candidato `6723`). `testar_batalha.py` não tem asserções: compare a leitura com a imagem.
 
 Depois, priorize os cenários P0/P1 da [matriz em TESTES.md](../docs/TESTES.md#matriz-de-cenários-propostos) afetados pela mudança.
 

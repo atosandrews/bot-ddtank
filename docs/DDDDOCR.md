@@ -49,9 +49,9 @@ O ddddocr **não tem suíte de testes** no checkout. A cobertura da integração
 
 | Camada | Onde | Observação |
 | --- | --- | --- |
-| Contrato do adaptador com OCR simulado | `tests/test_verificacao_ocr.py` | Injeta `fabrica` falsa em `OcrLocal`; rápido, sem ONNX |
+| Contrato do adaptador | `tests/test_verificacao_ocr.py` | Maioria com `fabrica` falsa em `OcrLocal` (rápido, sem ONNX); um teste usa os modelos reais na imagem 38 e espera `6723` |
 | Fluxo/visão/driver/integração | `tests/test_verificacao_*.py` | OCR, relógio e drivers simulados |
-| Smoke com modelos reais | `tools/testar_verificacao.py <img>` (sem `--sem-ocr`) | Carrega ONNX; hoje a imagem 38 retorna saída 2 (sem candidato). Isso é limitação conhecida, não regressão |
+| Smoke com modelos reais | `tools/testar_verificacao.py <img>` (sem `--sem-ocr`) | Carrega ONNX; a imagem 38 deve retornar saída 0 com candidato `6723` (variante `cores`) |
 | Instalação | `.\.venv\Scripts\python.exe -c "import ddddocr; print(ddddocr.__file__)"` | Deve apontar para `..\ddddocr\ddddocr\__init__.py` |
 
 Para medir acurácia, faltam imagens de captcha rotuladas (ver pendências em [VERIFICACAO_OCR](VERIFICACAO_OCR.md#validação-realizada-e-pendências)). Guarde-as com o código correto no nome e compare candidatos por modelo/variante; acerto em imagem sintética não comprova acerto no jogo.

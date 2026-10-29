@@ -26,7 +26,7 @@ Os comandos seguintes **controlam o jogo** e não foram usados na validação of
 
 ## Componentes e fluxo
 
-- [verificacao_ocr.py](../src/verificacao_ocr.py): duas instâncias CPU de `DdddOcr`, padrão e beta, compartilhadas no processo; PNG original e cinza ampliado 2x; restrição numérica e deduplicação dos candidatos. `classification()` utiliza os argumentos do SDK local, sem modificar suas interfaces.
+- [verificacao_ocr.py](../src/verificacao_ocr.py): duas instâncias CPU de `DdddOcr`, padrão e beta, compartilhadas no processo; PNG original, cinza ampliado 2x e a variante `cores` (separa os dígitos por matiz, lê cada camada e junta da esquerda para a direita; descarta o agrupamento quando falta leitura ou quando uma camada de vários dígitos tem outra camada no meio); restrição numérica e deduplicação dos candidatos. `classification()` utiliza os argumentos do SDK local, sem modificar suas interfaces.
 - [verificacao_visao.py](../src/verificacao_visao.py): título, recorte do código/contador, casas preenchidas e localização dos dez números/controles na captura atual.
 - [verificacao.py](../src/verificacao.py): revalidação, Resetar, sequência de quatro cliques, Confirmar, espera de resultado e novas tentativas. O controlador público é serializado entre contas.
 - [drivers/tela.py](../src/drivers/tela.py): captura em primeiro plano e clique verificado, também herdados por `DriverConta`. O caminho de verificação não usa cliques genéricos no centro nem PostMessage.
@@ -69,8 +69,16 @@ Ambiente criado com Python 3.13.1, OpenCV 5.0.0.93, ONNX Runtime 1.31.1, NumPy 2
 
 Os **48 testes** em `tests/test_verificacao_*.py` passaram. Usam OCR, relógio e drivers simulados; os testes visuais usam a imagem existente e variantes sintéticas. Cobrem mapa das teclas, deslocamento, ambiguidade, entrada parcial, candidato rejeitado, mais de cem tentativas, novo desafio, perda de foco, geometria, fechamento, expiração, isolamento entre contas, integração dos dois laços e Ctrl+C. A regressão das 15 telas existentes passou.
 
-**Limitação observada com modelos reais:** o quadro, contador 30 e os dez números foram reconhecidos na imagem existente, mas nenhum dos quatro resultados modelo/variante produziu quatro dígitos elegíveis. O diagnóstico devolveu lista vazia de candidatos e saída 2. Portanto, esta entrega implementa e testa o controlador, mas **não comprova resolução automática desse captcha ou acurácia no jogo**.
+**Limitação observada com modelos reais (estado inicial):** o quadro, contador 30 e os dez números foram reconhecidos na imagem existente, mas nenhum dos quatro resultados modelo/variante produziu quatro dígitos elegíveis. O diagnóstico devolveu lista vazia de candidatos e saída 2. Portanto, esta entrega implementa e testa o controlador, mas **não comprova resolução automática desse captcha ou acurácia no jogo**.
 
 Como smoke separado de contrato, uma imagem sintética de texto limpo `0011` foi processada pelo adaptador com os modelos reais: o modelo padrão retornou `0011` com score aproximado de 0.9965. Isso confirma preservação de zeros e execução do SDK; não substitui a validação com ruído/distorção do captcha real.
+
+### Variante por cores (2026-10-29, posterior)
+
+Investigação offline da imagem 38: o código é `6723` (6 roxo sobreposto ao 7 vermelho, 2 vermelho, 3 azul, com linhas claras de ruído). Lido inteiro, o recorte vira dois dígitos (`63`/`23`); só removendo o ruído, três (`723`). A causa é a sobreposição de dígitos de cores diferentes. Lendo cada camada de cor separadamente, os dois modelos reais retornam `6723`.
+
+Implementado em `verificacao_ocr.py` como variante adicional (as anteriores continuam). Resultados com modelos reais nesta imagem: único candidato `6723` (beta 0,989; padrão 0,954), `testar_verificacao.py` com saída 0, cerca de 0,28 s por leitura. Agrupamentos com roxo e azul juntos produziam `7263` (errado); a regra de camada intercalada os descarta e há teste para isso. Suíte: **53 testes** passaram, regressão das 15 telas passou.
+
+Validado em **uma** imagem real; limiares de cor (saturação ≥ 80, brilho ≤ 200, área ≥ 40 px) e número de cores (2 a 4) não foram calibrados em outras. Não comprova acurácia no jogo.
 
 Ainda faltam imagens rotuladas adicionais e validação em sessão real dos estados aceito, rejeitado e expirado; também do hover, aparência das casas preenchidas e variação dos botões. Não houve captura ao vivo, clique real ou execução do jogo nesta entrega.
