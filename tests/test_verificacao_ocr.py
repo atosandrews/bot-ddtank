@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pytest
 
-from src.verificacao_ocr import ErroInfraestrutura, OcrLocal
+from src.verificacao_ocr import ErroInfraestrutura, OcrLocal, _intercaladas, decidir
 
 
 class Modelo:
@@ -105,6 +105,76 @@ def test_camada_com_digitos_dos_dois_lados_de_outra_nao_tem_ordem_e_e_descartada
     cv2.rectangle(imagem, (70, 15), (95, 55), (30, 30, 150), -1)
     cv2.rectangle(imagem, (130, 15), (155, 55), (160, 40, 30), -1)
     assert OcrLocal(ModeloPorPosicao).reconhecer(imagem) == []
+
+
+def test_camadas_intercaladas_sao_descartadas_mesmo_com_pedaco_maior_fora_do_intervalo():
+    # Azul em 10-40 (maior) e 70-90; vermelho em 45-60 e 115-140 (maior): 1 3 2 4 na tela.
+    # Os maiores pedaços de cada cor ficam fora do intervalo da outra; ainda assim intercalam.
+    imagem = np.full((68, 164, 3), 245, np.uint8)
+    cv2.rectangle(imagem, (10, 15), (40, 55), (160, 40, 30), -1)
+    cv2.rectangle(imagem, (70, 15), (90, 55), (160, 40, 30), -1)
+    cv2.rectangle(imagem, (45, 15), (60, 55), (30, 30, 150), -1)
+    cv2.rectangle(imagem, (115, 15), (140, 55), (30, 30, 150), -1)
+    assert OcrLocal(ModeloPorPosicao).reconhecer(imagem) == []
+
+
+def test_mesma_cor_ligada_por_cima_de_outra_camada_e_descartada():
+    # Dois azuis ligados por um traço acima do vermelho viram um único pedaço: sem
+    # intervalo entre centroides, a ordem dependeria só do centro e sairia trocada.
+    imagem = np.full((68, 164, 3), 245, np.uint8)
+    cv2.rectangle(imagem, (10, 15), (35, 55), (160, 40, 30), -1)
+    cv2.rectangle(imagem, (130, 15), (155, 55), (160, 40, 30), -1)
+    cv2.rectangle(imagem, (10, 8), (155, 16), (160, 40, 30), -1)
+    cv2.rectangle(imagem, (75, 20), (90, 55), (30, 30, 150), -1)
+    camadas = OcrLocal.camadas_por_cor(imagem)[0]  # k=2: azul e vermelho
+    assert len(camadas) == 2
+    # Testa a regra direto: o veto por divergência entre agrupamentos não pode ser a única proteção.
+    assert _intercaladas([("99", .99), ("12", .99)], camadas)
+
+
+def leitura(texto, modelo, variante, confianca=.97):
+    return {"texto": texto, "confianca": confianca, "modelo": modelo, "variante": variante}
+
+
+def test_modelos_divergentes_em_um_digito_nao_geram_candidato():
+    # 1 vs 7 é a confusão mais comum: escolher pelo score enviaria um código errado.
+    ocr = OcrLocal(Modelo)
+    ocr.modelos[0][1].texto, ocr.modelos[1][1].texto = "1256", "7256"
+    assert ocr.reconhecer(np.ones((20, 60, 3), np.uint8)) == []
+
+
+def test_leitura_de_quatro_digitos_divergente_veta_mesmo_com_score_baixo():
+    leituras = [leitura("7256", "padrao", "original"), leitura("7256", "beta", "original"),
+                leitura("1256", "beta", "mascara", .30)]
+    assert decidir(leituras, .90) == []
+
+
+def test_mesma_familia_de_um_modelo_so_nao_basta():
+    # original e cinza_2x do mesmo modelo erram juntos; não são fontes independentes.
+    leituras = [leitura("7256", "padrao", "original"), leitura("7256", "padrao", "cinza_2x"),
+                leitura("256", "beta", "original"), leitura("", "beta", "cinza_2x")]
+    assert decidir(leituras, .90) == []
+
+
+def test_um_modelo_em_duas_familias_sem_divergencia_e_aceito():
+    leituras = [leitura("1256", "padrao", "original", .95), leitura("1256", "padrao", "mascara", .99),
+                leitura("256", "beta", "original")]
+    [c] = decidir(leituras, .90)
+    assert (c.texto, c.modelo, c.variante, c.confianca) == ("1256", "padrao", "mascara", .99)
+
+
+def test_dois_modelos_concordando_sao_aceitos_e_score_abaixo_do_limiar_nao_vota():
+    leituras = [leitura("6723", "padrao", "cores", .954), leitura("6723", "beta", "cores", .989)]
+    assert [c.texto for c in decidir(leituras, .90)] == ["6723"]
+    leituras[0]["confianca"] = .80
+    assert decidir(leituras, .90) == []
+
+
+def test_mascara_remove_ruido_claro_e_mantem_digitos():
+    mascara = dict(OcrLocal.variantes(captcha_sintetico()))["mascara"]
+    assert set(np.unique(mascara)) == {0, 255}
+    ys, xs = np.nonzero(mascara == 0)
+    assert xs.min() >= 10 + 20 and xs.max() <= 10 + 140  # só os dois blocos coloridos
 
 
 def test_modelos_reais_leem_o_captcha_da_especificacao():
