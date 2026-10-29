@@ -58,9 +58,11 @@ TELAS = [
 ]
 
 
-def identificar(frame, limiar):
-    """Retorna a primeira Tela reconhecida no frame, ou None."""
+def identificar(frame, limiar, ignorar=()):
+    """Retorna a primeira Tela reconhecida no frame, ou None. `ignorar`: nomes a pular."""
     for tela in TELAS:
+        if tela.nome in ignorar:
+            continue
         if vision.achar(tela.reconhecer, frame, limiar):
             return tela
     return None

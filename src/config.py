@@ -5,10 +5,11 @@ TITULO_JANELA = "DDClássico"
 LIMIAR = 0.85
 
 # Segundos de espera depois dos cliques de uma tela, para a tela trocar.
-ESPERA_TRANSICAO = (1.5, 2.5)
+# Faixas com sorteio: parece uma pessoa (nunca o mesmo tempo exato).
+ESPERA_TRANSICAO = (0.8, 1.3)
 
 # Segundos de espera entre cliques seguidos na mesma tela (ex.: Formigueiro -> Normal -> ok).
-ESPERA_CLIQUE = (0.6, 1.0)
+ESPERA_CLIQUE = (0.25, 0.45)
 
 # Até quantos segundos esperar um botão aparecer (popups demoram um pouco para abrir).
 ESPERA_ALVO = 5
@@ -42,6 +43,38 @@ ESTRATEGIAS = {
     "PANDORA": {"angulo": 30, "forca": 80, "skills": ["3", "9"], "alvo": "direita", "andar": "esquerda"},
 }
 
+# ---------------- Grupo (várias contas, python -m src.grupo) ----------------
+# A conta principal é a janela maior; as outras são as convidadas.
+# Estágio 1: as duas contas mais próximas formam uma dupla, juntam no mesmo pixel e a dupla
+# da esquerda atira para a esquerda, a da direita para a direita. Tecla 9 em todo tiro.
+ESTRATEGIAS_GRUPO = {
+    # Em grupo é sempre força 10, mesmo com formiga colada (pedido do usuário).
+    "FORMIGAS": {"angulo": 30, "forca": 10, "skills": ["9"], "alvo": "dupla", "andar": None,
+                 "juntar": True},
+    "PANDORA": ESTRATEGIAS["PANDORA"],
+}
+# True: na batalha só a principal joga; as convidadas ligam o "Confiar" do jogo (o jogo
+# joga por elas) uma vez por estágio. Evita trocar de janela a cada turno.
+SO_PRINCIPAL_JOGA = True
+# True: o estágio 1 a principal faz sozinha (padrão de uma conta); só para o estágio 2
+# (Pandora) ela convida as outras, que ficam no Confiar. Depois da Pandora elas saem da sala.
+CONVIDAR_SO_NO_ESTAGIO_2 = True
+# Estratégia da principal nesse modo: anda até ficar colada nas outras contas (as formigas
+# vêm todas juntas), atira na formiga mais perto, sempre força 10 e tecla 9.
+ESTRATEGIAS_SO_PRINCIPAL = {
+    # A principal fica parada (as convidadas vêm até ela). Só ela ataca e as formigas vêm
+    # dos dois lados: alterna o lado a cada turno.
+    "FORMIGAS": {"angulo": 30, "forca": 10, "skills": ["9"], "alvo": "perto", "andar": None,
+                 "alternar_lados": True},
+    "PANDORA": ESTRATEGIAS["PANDORA"],
+}
+DUPLA_MAX_PX = 150      # mais longe que isso, a conta mais próxima não é da minha dupla
+JUNTAR_PX = 4           # "mesmo pixel": para de andar quando a dupla estiver a até isso
+JUNTAR_TOQUE = 0.06     # segundos de seta em cada passinho até a dupla
+JUNTAR_MAX_TOQUES = 30
+# Segundos entre convites, se as contas não entrarem na sala.
+REENVIAR_CONVITE = 15
+
 # Parar o bot quando a instância acabar (saiu da batalha depois do último estágio).
 # False = começar outra instância sozinho.
 PARAR_DEPOIS_DA_INSTANCIA = True
@@ -59,7 +92,7 @@ TECLA_ANGULO_SOBE = "up"
 TECLA_ANGULO_DESCE = "down"
 
 # Segundos de pausa quando a batalha começa, antes do 1º tiro.
-PAUSA_INICIO_BATALHA = 3
+PAUSA_INICIO_BATALHA = 1
 
 # Quantos pixels valem 1 de "distância" das tabelas (a régua verde 0–10 cobre a tela de ~1000 px).
 PX_POR_DISTANCIA = 100

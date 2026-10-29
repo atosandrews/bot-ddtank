@@ -171,10 +171,104 @@ Em cada turno da batalha: detectar vez -> localizar posições -> calcular ângu
   "andou" antes de subir: era a seta → de virar, apertada por garantia com o personagem já
   virado. Agora `lado_virado` lê o lado pela agulha vermelha forte do relógio (aponta para
   onde ele olha; confere em todos os prints reais) e só vira se estiver do lado errado.
+- **7º teste (16:03), commit b7172ab: vitória de novo, sozinho, em ~3,5 min.** Estágio 1 em
+  6 turnos, Pandora em 2 turnos; chat "Você ganhou Pedra de Tigre Branco nível 2 / nível 1".
+  Desta vez nenhuma formiga colou, então a força 1 ainda não foi testada ao vivo.
+  O 1º tiro da Pandora saiu de novo com força 91 (3ª vez seguida); o 2º, 79.
 - Ferramenta de Captura do Windows travou com 32 cópias abertas (não era o bot); fechadas.
   O bot agora solta Espaço e setas sempre que encerra.
 - SALA_PRONTA não é mais o fim: depois do Início o bot segue para a batalha. O fim da batalha
   e o loot ainda não são reconhecidos (o bot fica esperando e salva print em logs/).
+
+## Fase 3: 4 contas juntas no Formigueiro (requisitos do usuário, 2026-10-28)
+- 4 janelas do cliente DDClássico no mesmo PC, uma conta em cada.
+- **Teste técnico OK:** `tools/testar_printwindow.py` tira print da janela do jogo mesmo coberta
+  (PrintWindow), e o bot reconhece a tela. Janela inativa mostra "Clique no jogo" escurecido.
+  Atenção: o filtro de título também pega aba do Opera com "DDClássico" no título; usar título
+  exato "DDClássico".
+- Plano: um bot só vigia as 4 janelas (PrintWindow) e traz para frente só a que precisa agir
+  (teclado/mouse reais), clicando no aviso de foco quando precisar.
+- **Entrar na sala:** a principal clica em **Convide** e chama as 3 contas, que aceitam.
+  Só na 1ª vez: depois elas continuam na sala entre as instâncias.
+- **Ciclo:** as 3 clicam em **Pronto**; a principal espera as 3 prontas, escolhe
+  Formigueiro → Normal e clica em Início. Repete sempre.
+- **Estágio 1:** 2 contas atiram sempre para a esquerda e 2 sempre para a direita. As duplas
+  nascem perto, em posição aleatória: as 2 mais próximas formam a dupla e uma anda até ficar no
+  mesmo pixel da outra (para não se acertarem). Tiro: ângulo 30, força 10, sempre com a
+  tecla 9 (todos os buffs de dano). Formiga colada: força 1 (regra continua valendo).
+- **Estágio 2:** as 4 contas usam a lógica da Pandora de hoje (ângulo 30, andar só se não
+  der, teclas 3 e 9, força 80).
+- **v1 do grupo escrita (2026-10-28), ainda não rodou no jogo:** `python -m src.grupo` ou
+  `rodar_grupo.bat`. Funciona com 2 a 4 contas.
+  - `src/drivers/conta.py`: vê cada janela por PrintWindow (mesmo coberta) e traz para frente
+    só para clicar/teclar, clicando antes no "Clique no jogo" se aparecer.
+  - Janela sem foco sempre mostra "Clique no jogo" escurecido; para ver a tela o bot ignora o
+    aviso (a comparação de imagens não muda com o escurecimento).
+  - **Principal:** ao iniciar, o bot pede para clicar na janela dela (as janelas maximizadas
+    têm o mesmo tamanho, então "a maior" não serve). Ou passar o número da janela.
+  - Convite: Convide → aba Amigos → clica em todos os "Convidar". Só quando a principal está
+    na sala e alguma convidada está fora (Cais, lobby ou tela desconhecida); repete a cada 30 s.
+  - Convidada: "Convite de" → Confirmar. Na sala: **Pronto, suposto no lugar do Início**
+    (Troque + 70 px). Ainda não tenho print da sala vista pela convidada: conferir no teste.
+  - Principal só clica em Início quando conta os carimbos "Pronto!!" (só o vermelho deles)
+    iguais ao número de convidadas.
+  - Batalha: quem tem a vez joga. Em grupo, "eu" = triângulo azul da vez (tenta vários prints,
+    é animado); as outras barras azuis são aliados. Estágio 1: dupla = aliado mais próximo
+    (até 150 px), anda em passinhos até ficar a até 4 px, dupla da esquerda atira para a
+    esquerda; só com 2 contas, cada uma atira para o seu lado. Tecla 9, força 10 (1 colada).
+  - **Descoberta (18:55): janela totalmente coberta CONGELA** (0 pixels mudam em 4 s; o
+    convite chega mas não aparece). Só a janela visível desenha. Quando o Claude ficou no
+    monitor do jogo, as 3 ficaram pretas. Consequências: (1) o convite agora é aceito
+    "visitando" cada convidada (traz para frente, espera o convite, Confirmar); (2) para a
+    batalha, as janelas precisam ficar num monitor só delas, cada uma com um pedaço visível
+    (`organizar_janelas` põe uma em cada canto, 1366x780). Ideia do usuário de entrar pelo
+    número da sala não resolve isso (a janela coberta também não vê o Cais).
+  - Convite só pelo nome: recortes dos nomes em `img/convidados/`; clica só no Convidar da
+    mesma linha (antes, com a aba errada, convidou desconhecidos).
+  - **Estado em 2026-10-28 20:12 (usuário parou o bot):** convite, Confirmar e entrada na
+    sala funcionam; uma partida começou e a Pandora já foi vencida em grupo uma vez.
+    Modo atual: `SO_PRINCIPAL_JOGA` (convidadas no Confiar). Estágio 1: na 1ª vez de cada
+    convidada ela anda até ficar em cima da principal (acha a principal pelo nome,
+    `img/nome_principal.png`, só o formato das letras azuis), liga o Confiar e passa o turno;
+    a principal fica parada e alterna os lados. Problemas abertos:
+    - Pronto: o botão da convidada às vezes não vira "Cancele" a tempo e o bot clica de novo,
+      desmarcando (o mesmo botão marca e desmarca). Precisa conferir sem reclicar.
+    - Principal às vezes perde o 1º turno (barra parada: jogo sem foco) e em 2 partidas
+      saiu do combate sozinha (causa desconhecida).
+    - Andar até a principal parou no meio uma vez (101 → 51 px).
+    - Trocar de janela é frágil porque as janelas do jogo dividem o monitor com outros
+      programas (janela coberta congela). Monitor só para o jogo ajudaria muito.
+  - **Ciclo atual (2026-10-28 20:30, `CONVIDAR_SO_NO_ESTAGIO_2`):** estágio 1 a principal
+    faz sozinha (padrão de uma conta, confirma o Lembrete). Na sala do estágio 2 convida as
+    convidadas, que confirmam e dão Pronto; ela inicia. Na Pandora a principal joga primeiro
+    (ângulo 30, 3 e 9, força 80) e só depois o bot visita cada convidada: Confiar + PASS.
+    Depois da Pandora a dona expulsa as convidadas pelo X do cartão
+    (`img/sala_expulsar_x.png`; o 1º X, em cima à esquerda, é o dela) e recomeça.
+  - **Teste das 21:40 (2026-10-28): ciclo completo em grupo funcionou.** Estágio 1 sozinha →
+    convite (as 2 confirmaram) → Pronto das 2 → "2 de 2: iniciando" → Pandora (principal
+    primeiro, depois Confiar + PASS nas 2) → expulsou as 2 pelo X → começou o estágio 1 de
+    novo. Usuário parou o bot. Um tiro da Pandora saiu com força 23 (barra mal lida).
+  - Otimizações (21:55): ângulo espera o número do relógio mudar depois de cada toque (antes
+    lia o número antigo e oscilava 29↔30); batalha em grupo tem caminho rápido (só a janela
+    da principal) e o código de verificação é conferido a cada 5 s.
+  - **Teste 22:00 (com as otimizações): 2 ciclos completos seguidos, sem erro, ~4 min cada.**
+    Estágio 1 sozinha (7–9 turnos) → convite/Pronto → Pandora em 2 turnos (Confiar + PASS
+    nas convidadas) → expulsou as 2 → recomeçou. Nenhum "ângulo travou" no log.
+  - Velocidade (22:20): ângulo em duas velocidades (uma rajada rápida até 3° do alvo, espera
+    o relógio parar, depois toque a toque); 15→30 caiu de ~6 s para ~1,4 s (simulação). Esperas
+    com sorteio para parecer gente: itens 0,12–0,22 s, virar 0,08–0,14 s, cliques 0,25–0,45 s,
+    transições 0,8–1,3 s, início de batalha 1 s, trocar de janela 0,3–0,5 s.
+  - **Mouse/teclado:** o bot usa os de verdade, então disputa com o usuário. Saída proposta:
+    rodar jogo + bot numa máquina virtual (ou outro PC).
+  - Ensaio sem cliques nas janelas reais: principal na sala, conta2 no Cais → clicaria em
+    Convide (1257, 714). Certo.
+
+## Código de verificação (anti-bot do jogo)
+- Quadro "Código de verificação", 30 s para digitar 4 dígitos clicando nos números.
+- **O bot NÃO resolve** (seria burlar a proteção do servidor). `src/verificacao.py`: ao ver
+  o título (`img/codigo_verificacao.png`), para tudo, traz a janela para frente, apita e
+  espera a pessoa digitar (até 3 min); quando o quadro some, continua. Vale para o bot de
+  uma conta e para o grupo (confere todas as janelas a cada volta).
 
 ## Próximos passos
 1. Testar a batalha v1 no jogo (ponteiro em `ANGULO`) e calibrar `PX_POR_DISTANCIA` e `FORCA_ANTECIPACAO`.

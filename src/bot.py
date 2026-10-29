@@ -6,7 +6,7 @@ from pathlib import Path
 import cv2
 import pyautogui
 
-from . import config, telas, vision
+from . import config, telas, verificacao, vision
 from .batalha import Batalha
 
 LOGS = Path(__file__).resolve().parent.parent / "logs"
@@ -43,6 +43,10 @@ class Bot:
     def passo(self):
         """Executa um ciclo. Retorna False quando o fluxo conhecido terminou."""
         frame = self.driver.capturar()
+        if verificacao.tem_codigo(frame):
+            # Anti-bot do jogo: o bot não resolve. Para, avisa e espera a pessoa digitar.
+            verificacao.esperar_pessoa(self.driver, self.nome)
+            return True
         tela = telas.identificar(frame, config.LIMIAR)
 
         if tela is None:
@@ -119,8 +123,11 @@ class Bot:
         except pyautogui.FailSafeException:
             self.log("parado: mouse no canto da tela")
         finally:
-            # Nunca deixar uma tecla presa se o bot parar no meio de um tiro.
+            # Nunca deixar uma tecla presa se o bot parar no meio de um tiro (mesmo com o
+            # mouse no canto, que dispara a trava de segurança).
+            pyautogui.FAILSAFE = False
             for tecla in (config.TECLA_ATIRAR, config.TECLA_ESQUERDA, config.TECLA_DIREITA,
                           config.TECLA_ANGULO_SOBE, config.TECLA_ANGULO_DESCE):
                 pyautogui.keyUp(tecla)
+            pyautogui.FAILSAFE = True
         self.log("encerrado")

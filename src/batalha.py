@@ -4,6 +4,7 @@ Tudo é medido a partir do rótulo "Força" (canto inferior esquerdo), que fica 
 mesmo lugar do HUD. As posições abaixo são deslocamentos em pixels a partir do centro dele.
 As estratégias de cada estágio ficam em config.ESTRATEGIAS.
 """
+import random
 import time
 from dataclasses import dataclass
 
@@ -20,6 +21,16 @@ LIMIAR_PASS = 0.65
 # "Pandora" no quadro de missão ("Derrote Pandora"); o fundo do quadro é semitransparente,
 # por isso o limiar é mais baixo (0.91+ no estágio 2, até 0.53 no estágio 1).
 MISSAO_PANDORA = IMG / "missao_pandora.png"
+# Ponto de encontro do estágio 1: ponta do toco de madeira no meio do mapa. O personagem
+# fica com a barra de vida 67 px à direita do centro do toco.
+TOCO = IMG / "batalha_toco.png"
+LIMIAR_TOCO = 0.68
+ENCONTRO_DO_TOCO = 67
+# Nome da conta principal embaixo da barra dela (formato das letras azuis). O centro da
+# barra fica 13 px à esquerda do centro do nome.
+NOME_PRINCIPAL = IMG / "nome_principal.png"
+LIMIAR_NOME = 0.65
+BARRA_DO_NOME = -13
 LIMIAR_MISSAO = 0.75
 
 # Barra de força: x do 0 e do 100, e a linha (y) onde medir.
@@ -95,6 +106,8 @@ class Leitura:
     eu: tuple | None
     inimigos: list
     estagio: str
+    aliados: list = None
+    pelo_triangulo: bool = False
 
 
 def ler(frame):
@@ -107,20 +120,24 @@ def ler(frame):
     ox, oy = max(ax + x1, 0), max(ay + y1, 0)
     campo = frame[oy:ay + y2, ox:ax + x2]
     hsv = cv2.cvtColor(campo, cv2.COLOR_BGR2HSV)
-    # Uma formiga em cima de mim cobre parte da minha barra: aceita pedaços menores
-    # e, se nem assim achar, usa o triângulo da vez.
-    azuis = _barras(hsv, "azul", largura_min=10)
+    azuis = [(x + ox, y + oy) for x, y in _barras(hsv, "azul", largura_min=10)]
     triangulo = _triangulo(hsv)
-    if azuis:
-        eu = (azuis[0][0] + ox, azuis[0][1] + oy)
-    elif triangulo:
-        eu = (triangulo[0] + ox, triangulo[1] + oy + TRIANGULO_ATE_BARRA)
+    # O triângulo azul fica só em cima de quem está jogando: com várias contas (várias
+    # barras azuis) é ele que diz quem sou eu. Sem triângulo, uso a barra azul (sozinho).
+    # Uma formiga em cima de mim cobre parte da barra, por isso aceito pedaços pequenos.
+    if triangulo:
+        tx, ty = triangulo[0] + ox, triangulo[1] + oy + TRIANGULO_ATE_BARRA
+        perto = [b for b in azuis if abs(b[0] - tx) <= 20]
+        eu = min(perto, key=lambda b: abs(b[0] - tx)) if perto else (tx, ty)
+    elif azuis:
+        eu = azuis[0]
     else:
         eu = None
+    aliados = [b for b in azuis if eu is None or abs(b[0] - eu[0]) > 20]
     inimigos = [(x + ox, y + oy) for x, y in _barras(hsv, "vermelho")]
     minha_vez = vision.achar(PASS, frame, LIMIAR_PASS) is not None
     estagio = "PANDORA" if vision.achar(MISSAO_PANDORA, frame, LIMIAR_MISSAO) else "FORMIGAS"
-    return Leitura(ancora, minha_vez, eu, inimigos, estagio)
+    return Leitura(ancora, minha_vez, eu, inimigos, estagio, aliados, triangulo is not None)
 
 
 _digitos = {}
@@ -241,10 +258,11 @@ def marcador(frame, ancora):
 
 
 class Batalha:
-    def __init__(self, driver, log, salvar_debug):
+    def __init__(self, driver, log, salvar_debug, estrategias=None):
         self.driver = driver
         self.log = log
         self.salvar_debug = salvar_debug
+        self.estrategias = estrategias or config.ESTRATEGIAS
         self.turno = 0
         self.estagio = None
         self.virado = None  # lado para onde o personagem está virado (1, -1 ou None)
@@ -253,22 +271,57 @@ class Batalha:
     def passo(self, frame):
         leitura = ler(frame)
         if leitura is None or not leitura.minha_vez:
-            time.sleep(0.5)
+            time.sleep(0.25)
             return
         self.turno += 1
         if leitura.estagio != self.estagio:
             self.estagio = leitura.estagio
             self.virado = None  # estágio novo: não sei para onde o personagem está virado
             self.log(f"estágio: {self.estagio}")
-        estrategia = config.ESTRATEGIAS[leitura.estagio]
+        estrategia = self.estrategias[leitura.estagio]
+
+        # Com aliados, só o triângulo diz qual barra azul sou eu; ele é animado,
+        # então tento alguns prints até pegá-lo inteiro.
+        for _ in range(8):
+            if leitura.pelo_triangulo or not leitura.aliados:
+                break
+            time.sleep(0.15)
+            nova = ler(self.driver.capturar())
+            if nova is not None and nova.eu is not None:
+                leitura = nova
+        if leitura.aliados and not leitura.pelo_triangulo:
+            self.log("não achei o triângulo da vez; posso estar confundindo eu com um aliado")
 
         distancia, colado = None, False
         if estrategia["alvo"] in ("direita", "esquerda"):
             lado = 1 if estrategia["alvo"] == "direita" else -1
-        elif leitura.eu and leitura.inimigos:
+        elif estrategia["alvo"] == "dupla" and leitura.eu:
+            leitura, lado = self.lado_da_dupla(leitura, estrategia)
             ex = leitura.eu[0]
-            alvo = min(leitura.inimigos, key=lambda p: abs(p[0] - ex))
+            if leitura.inimigos:
+                perto = min(abs(p[0] - ex) for p in leitura.inimigos)
+                colado = perto <= estrategia.get("colado_px", 0)
+            else:
+                # Nenhum inimigo à vista: a barra dele está escondida atrás da minha.
+                colado = "forca_colado" in estrategia
+        elif leitura.eu and leitura.inimigos:
+            if estrategia.get("ponto_encontro"):
+                # Todo mundo no mesmo ponto (ponta do toco): as formigas vêm juntas.
+                leitura = self.ir_ao_encontro(leitura)
+            ex = leitura.eu[0]
+            alvo = min(leitura.inimigos, key=lambda p: abs(p[0] - ex)) if leitura.inimigos else (ex + 1, 0)
             lado = 1 if alvo[0] > ex else -1
+            if estrategia.get("alternar_lados"):
+                # As formigas vêm dos dois lados: um tiro para cada lado, alternando.
+                # Se só houver formigas de um lado, atira nesse lado.
+                tem_esq = any(p[0] < ex for p in leitura.inimigos)
+                tem_dir = any(p[0] > ex for p in leitura.inimigos)
+                self.lado_alternado = -self.lado_alternado
+                if tem_esq and tem_dir:
+                    lado = self.lado_alternado
+                lado_inimigos = [p for p in leitura.inimigos if (p[0] - ex) * lado > 0]
+                if lado_inimigos:
+                    alvo = min(lado_inimigos, key=lambda p: abs(p[0] - ex))
             distancia = abs(alvo[0] - ex) / config.PX_POR_DISTANCIA
             colado = abs(alvo[0] - ex) <= estrategia.get("colado_px", 0)
         elif leitura.eu and "forca_colado" in estrategia:
@@ -294,6 +347,102 @@ class Batalha:
             return
         self.jogar(leitura, estrategia, lado, distancia, colado)
 
+    def ir_ate_principal(self, leitura):
+        """Convidada: anda até ficar no mesmo pixel da conta principal.
+
+        Acha a principal pelo nome dela embaixo da barra de vida (só o formato das letras
+        azuis, img/nome_principal.png). O nome é procurado de novo a cada passinho.
+        Retorna a leitura nova (ou a mesma, se o nome não aparecer: já empilhadas, os nomes
+        se sobrepõem e o bot considera que chegou).
+        """
+        def alvo(frame):
+            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            letras = cv2.inRange(hsv, (105, 120, 60), (130, 255, 255))
+            tpl = cv2.imread(str(NOME_PRINCIPAL), cv2.IMREAD_GRAYSCALE)
+            _, nota, _, loc = cv2.minMaxLoc(cv2.matchTemplate(letras, tpl, cv2.TM_CCOEFF_NORMED))
+            if nota < LIMIAR_NOME:
+                return None
+            return loc[0] + tpl.shape[1] // 2 + BARRA_DO_NOME
+
+        x = alvo(self.driver.capturar())
+        if x is None:
+            self.log("não achei o nome da principal (já devo estar em cima dela)")
+            return leitura
+        return self.juntar_com(leitura, x, alvo)
+
+    def ir_ao_encontro(self, leitura):
+        """Anda até o ponto de encontro: ponta do toco de madeira no meio do mapa (estágio 1).
+
+        O toco é procurado de novo a cada passinho, porque a câmera pode andar junto.
+        Retorna a leitura nova (ou a mesma, se o toco não estiver na tela).
+        """
+        def alvo(frame):
+            pos, nota = vision.procurar(TOCO, frame)
+            return pos[0] + ENCONTRO_DO_TOCO if pos and nota >= LIMIAR_TOCO else None
+
+        x = alvo(self.driver.capturar())
+        if x is None:
+            self.log("não achei o toco do ponto de encontro na tela")
+            return leitura
+        return self.juntar_com(leitura, x, alvo)
+
+    def juntar_com(self, leitura, alvo_x, recalcular=None):
+        """Anda em passinhos até ficar a até JUNTAR_PX do x pedido. Retorna a leitura nova.
+
+        `recalcular(frame)`: se dado, refaz o x do alvo a cada passo (alvo que se move na tela).
+        """
+        ex = leitura.eu[0]
+        if abs(alvo_x - ex) <= config.JUNTAR_PX:
+            return leitura
+        direcao = 1 if alvo_x > ex else -1
+        self.log(f"juntando: {abs(alvo_x - ex)} px para a {'direita' if direcao > 0 else 'esquerda'}")
+        tecla = config.TECLA_DIREITA if direcao > 0 else config.TECLA_ESQUERDA
+        for _ in range(config.JUNTAR_MAX_TOQUES):
+            self.driver.tecla(tecla, config.JUNTAR_TOQUE)
+            time.sleep(0.15)
+            frame = self.driver.capturar()
+            nova = ler(frame)
+            if nova is None or nova.eu is None:
+                break
+            leitura = nova
+            ex = leitura.eu[0]
+            if recalcular:
+                alvo_x = recalcular(frame) or alvo_x
+            if abs(alvo_x - ex) <= config.JUNTAR_PX or (alvo_x - ex) * direcao < 0:
+                break
+        self.virado = direcao
+        self.log(f"agora a {abs(alvo_x - ex)} px")
+        return leitura
+
+    def lado_da_dupla(self, leitura, estrategia):
+        """Grupo: junta com a conta mais próxima (dupla) e escolhe o lado da dupla.
+
+        A dupla que está mais à esquerda atira para a esquerda, a outra para a direita.
+        Retorna (leitura atualizada depois de andar, lado).
+        """
+        ex = leitura.eu[0]
+        aliados = leitura.aliados or []
+        if not aliados:
+            alvo = min(leitura.inimigos, key=lambda p: abs(p[0] - ex)) if leitura.inimigos else None
+            return leitura, (1 if alvo and alvo[0] > ex else -1)
+        parceiro = min(aliados, key=lambda a: abs(a[0] - ex))
+        if abs(parceiro[0] - ex) > config.DUPLA_MAX_PX:
+            # Sozinho do meu lado (ex.: 3 contas): atiro para longe dos outros.
+            centro = sum(a[0] for a in aliados) / len(aliados)
+            return leitura, (-1 if ex < centro else 1)
+
+        if estrategia.get("juntar"):
+            leitura = self.juntar_com(leitura, parceiro[0])
+            ex = leitura.eu[0]
+
+        centro_dupla = (ex + parceiro[0]) / 2
+        outros = [a for a in aliados if a is not parceiro]
+        if outros:
+            centro_outros = sum(a[0] for a in outros) / len(outros)
+            return leitura, (-1 if centro_dupla < centro_outros else 1)
+        # Só a dupla na luta (2 contas): cada uma atira para um lado.
+        return leitura, (-1 if ex <= parceiro[0] else 1)
+
     def jogar(self, leitura, estrategia, lado, distancia, colado=False):
         angulo = estrategia["angulo"]
         if colado:
@@ -316,7 +465,7 @@ class Batalha:
         if self.virado != lado:
             self.driver.tecla(tecla_lado, 0.05)
             self.virado = lado
-            time.sleep(0.2)
+            time.sleep(random.uniform(0.08, 0.14))
 
         if config.AJUSTAR_ANGULO:
             andar = estrategia["andar"]
@@ -340,7 +489,7 @@ class Batalha:
         for tecla in estrategia["skills"]:
             self.log(f"usando item {tecla}")
             self.driver.tecla(tecla)
-            time.sleep(0.3)
+            time.sleep(random.uniform(0.12, 0.22))
 
         self.atirar(leitura.ancora, forca)
         self.esperar_fim_da_vez()
@@ -352,9 +501,9 @@ class Batalha:
         lado ir; sem número legível, a agulha (aproximada). Retorna False se o número parar
         de mudar antes de chegar (o chão aqui não deixa esse ângulo).
         """
-        anterior, parado, atual = None, 0, None
+        parado, atual, rajada_feita = 0, None, False
+        frame = self.driver.capturar()
         for _ in range(60):
-            frame = self.driver.capturar()
             atual, exato = ler_numero(frame, ancora)
             if atual is None:
                 atual = ler_angulo(frame, ancora)
@@ -367,20 +516,45 @@ class Batalha:
             elif exato and atual == alvo:
                 self.log(f"ângulo {atual}")
                 return True
-            # Travou = o número não muda em 4 toques seguidos.
-            mascara = mascara_numero(frame, ancora)
-            if anterior is not None and mascara.shape == anterior.shape \
-                    and np.count_nonzero(mascara != anterior) <= 3:
-                parado += 1
-                if parado >= 4:
-                    self.log(f"ângulo travou em {atual:.0f}")
-                    return False
-            else:
-                parado = 0
-            anterior = mascara
-            self.driver.tecla(config.TECLA_ANGULO_SOBE if alvo > atual else config.TECLA_ANGULO_DESCE, 0.06)
-            # Dá tempo do jogo redesenhar o relógio antes de ler de novo.
-            time.sleep(0.12)
+            tecla = config.TECLA_ANGULO_SOBE if alvo > atual else config.TECLA_ANGULO_DESCE
+            if exato and abs(alvo - atual) > 3 and not rajada_feita:
+                # Longe do alvo: uma rajada de toques rápidos (como segurar a seta), sem
+                # esperar o relógio a cada um. Para 3° antes e termina no modo cuidadoso.
+                rajada_feita = True
+                for _ in range(int(abs(alvo - atual)) - 3):
+                    self.driver.tecla(tecla, 0.04)
+                    time.sleep(random.uniform(0.03, 0.06))
+                # Espera o relógio parar de mudar antes de ler (senão lê um número velho).
+                anterior = mascara_numero(self.driver.capturar(), ancora)
+                limite = time.time() + 1.0
+                while time.time() < limite:
+                    time.sleep(0.1)
+                    frame = self.driver.capturar()
+                    agora = mascara_numero(frame, ancora)
+                    if agora.shape == anterior.shape and np.count_nonzero(agora != anterior) <= 3:
+                        break
+                    anterior = agora
+                continue
+            antes = mascara_numero(frame, ancora)
+            self.driver.tecla(tecla, 0.06)
+            # Espera o número do relógio MUDAR antes de decidir o próximo toque. Ler cedo
+            # demais (número antigo) fazia apertar de novo e passar do ponto: 29, 30, 29, 30...
+            limite = time.time() + 0.6
+            mudou = False
+            while time.time() < limite:
+                time.sleep(0.05)
+                frame = self.driver.capturar()
+                depois = mascara_numero(frame, ancora)
+                if depois.shape != antes.shape or np.count_nonzero(depois != antes) > 3:
+                    mudou = True
+                    time.sleep(0.05)
+                    frame = self.driver.capturar()
+                    break
+            # Travou = o número não muda em 3 toques seguidos (o chão não deixa).
+            parado = 0 if mudou else parado + 1
+            if parado >= 3:
+                self.log(f"ângulo travou em {atual:.0f}")
+                return False
         self.log(f"ângulo não chegou em {alvo} (último lido {atual:.0f})")
         return False
 
@@ -391,11 +565,18 @@ class Batalha:
         referencia = self.driver.capturar(regiao)
         limite = time.time() + config.TEMPO_MAX_FORCA
         atual = 0.0
+        inicio = time.time()
         self.driver.segurar(config.TECLA_ATIRAR)
         try:
             while time.time() < limite:
                 atual = forca_na_barra(referencia, self.driver.capturar(regiao))
                 if atual >= forca - config.FORCA_ANTECIPACAO:
+                    break
+                if atual == 0 and time.time() - inicio > 1.5:
+                    # A barra nem começou a encher: o jogo não recebeu o Espaço
+                    # (ex.: janela ainda com o "Clique no jogo"). Desiste deste tiro.
+                    self.log("a barra de força não se mexeu; soltando sem atirar")
+                    self.salvar_debug(self.driver.capturar(), "barra_parada")
                     break
         finally:
             self.driver.soltar(config.TECLA_ATIRAR)
@@ -407,4 +588,4 @@ class Batalha:
         while time.time() < limite:
             if vision.achar(PASS, self.driver.capturar(), LIMIAR_PASS) is None:
                 return
-            time.sleep(0.3)
+            time.sleep(0.15)

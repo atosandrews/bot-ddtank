@@ -111,18 +111,39 @@ def trazer_para_frente(hwnd):
         win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
     if win32gui.GetForegroundWindow() == hwnd:
         return
-    try:
-        win32gui.SetForegroundWindow(hwnd)
-    except Exception:
-        # O Windows só deixa trocar a janela da frente depois de uma tecla; um Alt destrava.
-        import win32api
-        win32api.keybd_event(win32con.VK_MENU, 0, 0, 0)
-        win32api.keybd_event(win32con.VK_MENU, 0, win32con.KEYEVENTF_KEYUP, 0)
+    import win32api
+    import win32process
+    # O Windows não deixa um programa roubar a frente de outro. Três tentativas, da mais
+    # leve à mais forte: (1) Alt + SetForegroundWindow; (2) "grudar" o bot na janela da
+    # frente (AttachThreadInput) para herdar a permissão; (3) pôr a janela acima de todas
+    # e de volta ao normal (o clique seguinte cai nela e o próprio clique dá o foco).
+    for tentativa in range(3):
         try:
-            win32gui.SetForegroundWindow(hwnd)
+            if tentativa == 0:
+                win32api.keybd_event(win32con.VK_MENU, 0, 0, 0)
+                win32api.keybd_event(win32con.VK_MENU, 0, win32con.KEYEVENTF_KEYUP, 0)
+                win32gui.SetForegroundWindow(hwnd)
+            elif tentativa == 1:
+                frente = win32gui.GetForegroundWindow()
+                eu = win32api.GetCurrentThreadId()
+                dela = win32process.GetWindowThreadProcessId(frente)[0] if frente else eu
+                win32process.AttachThreadInput(eu, dela, True)
+                try:
+                    win32gui.BringWindowToTop(hwnd)
+                    win32gui.SetForegroundWindow(hwnd)
+                finally:
+                    win32process.AttachThreadInput(eu, dela, False)
+            else:
+                flags = win32con.SWP_NOMOVE | win32con.SWP_NOSIZE
+                win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0, flags)
+                win32gui.SetWindowPos(hwnd, win32con.HWND_NOTOPMOST, 0, 0, 0, 0, flags)
+                win32gui.SetForegroundWindow(hwnd)
         except Exception:
-            print("Aviso: não consegui trazer a janela para frente; clique nela uma vez.")
-    time.sleep(0.5)
+            pass
+        time.sleep(0.2)
+        if win32gui.GetForegroundWindow() == hwnd:
+            break
+    time.sleep(0.3)
 
 
 def listar_janelas():
