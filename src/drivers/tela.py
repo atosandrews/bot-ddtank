@@ -87,6 +87,60 @@ class DriverTela:
         oy = self.regiao["top"] if self.regiao else 0
         pyautogui.moveTo(ox + 5, oy + 5)
 
+    def janela_valida(self):
+        import win32gui
+        return bool(self.hwnd and win32gui.IsWindow(self.hwnd))
+
+    def preparar_verificacao(self):
+        """Ativa somente por HWND; nunca clica no centro para recuperar foco."""
+        import win32gui
+        if not self.janela_valida():
+            return False
+        if win32gui.GetForegroundWindow() != self.hwnd:
+            trazer_para_frente(self.hwnd)
+        if win32gui.GetForegroundWindow() != self.hwnd:
+            return False
+        self._atualizar_regiao()
+        return True
+
+    def _verificacao_pronta(self, regiao_esperada):
+        import win32gui
+        if not self.janela_valida() or win32gui.GetForegroundWindow() != self.hwnd:
+            return False
+        self._atualizar_regiao()
+        return self.regiao == regiao_esperada
+
+    def capturar_verificacao(self):
+        """Captura pixels novos em primeiro plano, inclusive no DriverConta."""
+        if not self.preparar_verificacao():
+            return None
+        regiao = dict(self.regiao)
+        frame = DriverTela.capturar(self)
+        return (frame, regiao) if self._verificacao_pronta(regiao) else None
+
+    def clicar_verificado(self, x, y, *, regiao_esperada):
+        """Aborta se foco, geometria ou janela sob o destino mudarem."""
+        import win32gui
+        if not self._verificacao_pronta(regiao_esperada):
+            return False
+        if not (0 <= x < self.regiao["width"] and 0 <= y < self.regiao["height"]):
+            return False
+        ponto = (self.regiao["left"] + int(x), self.regiao["top"] + int(y))
+
+        def alvo_correto():
+            return (self._verificacao_pronta(regiao_esperada)
+                    and win32gui.GetAncestor(win32gui.WindowFromPoint(ponto), 2) == self.hwnd)
+
+        if not alvo_correto():
+            return False
+        pyautogui.moveTo(*ponto, duration=0.08)
+        if not alvo_correto():
+            return False
+        pyautogui.click(*ponto)
+        # Remover hover antes da próxima leitura dos templates.
+        pyautogui.moveTo(self.regiao["left"] + 5, self.regiao["top"] + 5)
+        return True
+
     @classmethod
     def da_janela(cls, titulo_parcial):
         """Cria o driver já preso à janela cujo título contém o texto."""

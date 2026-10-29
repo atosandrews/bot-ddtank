@@ -207,13 +207,12 @@ class Grupo:
         print(f"{len(self.contas)} contas: principal + {len(self.convidadas)} convidada(s)", flush=True)
 
     def passo(self):
-        # Código de verificação (anti-bot) em qualquer conta: o bot não resolve. Para tudo,
-        # traz a janela para frente, apita e espera a pessoa digitar. Confere a cada 5 s.
+        # Verificação em qualquer conta suspende o grupo e usa o controlador serial.
         if time.time() - self.ultimo_codigo > 5:
             self.ultimo_codigo = time.time()
             for conta in self.contas:
                 if verificacao.tem_codigo(conta.driver.capturar()):
-                    verificacao.esperar_pessoa(conta.driver, conta.nome)
+                    verificacao.tratar(conta.driver, conta.nome)
                     return
 
         # Caminho rápido na batalha: só a janela da principal (print rápido + vez dela).
@@ -224,7 +223,7 @@ class Grupo:
                 principal.driver.ativar_com_clique()
             frame = principal.driver.capturar()
             if verificacao.tem_codigo(frame):
-                verificacao.esperar_pessoa(principal.driver, principal.nome)
+                verificacao.tratar(principal.driver, principal.nome)
                 return
             if ler_batalha(frame) is not None:
                 vistas = [(principal, frame, TELA_BATALHA)] + [(c, None, None) for c in self.convidadas]
@@ -649,7 +648,9 @@ class Grupo:
 
     def rodar(self):
         print("Grupo iniciado (Ctrl+C para parar; mouse no canto da tela também para)", flush=True)
+        sucesso = True
         try:
+            verificacao.preparar()
             while True:
                 self.passo()
                 time.sleep(0.3)
@@ -657,6 +658,9 @@ class Grupo:
             print("parado pelo usuário", flush=True)
         except pyautogui.FailSafeException:
             print("parado: mouse no canto da tela", flush=True)
+        except verificacao.ErroInfraestrutura as exc:
+            sucesso = False
+            print(f"parado: {exc}", flush=True)
         finally:
             # Soltar as teclas mesmo com o mouse no canto (a trava de segurança barraria).
             pyautogui.FAILSAFE = False
@@ -664,10 +668,11 @@ class Grupo:
                           config.TECLA_ANGULO_SOBE, config.TECLA_ANGULO_DESCE):
                 pyautogui.keyUp(tecla)
             pyautogui.FAILSAFE = True
+        return sucesso
 
 
 if __name__ == "__main__":
     import sys
     # python -m src.grupo [principal] [convidada ...]   (números das janelas; ver listar_janelas)
     numeros = [int(a) for a in sys.argv[1:]]
-    Grupo(numeros[0] if numeros else None, numeros[1:]).rodar()
+    sys.exit(0 if Grupo(numeros[0] if numeros else None, numeros[1:]).rodar() else 1)

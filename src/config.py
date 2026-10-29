@@ -1,6 +1,17 @@
 # Parte do título da janela do jogo. Deixe vazio para escolher na hora.
 TITULO_JANELA = "DDClássico"
 
+# Verificação automática: SDK local ddddocr, sem limite de tentativas por desafio.
+VERIFICACAO_LIMIAR_TITULO = 0.85
+VERIFICACAO_LIMIAR_OCR = 0.90  # heurística do modelo; não é probabilidade de acerto
+VERIFICACAO_LIMIAR_TECLAS = 0.90
+VERIFICACAO_MARGEM_TECLAS = 0.03
+VERIFICACAO_INTERVALO = 1.0
+VERIFICACAO_ESPERA_CLIQUE = 0.25
+VERIFICACAO_ESPERA_RESPOSTA = 2.5
+VERIFICACAO_DURACAO_DESAFIO = 30.0
+VERIFICACAO_SALVAR_DIAGNOSTICO = False
+
 # Confiança mínima (0 a 1) para considerar que um template foi encontrado.
 LIMIAR = 0.85
 

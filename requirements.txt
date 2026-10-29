@@ -3,3 +3,4 @@ mss
 pyautogui
 numpy
 pywin32
+-e ../ddddocr

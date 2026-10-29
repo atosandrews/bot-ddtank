@@ -44,8 +44,7 @@ class Bot:
         """Executa um ciclo. Retorna False quando o fluxo conhecido terminou."""
         frame = self.driver.capturar()
         if verificacao.tem_codigo(frame):
-            # Anti-bot do jogo: o bot não resolve. Para, avisa e espera a pessoa digitar.
-            verificacao.esperar_pessoa(self.driver, self.nome)
+            verificacao.tratar(self.driver, self.nome)
             return True
         tela = telas.identificar(frame, config.LIMIAR)
 
@@ -115,13 +114,18 @@ class Bot:
 
     def rodar(self):
         self.log("iniciado (Ctrl+C para parar; mouse no canto da tela também para)")
+        sucesso = True
         try:
+            verificacao.preparar()
             while self.passo():
                 pass
         except KeyboardInterrupt:
             self.log("parado pelo usuário")
         except pyautogui.FailSafeException:
             self.log("parado: mouse no canto da tela")
+        except verificacao.ErroInfraestrutura as exc:
+            sucesso = False
+            self.log(f"parado: {exc}")
         finally:
             # Nunca deixar uma tecla presa se o bot parar no meio de um tiro (mesmo com o
             # mouse no canto, que dispara a trava de segurança).
@@ -131,3 +135,4 @@ class Bot:
                 pyautogui.keyUp(tecla)
             pyautogui.FAILSAFE = True
         self.log("encerrado")
+        return sucesso

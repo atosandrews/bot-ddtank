@@ -16,6 +16,7 @@ Para parar: `Ctrl+C` no terminal, ou jogue o mouse num canto da tela.
 
 ## Ferramentas
 
+- `python tools/testar_verificacao.py docs/especificacao/imagens/38_codigo_verificacao.png`: diagnóstico offline do OCR e dos controles, sem clicar. Veja [verificação automática](docs/VERIFICACAO_OCR.md) para instalação, testes e limitações de reconhecimento.
 - `python tools/testar_prints.py`: testa o reconhecimento nos prints da especificação, sem o jogo.
 - `python tools/testar_batalha.py [print]`: mostra o que o bot lê da batalha e a força que usaria, sem apertar nada.
 - `python tools/diagnosticar.py`: tira um print do jogo e mostra qual tela o bot reconhece, sem clicar.
@@ -47,3 +48,13 @@ Para parar: `Ctrl+C` no terminal, ou jogue o mouse num canto da tela.
 - `tools/`: scripts auxiliares
 - `NOTAS.md`: contexto e progresso do projeto
 - `img/`: templates; `logs/`: screenshots de debug
+
+
+## Documentação local em português
+
+- [Verificação automática com OCR: implementação e resultados](docs/VERIFICACAO_OCR.md)
+- [Instruções para agentes](AGENTS.md)
+- [Contexto atual e arquitetura](docs/CONTEXTO.md)
+- [Ambiente e desenvolvimento](docs/DESENVOLVIMENTO.md)
+- [Testes e evidências](docs/TESTES.md)
+- [Catálogo compartilhado de skills](../docs/SKILLS.md)

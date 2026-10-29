@@ -28,4 +28,4 @@ if __name__ == "__main__":
     except RuntimeError as e:
         print(e)
         sys.exit(1)
-    Bot(driver, "bot1").rodar()
+    sys.exit(0 if Bot(driver, "bot1").rodar() else 1)
