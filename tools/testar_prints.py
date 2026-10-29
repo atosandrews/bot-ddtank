@@ -25,6 +25,7 @@ ESPERADO = {
     "22_pandora.webp": "BATALHA",
     "24_formigas_minha_vez_janela_real.png": "BATALHA",
     "25_clique_no_jogo_janela_real.png": "SEM_FOCO",
+    "39_sala_pos_instancia_janela_real.png": "SALA_SEM_INSTANCIA",
     # Recortes parciais (não há print da tela inteira): só confirmam o reconhecimento.
     "14_botoes_convide_troque_inicio.png": "SALA_PRONTA",
     "15_popup_lembrete.png": "LEMBRETE",

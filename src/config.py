@@ -91,7 +91,7 @@ REENVIAR_CONVITE = 15
 
 # Parar o bot quando a instância acabar (saiu da batalha depois do último estágio).
 # False = começar outra instância sozinho.
-PARAR_DEPOIS_DA_INSTANCIA = True
+PARAR_DEPOIS_DA_INSTANCIA = False
 ULTIMO_ESTAGIO = "PANDORA"
 
 # Andar: quanto tempo segurar a seta em cada passo e quantos passos tentar no máximo.

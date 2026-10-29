@@ -45,6 +45,13 @@ TELAS = [
         Clique(IMG / "botao_ok_instancia.png"),
     ]),
     Tela("SALA_SEM_INSTANCIA", IMG / "selecione_instancia.png", [Clique(IMG / "selecione_instancia.png")]),
+    # Ao voltar de uma instância o fundo do quadro muda (personagens em vez do mapa) e o
+    # template acima não casa; sem esta linha o bot clicaria Início sem instância escolhida.
+    # Só o texto, sem o cronômetro; o clique vai para o ícone logo abaixo.
+    Tela("SALA_SEM_INSTANCIA", IMG / "selecione_instancia_pos.png", [
+        Clique(IMG / "selecione_instancia_pos.png", deslocamento=(15, 105),
+               nome="ícone Selecione a instância (volta da instância)"),
+    ]),
     # O botão Início é animado, então o bot acha o Troque (parado) e clica ao lado dele.
     # Depois do Início pode aparecer o aviso de "lutar sozinho"; se aparecer, confirma.
     Tela("SALA_PRONTA", IMG / "troque.png", [
