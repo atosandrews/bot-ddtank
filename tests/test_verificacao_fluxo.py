@@ -275,3 +275,36 @@ def test_perda_de_foco_apos_primeiro_numero_limpa_e_recomeca():
     executar(d)
     assert d.confirmados == ["0011"]
     assert (200, 100) in d.cliques
+
+
+def test_diagnostico_salva_desafio_sem_candidato_uma_vez_e_o_envio(monkeypatch, tmp_path):
+    import json
+    from src import verificacao
+    monkeypatch.setattr(config, "VERIFICACAO_SALVAR_DIAGNOSTICO", True)
+    monkeypatch.setattr(verificacao, "PASTA_DIAGNOSTICO", tmp_path)
+
+    class VisaoComImagem(Visao):
+        def analisar(self, frame):
+            quadro = super().analisar(frame)
+            if quadro is not None:
+                quadro.codigo = np.zeros((4, 4, 3), np.uint8)
+            return quadro
+
+    class OcrHesitante(Ocr):
+        def reconhecer(self, imagem, limiar):
+            self.leituras += 1
+            self.ultimas_leituras = [{"texto": "0011", "confianca": np.float32(.5),
+                                      "modelo": "m", "variante": "v"}]
+            return [] if self.leituras <= 3 else super().reconhecer(imagem, limiar)
+
+    d, relogio = Driver(), Relogio()
+    r = resolver(d, ocr=OcrHesitante(), visao=VisaoComImagem(), dormir=relogio.dormir,
+                 relogio=relogio, log=lambda *a, **k: None, tela_conhecida=lambda f: f["fim"])
+    assert r.estado == "RESOLVIDO"
+    sem = sorted(tmp_path.glob("*_sem_candidato.json"))
+    assert len(sem) == 1  # três leituras vazias da mesma imagem, um arquivo
+    dados = json.loads(sem[0].read_text(encoding="utf-8"))
+    assert dados["candidato"] is None and dados["leituras"][0]["texto"] == "0011"
+    enviados = [p for p in tmp_path.glob("*.json") if "sem_candidato" not in p.name]
+    assert json.loads(enviados[0].read_text(encoding="utf-8"))["candidato"] == "0011"
+    assert len(list(tmp_path.glob("*.png"))) == 2

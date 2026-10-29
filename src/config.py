@@ -10,7 +10,7 @@ VERIFICACAO_INTERVALO = 1.0
 VERIFICACAO_ESPERA_CLIQUE = 0.25
 VERIFICACAO_ESPERA_RESPOSTA = 2.5
 VERIFICACAO_DURACAO_DESAFIO = 30.0
-VERIFICACAO_SALVAR_DIAGNOSTICO = False
+VERIFICACAO_SALVAR_DIAGNOSTICO = True  # grava recortes em logs/verificacao/ para calibrar o OCR
 
 # Confiança mínima (0 a 1) para considerar que um template foi encontrado.
 LIMIAR = 0.85

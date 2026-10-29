@@ -46,17 +46,26 @@ def _tela_conhecida(frame):
     return tela is not None and tela.nome != "SEM_FOCO"
 
 
-def _diagnostico(nome, quadro, candidato, tentativa):
+PASTA_DIAGNOSTICO = Path(__file__).resolve().parent.parent / "logs" / "verificacao"
+
+
+def _diagnostico(nome, quadro, candidato, tentativa, leituras=()):
+    """Grava recorte e metadados; candidato None registra um desafio sem código enviado."""
     if not config.VERIFICACAO_SALVAR_DIAGNOSTICO:
         return
-    pasta = Path(__file__).resolve().parent.parent / "logs" / "verificacao"
+    pasta = PASTA_DIAGNOSTICO
     pasta.mkdir(parents=True, exist_ok=True)
     identificador = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    cv2.imwrite(str(pasta / f"{identificador}.png"), quadro.codigo)
-    (pasta / f"{identificador}.json").write_text(json.dumps({
-        "conta": nome, "tentativa": tentativa, "candidato": candidato.texto,
-        "confianca_heuristica": candidato.confianca, "modelo": candidato.modelo,
-        "variante": candidato.variante, "desafio": quadro.identidade,
+    sufixo = "" if candidato is not None else "_sem_candidato"
+    cv2.imwrite(str(pasta / f"{identificador}{sufixo}.png"), quadro.codigo)
+    (pasta / f"{identificador}{sufixo}.json").write_text(json.dumps({
+        "conta": nome, "tentativa": tentativa,
+        "candidato": getattr(candidato, "texto", None),
+        "confianca_heuristica": getattr(candidato, "confianca", None),
+        "modelo": getattr(candidato, "modelo", None),
+        "variante": getattr(candidato, "variante", None), "desafio": quadro.identidade,
+        "leituras": [{**l, "confianca": float(l.get("confianca", 0.0))} for l in leituras],
+        "codigo_correto": None,  # preencher à mão para montar o conjunto rotulado
     }, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
@@ -107,6 +116,7 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
     enviado_neste_desafio = False
     ultimo_tempo = None
     ultimo_aviso = float("-inf")
+    salvo_sem_candidato = None
     log(f"[{nome}] verificação automática iniciada; Ctrl+C para interromper", flush=True)
     while True:
         captura = capturar()
@@ -167,6 +177,10 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
             candidatos = ocr.reconhecer(quadro.codigo, config.VERIFICACAO_LIMIAR_OCR)
             candidato = next((c for c in candidatos if c.texto not in rejeitados), None)
             if candidato is None:
+                if quadro.identidade != salvo_sem_candidato:
+                    # Uma vez por imagem: a recaptura de 1 s repetiria o mesmo arquivo.
+                    _diagnostico(nome, quadro, None, tentativas, getattr(ocr, "ultimas_leituras", ()))
+                    salvo_sem_candidato = quadro.identidade
                 if relogio() - ultimo_aviso >= 5:
                     log(f"[{nome}] sem candidato novo de quatro dígitos; recapturando", flush=True)
                     ultimo_aviso = relogio()
@@ -188,7 +202,8 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                                 tentativas += 1
                                 enviado_neste_desafio = True
                                 pendente = (candidato.texto, relogio()+config.VERIFICACAO_ESPERA_RESPOSTA)
-                                _diagnostico(nome, quadro, candidato, tentativas)
+                                _diagnostico(nome, quadro, candidato, tentativas,
+                                             getattr(ocr, "ultimas_leituras", ()))
                                 log(f"[{nome}] tentativa {tentativas}: {candidato.texto} "
                                     f"({candidato.modelo}/{candidato.variante}, "
                                     f"score={candidato.confianca:.3f}, "

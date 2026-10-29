@@ -61,7 +61,7 @@ Diagnóstico estritamente offline, sem importar drivers:
 .\.venv\Scripts\python.exe -B tools/testar_verificacao.py docs/especificacao/imagens/38_codigo_verificacao.png --salvar logs/verificacao_offline
 ```
 
-Saídas: 0 para quadro válido (e candidato elegível quando OCR habilitado), 1 para erro/quadro ausente e 2 para OCR sem candidato elegível. `--salvar` grava código e controles anotados na pasta indicada. Em automação, `VERIFICACAO_SALVAR_DIAGNOSTICO=True` grava recorte e metadados por tentativa em `logs/verificacao/`; o padrão é False. Logs de tentativas incluem conta, candidato, modelo, score e duração.
+Saídas: 0 para quadro válido (e candidato elegível quando OCR habilitado), 1 para erro/quadro ausente e 2 para OCR sem candidato elegível. `--salvar` grava código e controles anotados na pasta indicada. Em automação, `VERIFICACAO_SALVAR_DIAGNOSTICO` (ligado desde 2026-10-29) grava em `logs/verificacao/` o recorte e os metadados de cada código enviado e, uma vez por imagem, dos desafios sem candidato (`*_sem_candidato.*`), com todas as leituras do OCR e o campo `codigo_correto` para anotar à mão. Os arquivos podem conter o nome da conta. Logs de tentativas incluem conta, candidato, modelo, score e duração.
 
 ## Validação realizada e pendências
 
