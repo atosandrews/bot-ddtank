@@ -34,6 +34,9 @@ SEM_TELA_MAX = 10
 # Salva em logs/ um print antes de cada clique e outro depois do último (para depurar).
 SALVAR_PRINTS = True
 
+# Salva em logs/tiros/ um print anotado (JPEG) de cada tiro: eu, formigas, alvo e lado.
+SALVAR_PRINT_TIRO = True
+
 # ---------------- Batalha ----------------
 
 # Como jogar cada estágio. O estágio é reconhecido pelo quadro de missão ("Derrote ...").

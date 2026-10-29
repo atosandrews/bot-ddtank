@@ -11,6 +11,7 @@ import cv2
 
 from . import config, vision
 from .telas import IMG
+from .registro import imprimir
 from .verificacao_ocr import ErroInfraestrutura, obter_ocr
 from .verificacao_visao import QuadroInvalido, VisaoVerificacao
 
@@ -70,7 +71,7 @@ def _diagnostico(nome, quadro, candidato, tentativa, leituras=()):
 
 
 def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
-             relogio=time.monotonic, log=print, tela_conhecida=None):
+             relogio=time.monotonic, log=imprimir, tela_conhecida=None):
     """Repete enquanto há desafio; Ctrl+C e FailSafeException não são interceptados.
 
     RESOLVIDO descreve confirmação seguida de retorno observado ao jogo, não uma

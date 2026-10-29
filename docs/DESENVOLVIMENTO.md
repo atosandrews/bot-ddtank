@@ -51,6 +51,11 @@ Mouse/teclado são compartilhados. Controles incluem verificação de foco, inte
 
 ## Entrega e diagnóstico
 
+Arquivos de cada execução em `logs/` (fora do git):
+- `execucao_AAAAMMDD.txt`: cópia de tudo que o bot, o grupo e o captcha escrevem no terminal.
+- `tiros/AAAAMMDD_HHMMSS_tN_<lado>.jpg` (`SALVAR_PRINT_TIRO`): print anotado de cada tiro. O log tem a linha `tiro turno N:` com posição do personagem, `dx` das formigas, alvo, lado escolhido, lado lido pela agulha e se a seta foi apertada.
+- `verificacao/` (`VERIFICACAO_SALVAR_DIAGNOSTICO`): recortes do captcha; ver [VERIFICACAO_OCR.md](VERIFICACAO_OCR.md).
+
 Informe mudança, imagens, comandos, códigos de saída e pendências. Registre resolução, DPI/escala, contas, flags e se houve captura ou ação real. Compare template/screenshot antes de reduzir limiar; confira atualização da imagem e foco antes de alterar estratégia do grupo.
 
 Atualize os guias quando o comportamento mudar. Preserve [NOTAS.md](../NOTAS.md) como histórico e acrescente evidências datadas. Consulte o [catálogo de skills](SKILLS.md).

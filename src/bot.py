@@ -8,6 +8,7 @@ import pyautogui
 
 from . import config, telas, verificacao, vision
 from .batalha import Batalha
+from .registro import gravar_log
 
 LOGS = Path(__file__).resolve().parent.parent / "logs"
 
@@ -22,7 +23,9 @@ class Bot:
         self.batalha = Batalha(driver, self.log, self.salvar_debug)
 
     def log(self, msg):
-        print(f"[{datetime.now():%H:%M:%S}] [{self.nome}] [{self.estado}] {msg}", flush=True)
+        linha = f"[{datetime.now():%H:%M:%S}] [{self.nome}] [{self.estado}] {msg}"
+        print(linha, flush=True)
+        gravar_log(linha)
 
     def salvar_debug(self, frame, motivo):
         LOGS.mkdir(exist_ok=True)

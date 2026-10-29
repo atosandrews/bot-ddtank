@@ -23,12 +23,18 @@ import numpy as np
 import pyautogui
 
 from . import config, telas, verificacao, vision
+from .registro import gravar_log
 from .batalha import LIMIAR_PASS, PASS as PASS_BATALHA, Batalha, ler as ler_batalha
 from .drivers.conta import DriverConta, contas_abertas, esperar_clique_na_principal
 from .drivers.tela import ativar_dpi, trazer_para_frente
 from .telas import IMG
 
 LOGS = Path(__file__).resolve().parent.parent / "logs"
+
+
+def avisar(msg):
+    print(msg, flush=True)
+    gravar_log(f"[{datetime.now():%H:%M:%S}] {msg}")
 
 CONVIDE = IMG / "grupo_convide.png"
 ABA_AMIGOS = IMG / "grupo_aba_amigos.png"
@@ -95,7 +101,9 @@ class Conta:
         self.na_luta = False  # entrou na luta atual com a principal (estágio 2)
 
     def log(self, msg):
-        print(f"[{datetime.now():%H:%M:%S}] [{self.nome}] [{self.tela}] {msg}", flush=True)
+        linha = f"[{datetime.now():%H:%M:%S}] [{self.nome}] [{self.tela}] {msg}"
+        print(linha, flush=True)
+        gravar_log(linha)
 
     def salvar_debug(self, frame, motivo):
         LOGS.mkdir(exist_ok=True)
@@ -204,7 +212,7 @@ class Grupo:
         self.principal_jogou = False  # a principal já deu o 1º tiro nesta luta
         self.na_batalha = False  # a principal está na luta (caminho rápido)
         self.ultimo_codigo = 0.0  # última conferência do código de verificação
-        print(f"{len(self.contas)} contas: principal + {len(self.convidadas)} convidada(s)", flush=True)
+        avisar(f"{len(self.contas)} contas: principal + {len(self.convidadas)} convidada(s)")
 
     def passo(self):
         # Verificação em qualquer conta suspende o grupo e usa o controlador serial.
@@ -647,7 +655,7 @@ class Grupo:
                 time.sleep(0.3)
 
     def rodar(self):
-        print("Grupo iniciado (Ctrl+C para parar; mouse no canto da tela também para)", flush=True)
+        avisar("Grupo iniciado (Ctrl+C para parar; mouse no canto da tela também para)")
         sucesso = True
         try:
             verificacao.preparar()
@@ -655,12 +663,12 @@ class Grupo:
                 self.passo()
                 time.sleep(0.3)
         except KeyboardInterrupt:
-            print("parado pelo usuário", flush=True)
+            avisar("parado pelo usuário")
         except pyautogui.FailSafeException:
-            print("parado: mouse no canto da tela", flush=True)
+            avisar("parado: mouse no canto da tela")
         except verificacao.ErroInfraestrutura as exc:
             sucesso = False
-            print(f"parado: {exc}", flush=True)
+            avisar(f"parado: {exc}")
         finally:
             # Soltar as teclas mesmo com o mouse no canto (a trava de segurança barraria).
             pyautogui.FAILSAFE = False

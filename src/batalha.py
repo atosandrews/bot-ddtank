@@ -6,6 +6,8 @@ As estratégias de cada estágio ficam em config.ESTRATEGIAS.
 """
 import random
 import time
+from datetime import datetime
+from pathlib import Path
 from dataclasses import dataclass
 
 import cv2
@@ -257,6 +259,31 @@ def marcador(frame, ancora):
     return float(xs.mean() / (BARRA_X100 - BARRA_X0) * 100)
 
 
+PASTA_TIROS = Path(__file__).resolve().parent.parent / "logs" / "tiros"
+
+
+def _nome_lado(lado):
+    return {1: "direita", -1: "esquerda"}.get(lado, "indefinido")
+
+
+def anotar_tiro(frame, leitura, lado, alvo_dx, virado_lido):
+    """Cópia do print com eu (verde), formigas (vermelho), alvo e lado do tiro (amarelo)."""
+    img = frame.copy()
+    if leitura.eu:
+        cv2.circle(img, tuple(map(int, leitura.eu)), 14, (0, 255, 0), 2)
+    for p in leitura.inimigos:
+        cv2.circle(img, tuple(map(int, p)), 12, (0, 0, 255), 2)
+    if leitura.eu:
+        ex, ey = map(int, leitura.eu)
+        if alvo_dx is not None:
+            cv2.circle(img, (int(ex + alvo_dx), ey), 20, (0, 255, 255), 3)
+        cv2.arrowedLine(img, (ex, ey - 30), (ex + 60 * lado, ey - 30), (0, 255, 255), 3)
+    texto = f"tiro: {_nome_lado(lado)} | agulha: {_nome_lado(virado_lido)}"
+    cv2.putText(img, texto, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 4)
+    cv2.putText(img, texto, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+    return img
+
+
 class Batalha:
     def __init__(self, driver, log, salvar_debug, estrategias=None):
         self.driver = driver
@@ -267,6 +294,7 @@ class Batalha:
         self.estagio = None
         self.virado = None  # lado para onde o personagem está virado (1, -1 ou None)
         self.lado_alternado = 1  # 1 = direita, -1 = esquerda
+        self.alvo_dx = None  # distância em px até o alvo escolhido no turno (diagnóstico)
 
     def passo(self, frame):
         leitura = ler(frame)
@@ -293,6 +321,7 @@ class Batalha:
             self.log("não achei o triângulo da vez; posso estar confundindo eu com um aliado")
 
         distancia, colado = None, False
+        self.alvo_dx = None
         if estrategia["alvo"] in ("direita", "esquerda"):
             lado = 1 if estrategia["alvo"] == "direita" else -1
         elif estrategia["alvo"] == "dupla" and leitura.eu:
@@ -322,6 +351,7 @@ class Batalha:
                 lado_inimigos = [p for p in leitura.inimigos if (p[0] - ex) * lado > 0]
                 if lado_inimigos:
                     alvo = min(lado_inimigos, key=lambda p: abs(p[0] - ex))
+            self.alvo_dx = alvo[0] - ex
             distancia = abs(alvo[0] - ex) / config.PX_POR_DISTANCIA
             colado = abs(alvo[0] - ex) <= estrategia.get("colado_px", 0)
         elif leitura.eu and "forca_colado" in estrategia:
@@ -443,6 +473,24 @@ class Batalha:
         # Só a dupla na luta (2 contas): cada uma atira para um lado.
         return leitura, (-1 if ex <= parceiro[0] else 1)
 
+    def registrar_tiro(self, frame, leitura, lado, virado_lido, virar):
+        """Log e print anotado de cada tiro, para diagnosticar tiro no lado errado."""
+        ex = leitura.eu[0] if leitura.eu else None
+        formigas = sorted(int(p[0] - ex) for p in leitura.inimigos) if ex is not None else []
+        self.log(f"tiro turno {self.turno}: eu x={ex}, formigas dx={formigas}, "
+                 f"alvo dx={self.alvo_dx}, lado={_nome_lado(lado)}, "
+                 f"agulha={_nome_lado(virado_lido)}, último lado={_nome_lado(self.virado)}, "
+                 f"seta={'sim' if virar else 'não'}")
+        if not config.SALVAR_PRINT_TIRO:
+            return
+        try:
+            PASTA_TIROS.mkdir(parents=True, exist_ok=True)
+            arquivo = PASTA_TIROS / f"{datetime.now():%Y%m%d_%H%M%S}_t{self.turno}_{_nome_lado(lado)}.jpg"
+            img = anotar_tiro(frame, leitura, lado, self.alvo_dx, virado_lido)
+            cv2.imwrite(str(arquivo), img, [cv2.IMWRITE_JPEG_QUALITY, 80])
+        except (OSError, cv2.error) as exc:
+            self.log(f"não consegui salvar o print do tiro: {exc}")
+
     def jogar(self, leitura, estrategia, lado, distancia, colado=False):
         angulo = estrategia["angulo"]
         if colado:
@@ -459,7 +507,9 @@ class Batalha:
         # Uma batidinha na seta vira o personagem para o alvo. Só quando precisa: se ele já
         # está virado, a batidinha faz andar um pouco e pode mudar o ângulo.
         # A agulha do relógio mostra o lado; se não der para ver, usa o último lado virado.
-        virado = lado_virado(self.driver.capturar(), leitura.ancora)
+        frame = self.driver.capturar()
+        virado = lado_virado(frame, leitura.ancora)
+        self.registrar_tiro(frame, leitura, lado, virado, virar=(virado or self.virado) != lado)
         if virado is not None:
             self.virado = virado
         if self.virado != lado:
