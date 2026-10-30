@@ -18,6 +18,7 @@ ligado no meio da instância.
 import random
 import sys
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass
 
 import cv2
@@ -333,6 +334,33 @@ def unidade_do_numero(mascara, dezena):
     glifo = resto[:, cols.min():]
     vazias = np.where(~glifo.any(axis=0))[0]
     return glifo[:, :vazias[0]] if len(vazias) else glifo
+
+
+def soltar_teclas():
+    """Solta as teclas do tiro, do andar e do ângulo (passo interrompido no meio)."""
+    import pyautogui
+    falha = pyautogui.FAILSAFE
+    pyautogui.FAILSAFE = False
+    try:
+        for tecla in (config.TECLA_ATIRAR, config.TECLA_ESQUERDA, config.TECLA_DIREITA,
+                      config.TECLA_ANGULO_SOBE, config.TECLA_ANGULO_DESCE):
+            pyautogui.keyUp(tecla)
+    finally:
+        pyautogui.FAILSAFE = falha
+
+
+@contextmanager
+def tolerar_print_invalido(log):
+    """Print vazio ou cortado da janela (minimizada ou sumindo por um instante): o grupo caiu
+    com isso no 1º teste (30/10, cv2.error no ajuste do ângulo). Avisa, solta as teclas,
+    espera e deixa o próximo passo tentar de novo."""
+    try:
+        yield
+    except cv2.error as exc:
+        log(f"print inválido da janela (minimizada?): {str(exc).strip().splitlines()[-1][:90]}; "
+            f"tentando de novo")
+        soltar_teclas()
+        time.sleep(1.0)
 
 
 class BatalhaPintinho(Batalha):
@@ -675,6 +703,11 @@ class BotPintinho(Bot):
         self.cartas_viradas = 0
 
     def passo(self):
+        with tolerar_print_invalido(self.log):
+            return self._passo()
+        return True
+
+    def _passo(self):
         frame = self.driver.capturar()
         if verificacao.tem_codigo(frame):
             verificacao.tratar(self.driver, self.nome)

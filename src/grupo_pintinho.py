@@ -90,7 +90,7 @@ class GrupoPintinho(Grupo):
         self.cartas = {c.nome: 0 for c in self.contas}  # cartas viradas na tela atual
 
     def passo(self):
-        with modo_pintinho():
+        with modo_pintinho(), pt.tolerar_print_invalido(avisar):
             if self.virar_cartas():
                 return
             super().passo()

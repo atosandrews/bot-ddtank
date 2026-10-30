@@ -3,6 +3,7 @@ do que src/grupo.py usa do Formigueiro. Prints em tests/imagens/pintinho/ (grava
 from pathlib import Path
 
 import cv2
+import numpy as np
 import pytest
 
 from src import batalha, config, grupo, telas
@@ -72,3 +73,16 @@ def test_so_convida_antes_do_estagio_4(monkeypatch, sala, ultimo_jogado, esperad
         assert config.CONVIDAR_SO_NO_ESTAGIO_2  # volta ao normal depois do caminho do grupo
     assert chamadas == esperado
     assert g.convidar_direto == (esperado == ["sozinha"])
+
+
+def test_print_invalido_nao_derruba_o_grupo(monkeypatch):
+    # 1º teste do grupo (30/10): cv2.error com a janela da principal sem imagem derrubou o bot.
+    g = gp.GrupoPintinho.__new__(gp.GrupoPintinho)
+    monkeypatch.setattr(g, "virar_cartas", lambda: False)
+    monkeypatch.setattr(grupo.Grupo, "passo", lambda self: cv2.cvtColor(np.zeros((0, 0, 3), np.uint8), cv2.COLOR_BGR2HSV))
+    monkeypatch.setattr(pt.time, "sleep", lambda s: None)
+    soltas = []
+    monkeypatch.setattr(pt, "soltar_teclas", lambda: soltas.append(True))
+    g.passo()  # não levanta
+    assert soltas == [True]
+    assert grupo.telas is telas  # a troca do Pintinho foi desfeita mesmo com o erro
