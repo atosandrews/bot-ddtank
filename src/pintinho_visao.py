@@ -210,12 +210,8 @@ def ler_vento(frame, ancora):
     return lado * (int(lidos[0]) + int(lidos[1]) / 10)
 
 
-def pontos_minimapa(frame, ancora):
-    """Pontos do minimapa em pixels da tela: (x meu ou None, [(x, y) vermelhos], [(x, y) verdes]).
-
-    Vermelho = inimigo; verde-amarelo = a gaiola do estágio 4. None sem o minimapa.
-    A faixa de cima (contador e botão vermelho de sair) fica de fora.
-    """
+def _ler_minimapa(frame, ancora):
+    """(x meu, y meu, vermelhos, verdes) em pixels da tela, ou None sem o minimapa."""
     busca, ox, oy = _regiao(frame, ancora, BUSCA_ROTULO)
     pos, nota = vision.procurar(ROTULO_MINIMAPA, busca) if busca.size else (None, 0)
     if pos is None or nota < 0.8:
@@ -228,6 +224,11 @@ def pontos_minimapa(frame, ancora):
     eu = None
     if azul.sum() >= 6:
         eu = int(np.median(np.where(azul)[1])) + mx
+    eu_y = None
+    k, _, stats, centros = cv2.connectedComponentsWithStats(azul.astype(np.uint8))
+    if k > 1:  # o ponto (a maior mancha azul; em cima dele há uma setinha azul menor)
+        maior = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
+        eu_y = int(round(centros[maior][1])) + my
 
     def pontos(mascara):
         k, _, stats, centros = cv2.connectedComponentsWithStats(mascara.astype(np.uint8))
@@ -236,7 +237,25 @@ def pontos_minimapa(frame, ancora):
 
     vermelhos = pontos((r > 190) & (g < 80) & (b < 80))
     verdes = pontos((b < 30) & (abs(g - 204) < 14) & (abs(r - 153) < 14))  # ponto (153, 204, 0)
-    return eu, vermelhos, verdes
+    return eu, eu_y, vermelhos, verdes
+
+
+def pontos_minimapa(frame, ancora):
+    """Pontos do minimapa em pixels da tela: (x meu ou None, [(x, y) vermelhos], [(x, y) verdes]).
+
+    Vermelho = inimigo; verde-amarelo = a gaiola do estágio 4. None sem o minimapa.
+    A faixa de cima (contador e botão vermelho de sair) fica de fora.
+    """
+    lido = _ler_minimapa(frame, ancora)
+    return None if lido is None else (lido[0], lido[2], lido[3])
+
+
+def posicao_no_minimapa(frame, ancora):
+    """((x, y) meu, [(x, y) vermelhos]) em pixels da tela, ou None. O y é o centro do ponto."""
+    lido = _ler_minimapa(frame, ancora)
+    if lido is None or lido[0] is None or lido[1] is None:
+        return None
+    return (lido[0], lido[1]), lido[2]
 
 
 def ler_minimapa(frame, ancora):

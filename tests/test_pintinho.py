@@ -110,23 +110,6 @@ def test_fora_das_cartas_e_da_batalha_nada_e_lido():
     assert batalha.ler(frame) is None and pv.tela_de_cartas(frame) is None
 
 
-def test_plano_da_galinha_de_baixo_com_vento_contra():
-    frame = img("e2_0de3_vento-1.2")
-    tiro = plano(2, frame, batalha.ler(frame), 0)
-    assert (tiro.lado, tiro.angulo, tiro.andar, tiro.voar, tiro.galinha) == (1, 25, False, False, 0)
-    # Padrão do usuário 25/65 (do pixel de trás); vento −1,2 contra soma 0,4 × 1,2.
-    assert tiro.forca == pytest.approx(65 + 0.4 * 1.2)
-    assert "distância 13.2, pixel de trás" in tiro.motivo
-
-
-def test_plano_da_galinha_de_cima_com_vento_a_favor():
-    frame = img("e2_vento+2.7")
-    tiro = plano(2, frame, batalha.ler(frame), 2)
-    assert (tiro.lado, tiro.angulo, tiro.galinha) == (1, 45, 2) and "de cima" in tiro.motivo
-    # 45/75; o vento a favor tira 0,17 × 2,7.
-    assert tiro.forca == pytest.approx(75 - 0.17 * 2.7) and "mais à frente" in tiro.motivo
-
-
 def test_plano_do_estagio_4_burrinho_e_depois_a_gaiola():
     vivo, morto = img("e4"), img("e4_escudo_caiu")
     primeiro = plano(4, vivo, batalha.ler(vivo), 0)
@@ -248,31 +231,6 @@ def test_voar_aperta_f_e_nao_usa_itens(monkeypatch):
     assert b.disparar(batalha.ler(frame), Tiro(-1, 41, 62, "Grange", voar=True))
     assert forcas == [62] and "f" in b.driver.teclas
     assert "3" not in b.driver.teclas and "9" not in b.driver.teclas
-
-
-def test_galinha_sem_angulo_exato_passa_a_vez_em_vez_de_atirar(monkeypatch):
-    frame = img("e2_1de3_vento-2.5")
-    b = batalha_de_teste(frame)
-    forcas = preparar_disparo(monkeypatch, b, [True] * 5)
-    monkeypatch.setattr(b, "angulo_exato", lambda ancora, angulo: False)
-    passou = []
-    monkeypatch.setattr(b, "passar_a_vez", lambda motivo: passou.append(motivo))
-    b.estagio = 2
-    b.passo(frame)
-    assert forcas == [] and len(passou) == 1
-    assert b.galinha_mirada is None and b.tiros_no_estagio == 0  # passar não conta como erro
-
-
-def test_galinha_acertada_segue_para_a_proxima(monkeypatch):
-    frame = img("e2_1de3_vento-2.5")
-    b = batalha_de_teste(frame)
-    tiros = []
-    monkeypatch.setattr(b, "disparar", lambda leitura, tiro: tiros.append(tiro) or True)
-    b.ler_estagio(frame, batalha.ler(frame))
-    b.galinha_mirada = 0  # o tiro anterior foi na de baixo e o contador agora mostra 1/3
-    b.passo(frame)
-    assert tiros[0].galinha == 1 and tiros[0].angulo == 25
-    assert tiros[0].forca == pytest.approx(100)  # 100 + vento contra, cortado no máximo
 
 
 def test_galinha_errada_mira_nela_de_novo(monkeypatch):
@@ -415,21 +373,6 @@ def test_recuo_anda_ate_o_minimapa_mostrar_os_pixels(monkeypatch):
     assert b.driver.teclas == ["right"] * 4  # 101, 103, 106, 108: parou ao passar de 7
 
 
-def test_padrao_das_galinhas_e_mais_5_so_no_pixel_de_tras_com_vento_forte():
-    tras = img("e2_1de3_vento-2.5")  # nasceu no pixel de trás (o da gravação)
-    leitura = batalha.ler(tras)
-    baixo = img("e2_0de3_vento-1.2")  # as 3 vivas, no pixel de trás
-    lb = batalha.ler(baixo)
-    assert plano(2, baixo, lb, 0, mortas=0, vento=-3.0).forca == pytest.approx(65 + 5)
-    assert plano(2, baixo, lb, 0, mortas=0, vento=-2.9).forca == pytest.approx(65 + 0.4 * 2.9)
-    assert plano(2, baixo, lb, 0, mortas=0, vento=3.0).forca == pytest.approx(65 - 0.17 * 3.0)
-    assert plano(2, tras, leitura, 1, mortas=1, vento=-3.0).forca == pytest.approx(100)  # máximo
-    frente = img("e2_vento+2.7")  # volta 2: nasceu 9 px mais à frente no minimapa
-    tiro = plano(2, frente, batalha.ler(frente), 2, mortas=2, vento=-3.5)
-    assert "+5" not in tiro.motivo and tiro.forca == pytest.approx(75 + 0.4 * 3.5)
-    assert plano(2, frente, batalha.ler(frente), 2, mortas=2, vento=0.0).forca == pytest.approx(75)
-
-
 @pytest.mark.parametrize("nome", ["e1", "e3", "e4", "e2_0de3_vento-1.2"])
 def test_relogio_le_igual_ou_melhor_que_o_do_bot(nome):
     frame = img(nome)
@@ -481,17 +424,62 @@ def test_andar_ate_o_angulo_respeita_o_tempo_da_vez(monkeypatch):
     assert b.driver.teclas.count("right") == 1  # um passo e parou: passou de 7 s da vez
 
 
-@pytest.mark.parametrize("posicoes, teclas", [
-    ([118, 115, 112, 110], ["left"] * 3),   # nasceu 9 px à frente: anda para trás até 1 px
-    ([109, 109], []),                             # já no pixel de trás: não anda
-    ([106, 109], ["right"]),                 # passou do ponto (mais atrás): volta
+@pytest.mark.parametrize("nome, mortas, angulo, forca", [
+    # Volta 1 da gravação (vento contra): o usuário matou com 62 / 63 / 71.
+    ("e2_0de3_vento-1.2", 0, 30, 62.0 + 1.8),
+    ("e2_1de3_vento-2.5", 1, 45, 66.2 - 1.1),
+    # Volta 2 (nasceu 9 px mais perto, vento a favor 2,7): o usuário matou a de cima com 68.
+    ("e2_vento+2.7", 2, 55, 66.9 + 1.5),
 ])
-def test_estagio_2_vai_ao_pixel_de_tras(monkeypatch, posicoes, teclas):
-    # Galinha de baixo em x=223 no minimapa; no pixel de trás eu fico 114 px antes (x=109).
+def test_estagio_2_calcula_a_forca_pela_distancia_altura_e_vento(nome, mortas, angulo, forca):
+    frame = img(nome)
+    tiro = plano(2, frame, batalha.ler(frame), mortas, mortas=mortas)
+    assert (tiro.lado, tiro.angulo, tiro.galinha) == (1, angulo, mortas)
+    assert tiro.forca == pytest.approx(forca, abs=0.2) and "pelo minimapa" in tiro.motivo
+    dx, dy, a_favor = tiro.calculo
+    assert 12 < dx < 14.2 and dy >= 0.5
+
+
+def test_estagio_2_sem_minimapa_usa_o_lugar_da_gravacao(monkeypatch):
+    frame = img("e2_0de3_vento-1.2")
+    monkeypatch.setattr(pv, "posicao_no_minimapa", lambda f, a: None)
+    tiro = plano(2, frame, batalha.ler(frame), 0, mortas=0, vento=0.0)
+    assert "lugar da gravação" in tiro.motivo
+    assert tiro.calculo[0] == pytest.approx(114 * pv.DISTANCIA_POR_PX_MINIMAPA)
+
+
+def test_galinha_com_angulo_travado_recalcula_a_forca(monkeypatch):
     frame = img("e2_0de3_vento-1.2")
     b = batalha_de_teste(frame)
-    xs = iter(posicoes)
-    monkeypatch.setattr(pv, "pontos_minimapa",
-                        lambda f, a: (next(xs, posicoes[-1]), [(223, 80), (225, 55), (230, 34)], []))
-    b.ir_ao_pixel_de_tras(batalha.ler(frame).ancora, 0)
-    assert b.driver.teclas == teclas
+    forcas = preparar_disparo(monkeypatch, b, [False] * 5)  # o 30 não dá: o relógio fica em 35
+    monkeypatch.setattr(pintinho, "ler_relogio", lambda f, a: (35, True))
+    tiro = plano(2, frame, batalha.ler(frame), 0, mortas=0, vento=0.0)
+    assert b.disparar(batalha.ler(frame), tiro)
+    dx, dy, a_favor = tiro.calculo
+    esperado = pintinho.prever_forca(35, a_favor, dx, dy) + pintinho.GALINHA_AJUSTE[0]
+    assert forcas == [pytest.approx(esperado)]
+
+
+def test_galinha_sem_ler_o_relogio_passa_a_vez(monkeypatch):
+    frame = img("e2_0de3_vento-1.2")
+    b = batalha_de_teste(frame)
+    forcas = preparar_disparo(monkeypatch, b, [True] * 5)
+    monkeypatch.setattr(pintinho, "ler_relogio", lambda f, a: (None, False))
+    passou = []
+    monkeypatch.setattr(b, "passar_a_vez", lambda motivo: passou.append(motivo))
+    b.estagio = 2
+    b.passo(frame)
+    assert forcas == [] and len(passou) == 1
+    assert b.galinha_mirada is None and b.tiros_no_estagio == 0  # passar não conta como tiro
+
+
+def test_galinha_acertada_segue_para_a_proxima(monkeypatch):
+    frame = img("e2_1de3_vento-2.5")
+    b = batalha_de_teste(frame)
+    tiros = []
+    monkeypatch.setattr(b, "disparar", lambda leitura, tiro: tiros.append(tiro) or True)
+    b.ler_estagio(frame, batalha.ler(frame))
+    b.galinha_mirada = 0  # o tiro anterior foi na de baixo e o contador agora mostra 1/3
+    b.passo(frame)
+    assert tiros[0].galinha == 1 and tiros[0].angulo == 45
+

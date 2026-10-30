@@ -206,6 +206,21 @@ grupo pelas do Pintinho e devolve depois.
   (±1 px). As regras do vento continuam (contra +0,4/unidade, a favor −0,17, +5 com vento de 3
   ou mais para a esquerda); força máxima 100.
 
+## Estágio 2 calculado (30/10, depois do 10º teste)
+
+No pixel de trás o ângulo não desce de 30 (tábua inclinada) e o 25 pedido não dava. Pedido do
+usuário: nasça onde nascer, **calcular a força sozinho** pela distância, pela altura e pelo
+vento. Pesquisa: o pacote [ddtcurve](https://pypi.org/project/ddtcurve) (PyPI) traz um modelo
+de trajetória do DDTank (gravidade, vento, resistência do ar) com constantes calibradas.
+Portado sem scipy em [src/pintinho_fisica.py](../src/pintinho_fisica.py): igual ao original
+em 316 casos; com altura 0 fica a 1–3 das tabelas da moldura.
+- Distância e altura de cada galinha vêm do minimapa (meu ponto azul e o vermelho dela;
+  1 px ≈ 0,116 da régua). Ângulos 30 / 45 / 55. Correção por galinha (mediana dos tiros que
+  mataram): +1,8 / −1,1 / +1,5.
+- Se o chão não deixar chegar no ângulo, a força é **recalculada com o ângulo do relógio**;
+  sem ler o relógio, passa a vez. Não anda mais até um pixel fixo.
+- Contra os tiros que mataram na gravação, o modelo errou −3…+2 (um caso +6).
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha
