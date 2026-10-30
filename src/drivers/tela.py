@@ -121,8 +121,7 @@ class DriverTela:
     def estacionar_mouse(self, x, y):
         """Põe o mouse em (x, y) da janela sem clicar (só com o jogo em primeiro plano).
 
-        No captcha o mouse fica no centro da roda: perto das teclas ela gira mais devagar e,
-        longe de cima dos números, eles não somem.
+        No captcha o mouse espera fora do teclado: com ele dentro da roda os botões somem.
         """
         import win32gui
         if not self.janela_valida() or win32gui.GetForegroundWindow() != self.hwnd:

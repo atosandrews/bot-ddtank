@@ -194,5 +194,10 @@
     },
     "mean_min": 0.6,
     "margin_min": 0.15
-  }
+  },
+  "rest": [
+    80,
+    10
+  ],
+  "_rest": "Onde o mouse espera no captcha: barra do título, fora do teclado. Com o mouse dentro da roda (inclusive no centro) os botões somem (run de 29/10: 0 botões soltos)."
 }

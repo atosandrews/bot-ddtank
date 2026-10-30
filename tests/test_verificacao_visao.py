@@ -108,3 +108,14 @@ def test_roda_concorda_com_o_recorte_exato_na_referencia(frame):
     kx, ky, kw, kh = v.perfil["keyboard"]
     roda = v.teclas_pela_roda(frame[ky:ky + kh, kx:kx + kw], (kx, ky))
     assert all(np.hypot(*np.subtract(exato[d], roda[d])) <= 4 for d in "0123456789")
+
+
+def test_segundo_captcha_real_com_roda_girada():
+    # Print do usuário (29/10, 2º): 5 e 4 em cima, 9 e 0 embaixo e grandes.
+    esperado = {"7": (960, 511), "6": (986, 455), "5": (1039, 425), "4": (1101, 432),
+                "3": (1146, 474), "2": (1158, 535), "1": (1132, 591), "0": (1079, 621),
+                "9": (1017, 614), "8": (972, 572)}
+    q = VisaoVerificacao().analisar(cv2.imread(str(RODA_GIRADA.with_name("captcha_roda_girada_2.webp"))))
+    for digito, (x, y) in esperado.items():
+        assert abs(q.teclas[digito][0] - x) <= 4 and abs(q.teclas[digito][1] - y) <= 4, digito
+    assert q.repouso is not None and q.repouso[1] < q.centro_roda[1] - 100  # acima do teclado

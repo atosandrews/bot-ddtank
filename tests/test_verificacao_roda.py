@@ -14,6 +14,7 @@ from src.verificacao_ocr import Candidato
 from src.verificacao_visao import VisaoVerificacao
 
 CENTRO, RAIO = (500, 300), 100
+REPOUSO = (300, 150)  # barra do título, fora do teclado
 
 
 class Relogio:
@@ -81,7 +82,7 @@ class Visao:
             identidade="A", origem=(0, 0), codigo=np.zeros((4, 4, 3)), tempo=np.zeros(1),
             teclas={d: tuple(int(round(v)) for v in posicao(d, a)) for d in "0123456789"},
             confirmar=(100, 100), resetar=(200, 100), ocupados=len(frame["entrada"]),
-            centro_roda=CENTRO, fase=a % 36)
+            centro_roda=CENTRO, fase=a % 36, repouso=REPOUSO)
 
     def fase(self, frame, origem):
         return frame["angulo"] % 36
@@ -139,9 +140,10 @@ def test_roda_rapida_demais_nao_e_clicada(monkeypatch):
     assert d.entrada == "" and any("rápida demais" in l for l in logs)
 
 
-def test_mouse_fica_no_centro_da_roda():
+def test_mouse_espera_fora_do_teclado():
+    # Run de 29/10: com o mouse no centro da roda os botões sumiram (0 botões soltos).
     relogio, logs = Relogio(), []
     d = Driver(relogio, velocidade=0)
     executar(d, relogio, logs)
-    assert d.estacionado and set(d.estacionado) == {CENTRO}
-    assert all(c[2] == CENTRO for c in d.cliques)  # depois de cada clique volta ao centro
+    assert d.estacionado and set(d.estacionado) == {REPOUSO}
+    assert all(c[2] == REPOUSO for c in d.cliques)  # depois de cada clique volta para fora

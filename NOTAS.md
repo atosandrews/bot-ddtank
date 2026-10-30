@@ -352,3 +352,13 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
   o número é localizado no print mais recente e adiantado pelo giro medido entre dois prints
   (`VERIFICACAO_LATENCIA_CLIQUE`); acima de `VERIFICACAO_GIRO_MAX` °/s não clica. O log
   mostra "roda +N°/s" a cada número, para calibrar com a próxima run.
+
+## 2026-10-29 — run com o captcha: mouse no centro escondia os botões
+- Log: "Teclado não reconhecido (0 botões soltos)", depois "Roda ambígua" e "Botões fora do
+  círculo": com o mouse no centro da roda os botões somem/clareiam. O print do usuário (mouse
+  fora) é lido certo (10 de 10). Agora o mouse espera na barra do título (`perfil.json` →
+  `rest`), fora do teclado. A previsão do giro compensa a roda mais rápida.
+- OCR desse captcha (6418: 6 e 8 ocos, 1 preto): só o modelo beta lê 6418 (0,97–0,98); o
+  padrão lê "61" e a leitura por cores perde o 1 preto. Sem 2 fontes, não envia. Camada preta
+  testada de novo (dá "4136", errado) e desfeita. Precisa de capturas reais sem compressão
+  (`logs/verificacao/`).

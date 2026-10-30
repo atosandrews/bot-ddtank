@@ -30,6 +30,7 @@ class Quadro:
     ocupados: int
     centro_roda: tuple = None  # centro do círculo dos botões, em coordenadas da janela
     fase: float = None  # ângulo de partida da roda (graus, módulo 36) neste print
+    repouso: tuple = None  # onde o mouse espera, fora do teclado (coordenadas da janela)
 
 
 class VisaoVerificacao:
@@ -228,4 +229,5 @@ class VisaoVerificacao:
             fase = None
         return Quadro((ox, oy), codigo, self._recortar(popup, self.perfil["timer"]).copy(),
                       identidade, teclas, confirmar, resetar, ocupados,
-                      (ox + kx + cx, oy + ky + cy), fase)
+                      (ox + kx + cx, oy + ky + cy), fase,
+                      (ox + self.perfil["rest"][0], oy + self.perfil["rest"][1]))

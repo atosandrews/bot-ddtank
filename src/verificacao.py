@@ -85,11 +85,12 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         if not callable(getattr(driver, metodo, None)):
             raise ErroInfraestrutura(f"Driver sem suporte a verificação: {metodo}")
 
-    centro = None  # centro da roda: onde o mouse espera (perto das teclas, fora dos números)
+    # Onde o mouse espera: fora do teclado. Dentro da roda (até no centro) os botões somem.
+    repouso = None
 
     def estacionar():
-        if centro is not None and callable(getattr(driver, "estacionar_mouse", None)):
-            driver.estacionar_mouse(*centro)
+        if repouso is not None and callable(getattr(driver, "estacionar_mouse", None)):
+            driver.estacionar_mouse(*repouso)
 
     def capturar():
         if not driver.janela_valida():
@@ -137,8 +138,8 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                     adiantar = velocidade * (t2 - t1 + config.VERIFICACAO_LATENCIA_CLIQUE)
                     destino = visao.girar(atual.centro_roda, destino, adiantar)
                     log(f"[{nome}] roda {velocidade:+.0f}°/s; clicando {digito}", flush=True)
-        if centro is not None:
-            return driver.clicar_verificado(*destino, regiao_esperada=regiao, estacionar=centro)
+        if repouso is not None:
+            return driver.clicar_verificado(*destino, regiao_esperada=regiao, estacionar=repouso)
         return driver.clicar_verificado(*destino, regiao_esperada=regiao)
 
     identidade = None
@@ -162,7 +163,7 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         try:
             quadro = visao.analisar(frame)
             if quadro is not None:
-                centro = getattr(quadro, "centro_roda", None) or centro
+                repouso = getattr(quadro, "repouso", None) or repouso
             if quadro is None:
                 if identidade is not None and relogio() >= prazo:
                     expirado = True
