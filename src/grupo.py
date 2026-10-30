@@ -387,6 +387,19 @@ class Grupo:
         else:
             principal.log(f"{prontas} de {len(self.convidadas)} convidada(s) pronta(s)")
 
+    def resolver_codigos(self):
+        """Antes de começar uma volta: resolve o captcha de qualquer conta (pedido do usuário).
+
+        Janela coberta não desenha: cada conta é trazida para frente antes do print.
+        True se havia algum captcha (o chamador confere de novo no próximo passo).
+        """
+        houve = False
+        for conta in self.contas:
+            if verificacao.tem_codigo(self.olhar(conta)):
+                verificacao.tratar(conta.driver, conta.nome)
+                houve = True
+        return houve
+
     def dar_pronto_na_sala(self, c, frame=None):
         """Numa visita só: espera a sala da convidada, clica em Pronto e confere o 'Cancele'.
 
@@ -463,14 +476,14 @@ class Grupo:
         """Antes do estágio 1: a dona da sala expulsa as convidadas (X do cartão) e inicia
         sozinha, confirmando o aviso de lutar sozinha."""
         if not self.convidadas_no_cais:
-            # Pedido do usuário: cada convidada sai da sala (Sair) e espera no Cais.
+            # Nova volta: a principal expulsa as convidadas pelo X (pedido do usuário, 30/10),
+            # sem trocar para as janelas delas. Na próxima sala elas aceitam o convite de novo.
             for c in self.convidadas:
-                self.levar_ao_cais(c)
                 c.aceitou_nesta_volta = False
                 c.pronto_sala = False
                 c.clicou_pronto = 0
             self.convidadas_no_cais = True
-        # Reserva: se alguma continuou na sala, a dona expulsa pelo X do cartão.
+        # A dona da sala expulsa as convidadas pelo X do cartão de cada uma.
         frame = self.olhar(principal)
         outros = self.xis_dos_cartoes(frame)[1:]  # o 1º (em cima à esquerda) é o dela
         if outros:
@@ -491,6 +504,8 @@ class Grupo:
             principal.log("ainda tem convidada na sala; esperando ela sair")
             return
         if tela.cliques:
+            if tela.nome == "SALA_PRONTA" and self.resolver_codigos():
+                return  # havia captcha: confere de novo antes de começar
             principal.log("estágio 1: indo sozinha")
             principal.fazer_cliques(tela, frame)  # Início e, se aparecer, OK do Lembrete
             time.sleep(random.uniform(*config.ESPERA_TRANSICAO))
@@ -533,6 +548,8 @@ class Grupo:
         # congelada mostrando a sala, então não dá para confiar no print antigo.
         em_batalha = {c for c, _, t in vistas if t is not None and t.batalha}
         for conta in self.convidadas:
+            if not config.CONFIAR_CONVIDADAS:
+                break  # a principal mata a Pandora no 1º turno: não troca de janela na luta
             if conta.confiou or not (conta.na_luta or conta in em_batalha):
                 continue  # convidada fora da luta (ex.: estágio 1, a principal vai sozinha)
             if not conta.driver.ativar_com_clique():

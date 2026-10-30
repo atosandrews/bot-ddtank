@@ -396,3 +396,14 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
   "SAIR"; o certo é clicar na porta, 27 px acima (`SAIR_PORTA`, informado pelo usuário).
 - Ajuste pedido pelo usuário: o mouse espera por dentro da roda, 75 px acima do centro (`rest`).
   Os botões passam a ~25–30 px dele (roda mais lenta) e nunca por cima, em qualquer rotação.
+
+## 2026-10-30 00:24 — ciclo jogado pelo usuário (logs/gravacao_jogada/, com cliques e teclas)
+Comparado com o bot e confirmado pelo usuário:
+- Pronto das convidadas continua necessário (uma visita por convidada, como já fazia).
+- Pandora: a principal mata no 1º turno; as convidadas não ligam o Confiar e o bot não troca
+  de janela durante a luta (`CONFIAR_CONVIDADAS = False`).
+- Depois da Pandora a principal expulsa as convidadas pelo X do cartão, sem visitar as janelas
+  delas (a ida de cada uma ao Cais pela porta Sair saiu desta etapa).
+- Antes de recomeçar o estágio 1, o bot confere e resolve os captchas de todas as contas
+  (`resolver_codigos`).
+- Baú de recompensa: o usuário preferiu deixar como estava (sem clique).

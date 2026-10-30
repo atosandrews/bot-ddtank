@@ -81,6 +81,9 @@ SO_PRINCIPAL_JOGA = True
 # True: o estágio 1 a principal faz sozinha (padrão de uma conta); só para o estágio 2
 # (Pandora) ela convida as outras, que ficam no Confiar. Depois da Pandora elas saem da sala.
 CONVIDAR_SO_NO_ESTAGIO_2 = True
+# False: na Pandora as convidadas não ligam o Confiar; a principal a mata no 1º turno e o bot
+# não troca de janela durante a luta (usuário, 30/10). True: visita cada uma para o Confiar.
+CONFIAR_CONVIDADAS = False
 # Estratégia da principal nesse modo: anda até ficar colada nas outras contas (as formigas
 # vêm todas juntas), atira na formiga mais perto, sempre força 10 e tecla 9.
 ESTRATEGIAS_SO_PRINCIPAL = {

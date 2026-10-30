@@ -129,25 +129,44 @@ def test_no_lobby_nunca_clica_em_sair(ambiente):
     assert j.cliques == []
 
 
-def test_antes_do_estagio_1_convidadas_saem_da_sala_e_voltam_a_esperar_convite(ambiente, monkeypatch):
-    janelas = []
-    for _ in range(3):
-        j = Janela("c", [frame("SALA_PRONTA", **{SAIR_SALA.name: (1400, 770)})])
-        j.ao_clicar = lambda janela, pos: setattr(janela, "telas", [frame("CAIS_EXPEDICAO")])
-        janelas.append(j)
+def preparar_volta(monkeypatch, ambiente, xis, codigo_em=None):
+    janelas = [Janela("c", [frame("SALA_PRONTA")]) for _ in range(3)]
     convidadas = [conta(f"conta{i}", j) for i, j in zip((2, 3, 4), janelas)]
     for c in convidadas:
         c.aceitou_nesta_volta, c.pronto_sala = True, True
     g = montar(convidadas, frame("SALA_PRONTA"))
     g.convidadas_no_cais = False
     g.principal.batalha.estagio = "PANDORA"  # acabou a Pandora: próxima é o estágio 1
-    monkeypatch.setattr(Grupo, "xis_dos_cartoes", staticmethod(lambda f: [(1, 1)]))
+    estado = {"xis": list(xis)}
+    monkeypatch.setattr(Grupo, "xis_dos_cartoes", staticmethod(lambda f: estado["xis"]))
     monkeypatch.setattr(grupo, "contar_prontos", lambda f: 0)
+    tratados = []
+    monkeypatch.setattr(grupo.verificacao, "tem_codigo", lambda f: f is codigo_em)
+    monkeypatch.setattr(grupo.verificacao, "tratar", lambda d, n: tratados.append(n))
+    g.principal.driver.ao_clicar = lambda j, pos: estado.update(xis=[(1, 1)])
+    return g, janelas, convidadas, tratados
 
+
+def test_principal_expulsa_pelo_x_sem_clicar_nas_convidadas(ambiente, monkeypatch):
+    g, janelas, convidadas, tratados = preparar_volta(
+        monkeypatch, ambiente, xis=[(1, 1), (300, 280), (840, 283), (658, 475)])
     g.cuidar_da_sala(g.principal)
-    assert all(j.cliques == [PORTA] for j in janelas)
+    assert g.principal.driver.cliques == [(300, 280), (840, 283), (658, 475)]  # X das 3
+    assert all(j.cliques == [] for j in janelas)  # nenhuma troca para clicar nas convidadas
     assert all(not c.aceitou_nesta_volta and not c.pronto_sala for c in convidadas)
     assert g.convidadas_no_cais and g.convidar_direto
+
+
+def test_com_captcha_em_alguma_conta_resolve_antes_de_dar_inicio(ambiente, monkeypatch):
+    g, janelas, _, tratados = preparar_volta(monkeypatch, ambiente, xis=[(1, 1)])
+    janelas[1].telas = [frame("SALA_PRONTA", captcha=True)]
+    monkeypatch.setattr(grupo.verificacao, "tem_codigo", lambda f: bool(f.get("captcha")))
+    g.cuidar_da_sala(g.principal)
+    assert tratados == ["conta3"]
+    assert g.principal.feitos == []  # não deu Início com captcha pendente
+    janelas[1].telas = [frame("SALA_PRONTA")]
+    g.cuidar_da_sala(g.principal)
+    assert g.principal.feitos == ["SALA_PRONTA"]  # sem captcha: começa o estágio 1
 
 
 def test_convidada_em_sala_de_outra_pessoa_sai_em_vez_de_dar_pronto(ambiente):
