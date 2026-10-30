@@ -143,7 +143,7 @@ def test_estagios_1_e_3_comecam_voando():
     leitura = batalha.ler(frame)
     leitura.inimigos = []  # no começo nenhum pintinho perto na tela
     voo = plano(1, frame, leitura, 0)
-    assert (voo.lado, voo.angulo, voo.forca, voo.voar) == (1, 41, 56, True)
+    assert (voo.lado, voo.angulo, voo.forca, voo.voar) == (1, 40, 45, True)
     # Depois do voo, sem barra à vista: a dele está atrás da minha (colado), força 5.
     curto = plano(1, frame, leitura, 1)
     assert (curto.lado, curto.angulo, curto.forca, curto.voar) == (1, 40, 5, False)
@@ -177,7 +177,8 @@ def test_recuar_anda_para_tras_e_vira_para_o_alvo(monkeypatch):
     frame = img("e3")
     b = batalha_de_teste(frame)
     forcas = preparar_disparo(monkeypatch, b, [True])
-    assert b.disparar(batalha.ler(frame), Tiro(-1, 30, 20, "Grange", recuar=0.45))
+    monkeypatch.setattr(pv, "pontos_minimapa", lambda frame, ancora: None)  # sem minimapa
+    assert b.disparar(batalha.ler(frame), Tiro(-1, 30, 20, "Grange", recuar=7))
     assert b.driver.teclas[:2] == ["right", "left"]  # para trás e de volta para a casa
     assert forcas == [20] and b.driver.teclas[-2:] == ["3", "9"]
 
@@ -377,3 +378,29 @@ def test_atirar_espera_a_barra_recomecar_e_corrige_a_antecipacao():
     assert real == pytest.approx(63, abs=0.5)
     assert driver.valores == []  # soltou em 61,5 (62 − 1), não no 56 do tiro anterior
     assert b.antecipacao == pytest.approx(1.5, abs=0.3)  # saiu 1 a mais: solta mais cedo
+
+
+def test_recuo_anda_ate_o_minimapa_mostrar_os_pixels(monkeypatch):
+    frame = img("e3")
+    b = batalha_de_teste(frame)
+    posicoes = iter([100, 101, 103, 106, 108, 120])  # x meu no minimapa a cada print
+    monkeypatch.setattr(pv, "pontos_minimapa", lambda f, a: (next(posicoes), [], []))
+    b.recuar(batalha.ler(frame).ancora, -1, 7)  # alvo à esquerda: recua para a direita
+    assert b.driver.teclas == ["right"] * 4  # 101, 103, 106, 108: parou ao passar de 7
+
+
+def test_pixel_de_tras_com_vento_forte_para_a_esquerda_soma_5(monkeypatch):
+    frame = img("e2_1de3_vento-2.5")  # nasceu no pixel de trás (o da gravação)
+    leitura = batalha.ler(frame)
+    forte = plano(2, frame, leitura, 1, mortas=1, vento=-3.0)
+    assert forte.forca == pytest.approx(62.5 + 5, abs=0.3) and "+5" in forte.motivo
+    fraco = plano(2, frame, leitura, 1, mortas=1, vento=-2.9)
+    assert fraco.forca == pytest.approx(62.5 + 0.4 * 2.9, abs=0.3)
+    a_favor = plano(2, frame, leitura, 1, mortas=1, vento=3.0)
+    assert a_favor.forca == pytest.approx(62.5 - 0.17 * 3.0, abs=0.3)
+
+
+def test_mais_a_frente_o_vento_forte_nao_soma_5():
+    frame = img("e2_vento+2.7")  # volta 2: nasceu 9 px mais perto no minimapa
+    tiro = plano(2, frame, batalha.ler(frame), 2, mortas=2, vento=-3.5)
+    assert "+5" not in tiro.motivo

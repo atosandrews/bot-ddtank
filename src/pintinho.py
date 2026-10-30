@@ -37,7 +37,7 @@ PREPARO_INTERVALO = 1.0
 
 # Estágio 1 (pintinhos): no começo eles estão longe; depois vêm até o personagem.
 PERTO_PX = 250            # inimigo na tela a até isso: tiro curto
-TIRO_LONGE = (41, 56)     # voando (F) para perto deles; (ângulo, força) das voltas 2 e 3
+TIRO_LONGE = (40, 45)     # voando (F) para perto deles (usuário, 30/10: sempre 40/45)
 TIRO_PERTO = (40, 10)
 # Pintinho quase colado (ou a barra dele escondida atrás da minha): força 5, como no
 # Formigueiro (usuário, 30/10).
@@ -56,6 +56,12 @@ GALINHAS = [(30, 62.2, 114), (45, 62.5, 116), (55, 70.6, 121)]  # de baixo, do m
 # (70,0, vento −3,0) caíram curtos; na gravação o usuário matou com 63 e 71 (−2,5 e −2,4).
 FORCA_POR_VENTO = 0.17    # a favor
 FORCA_POR_VENTO_CONTRA = 0.4
+# Regra do usuário (30/10), só neste caso: nascendo no pixel de trás (o da gravação, a
+# galinha a pelo menos a distância gravada no minimapa, com 2 px de folga) e vento de 3 ou
+# mais para a esquerda, a força é a da tabela + 5 (no lugar da correção normal do vento).
+VENTO_FORTE_CONTRA = 3.0
+FORCA_A_MAIS_VENTO_FORTE = 5
+FOLGA_PIXEL_DE_TRAS = 2
 FORCA_VENTO_MAX = 3       # nunca corrige mais do que isso (leitura errada do vento)
 # Errar uma galinha faz elas porem escudo por um tempo (usuário, 30/10): o contador e o vento
 # são lidos em vários prints e o ângulo tem que estar exato no relógio.
@@ -66,7 +72,12 @@ LEITURAS_ESTAGIO_2 = 8
 # (usuário, 30/10). Na gravação o recuo foi de 0,42–0,55 s nas 3 voltas.
 GRANGE_PRIMEIRO = (40, 60)
 GRANGE_DEPOIS = (30, 20)
-GRANGE_RECUO = 0.45       # segundos de seta para trás, só no 1º turno depois do voo
+# Recuo medido no minimapa (px), só no 1º turno depois do voo: na gravação o usuário recuou
+# 9, 7 e 5 px. No 4º teste (30/10) um aperto às cegas de 0,45 s quase não andou, o
+# personagem ficou colado na casa, se acertou junto e morreu.
+GRANGE_RECUO = 7
+RECUO_TOQUE = 0.15        # segundos de seta em cada passinho do recuo
+RECUO_TEMPO_MAX = 4.0
 # Estágio 4: o Burrinho (à esquerda) protege a gaiola com um escudo. Sempre 20/75 nele até
 # morrer; sem o ângulo 20 ali, anda só um pouco até ter (usuário, 30/10).
 BURRINHO = (20, 75)
@@ -148,7 +159,7 @@ class Tiro:
     voar: bool = False        # Voar (F): o personagem vai junto com o tiro, sem itens
     galinha: int = None       # estágio 2: quantas já estavam mortas quando mirou
     gaiola: bool = False
-    recuar: float = 0         # segundos andando para trás antes de mirar
+    recuar: int = 0           # px do minimapa para andar para trás antes de mirar
 
 
 def plano(estagio, frame, leitura, tiros_no_estagio, tiros_na_gaiola=0, mortas=None, vento=_LER):
@@ -162,15 +173,23 @@ def plano(estagio, frame, leitura, tiros_no_estagio, tiros_na_gaiola=0, mortas=N
         angulo, forca, dx_gravacao = GALINHAS[mortas]
         pontos = pv.pontos_minimapa(frame, ancora)
         x = galinha_no_minimapa(pontos, mortas)
+        pixel_de_tras = x is None  # sem minimapa: vale o lugar da gravação (o de trás)
         if x is not None:
             distancia = distancia_minimapa(pontos[0], x)
             gravacao = dx_gravacao * pv.DISTANCIA_POR_PX_MINIMAPA
             forca += forca_tabela(angulo, distancia) - forca_tabela(angulo, gravacao)
+            pixel_de_tras = abs(x - pontos[0]) >= dx_gravacao - FOLGA_PIXEL_DE_TRAS
             onde = f"distância {distancia:.1f}"
         else:
             onde = "distância da gravação (minimapa ilegível)"
-        forca, vento = com_vento(forca, frame, ancora, 1, vento)
+        if vento is _LER:
+            vento = pv.ler_vento(frame, ancora)
         nome = ("de baixo", "do meio", "de cima")[mortas]
+        if pixel_de_tras and vento is not None and vento <= -VENTO_FORTE_CONTRA:
+            return Tiro(1, angulo, forca + FORCA_A_MAIS_VENTO_FORTE,
+                        f"galinha {nome} ({mortas}/3 mortas), {onde}, pixel de trás com vento {vento}: "
+                        f"+{FORCA_A_MAIS_VENTO_FORTE}", galinha=mortas)
+        forca, vento = com_vento(forca, frame, ancora, 1, vento)
         return Tiro(1, angulo, forca, f"galinha {nome} ({mortas}/3 mortas), {onde}, vento {vento}",
                     galinha=mortas)
     if estagio == 3:
@@ -343,12 +362,7 @@ class BatalhaPintinho(Batalha):
             self.driver.tecla(TECLA_VOAR)
             time.sleep(random.uniform(0.15, 0.25))
         if tiro.recuar:
-            # Anda para trás (o lado oposto ao tiro) e vira de volta para o alvo.
-            self.log(f"recuando {tiro.recuar:.2f} s")
-            tecla_tras = config.TECLA_ESQUERDA if lado > 0 else config.TECLA_DIREITA
-            self.driver.tecla(tecla_tras, tiro.recuar)
-            time.sleep(random.uniform(0.2, 0.3))
-            self.virado = -lado
+            self.recuar(leitura.ancora, lado, tiro.recuar)
         if self.virado != lado:
             self.driver.tecla(tecla_lado, 0.05)
             self.virado = lado
@@ -373,6 +387,29 @@ class BatalhaPintinho(Batalha):
         self.atirar(leitura.ancora, tiro.forca)
         self.esperar_fim_da_vez()
         return True
+
+    def recuar(self, ancora, lado, pixels):
+        """Anda para trás (o lado oposto ao tiro) em passinhos até o minimapa mostrar que
+        recuou `pixels`. Sem o minimapa, anda o tempo que o usuário andou na gravação."""
+        tecla_tras = config.TECLA_ESQUERDA if lado > 0 else config.TECLA_DIREITA
+        pontos = pv.pontos_minimapa(self.driver.capturar(), ancora)
+        inicio_x = pontos[0] if pontos else None
+        if inicio_x is None:
+            self.log("recuando sem o minimapa: 0,6 s")
+            self.driver.tecla(tecla_tras, 0.6)
+        else:
+            limite, andou = time.time() + RECUO_TEMPO_MAX, 0
+            while time.time() < limite:
+                self.driver.tecla(tecla_tras, RECUO_TOQUE)
+                time.sleep(0.12)
+                pontos = pv.pontos_minimapa(self.driver.capturar(), ancora)
+                if pontos and pontos[0] is not None:
+                    andou = (pontos[0] - inicio_x) * -lado
+                    if andou >= pixels:
+                        break
+            self.log(f"recuei {andou} px no minimapa (pedido {pixels})")
+        time.sleep(random.uniform(0.15, 0.25))
+        self.virado = -lado
 
     def atirar(self, ancora, forca):
         """Segura o Espaço e solta quando a barra (lida ao vivo) chega na força pedida.

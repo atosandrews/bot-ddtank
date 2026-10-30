@@ -124,6 +124,16 @@ Uma instância inteira. Estágio 1 perfeito e rápido; estágio 4 sem erro (gaio
 - Respostas do usuário: com escudo, continuar atirando; itens 3 e 9 sempre (se faltar
   energia, o jogo ignora).
 
+## Correções do usuário depois do 4º teste (30/10)
+
+- Estágio 1: o voo é **sempre 40/45**.
+- Estágio 2, **só neste caso**: nascendo no pixel de trás (o da gravação: galinha a pelo menos
+  a distância gravada no minimapa, folga de 2 px) e **vento de 3 ou mais para a esquerda**,
+  força = tabela **+5** (no lugar da correção normal do vento).
+- Estágio 3: o voo foi certo, mas o recuo não andou (aperto às cegas de 0,45 s logo no começo
+  da vez); colado na casa, o personagem se acertou junto e morreu. Agora recua em passinhos
+  até o minimapa mostrar **7 px** para trás (na gravação: 9, 7 e 5 px).
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha
