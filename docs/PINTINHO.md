@@ -190,7 +190,7 @@ grupo pelas do Pintinho e devolve depois.
   convida as 3 e espera o Pronto.
 - Estágio 4: a principal joga; **depois do 1º tiro dela, o bot liga o Confiar em cada convidada
   e passa a vez** (pedido do usuário, 30/10).
-- Cartas: cada conta vira as grátis.
+- Cartas: só a principal vira as grátis (as convidadas não; pedido do usuário, 30/10).
 **Ainda não rodou no jogo.**
 
 ## Grupo no jogo e estágio 2 novo (30/10, 16:37–16:55)

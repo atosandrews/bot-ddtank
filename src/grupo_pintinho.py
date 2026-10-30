@@ -13,7 +13,7 @@ do grupo são trocadas pelas do Pintinho (`modo_pintinho`) e voltam ao normal de
   na sala e inicia sozinha; antes do 4, convida as outras pela aba Amigos e espera o Pronto.
 - Batalha: a principal joga como em src/pintinho.py. No estágio 4, depois do 1º tiro dela, o
   bot passa em cada convidada, liga o Confiar (o jogo joga por ela) e passa a vez (usuário, 30/10).
-- Cartas: cada conta vira as grátis (1 por estágio, 2 no fim).
+- Cartas: só a principal vira as grátis (1 por estágio, 2 no fim).
 """
 import contextlib
 import random
@@ -138,12 +138,12 @@ class GrupoPintinho(Grupo):
         return super().levar_ao_cais(c, tentativas)
 
     def virar_cartas(self):
-        """Tela de cartas em alguma conta (fim de estágio): vira as grátis de cada uma.
-        Fora da batalha só; True se alguma conta estava nas cartas."""
+        """Tela de cartas na principal (fim de estágio): vira as grátis dela. As convidadas não
+        viram (pedido do usuário, 30/10). Fora da batalha só; True se a principal estava nas cartas."""
         if self.na_batalha:
             return False
         alguma = False
-        for conta in self.contas:
+        for conta in (self.principal,):
             frame = conta.driver.capturar()
             tipo = pv.tela_de_cartas(frame)
             if not tipo:

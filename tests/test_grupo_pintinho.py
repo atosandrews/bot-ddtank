@@ -141,3 +141,18 @@ def test_no_estagio_4_convidada_em_batalha_vai_para_o_confiar():
     luta.na_luta = False
     g.marcar_convidadas_na_luta()
     assert not luta.na_luta
+
+
+def test_so_a_principal_vira_as_cartas(monkeypatch):
+    g = gp.GrupoPintinho.__new__(gp.GrupoPintinho)
+    g.na_batalha = False
+    principal, convidada = Conta(img("cartas_final"), 4), Conta(img("cartas_final"), None)
+    for c, nome in ((principal, "principal"), (convidada, "conta2")):
+        c.nome, c.log = nome, lambda m: None
+        c.driver.clicar = lambda x, y, c=c: c.__dict__.setdefault("cliques", []).append((x, y))
+        c.driver.afastar_mouse = lambda: None
+    g.principal, g.contas = principal, [principal, convidada]
+    g.cartas = {"principal": 0, "conta2": 0}
+    monkeypatch.setattr(gp.time, "sleep", lambda s: None)
+    assert g.virar_cartas()
+    assert len(getattr(principal, "cliques", [])) == 1 and not hasattr(convidada, "cliques")
