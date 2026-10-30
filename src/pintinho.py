@@ -343,6 +343,7 @@ class BatalhaPintinho(Batalha):
         self.erros_galinha = 0  # só para o log: quantas vezes errou uma galinha
         self.preparado_em = 0.0
         self.inicio_vez = None  # quando a vez atual começou (o andar não pode passar do tempo)
+        self.popup_fechado = False
         self.atraso = ATRASO_INICIAL  # s entre ler a barra e o jogo parar de encher
         self._zerar_estagio()
 
@@ -354,6 +355,7 @@ class BatalhaPintinho(Batalha):
     def nova_luta(self):
         super().nova_luta()
         self._zerar_estagio()
+        self.popup_fechado = False
 
     def ler_estagio(self, frame, leitura):
         estagio = pv.ler_estagio(frame, leitura.ancora)
@@ -406,11 +408,25 @@ class BatalhaPintinho(Batalha):
             self.salvar_debug(self.driver.capturar(), "sem_contador")
         return mortas
 
+    def fechar_popup_missao(self, frame):
+        """Começo da luta: fecha o quadro "Requisitos/Vitória" (cobre o meio do campo)."""
+        x = pv.x_do_popup_missao(frame)
+        if x:
+            self.log("fechando o quadro Requisitos/Vitória")
+            self.driver.clicar(*x)
+            time.sleep(0.4)
+            frame = self.driver.capturar()
+        self.popup_fechado = x is not None or self.turno > 0
+        return frame
+
     def passo(self, frame):
         leitura = ler(frame)
         if leitura is None:
             time.sleep(0.25)
             return
+        if not self.popup_fechado:
+            frame = self.fechar_popup_missao(frame)
+            leitura = ler(frame) or leitura
         estagio = self.ler_estagio(frame, leitura)
         if not leitura.minha_vez:
             if not self.preparar_angulo(frame, leitura):
@@ -657,7 +673,6 @@ class BotPintinho(Bot):
         super().__init__(driver, nome)
         self.batalha = BatalhaPintinho(driver, self.log, self.salvar_debug)
         self.cartas_viradas = 0
-        self.popup_fechado = False
 
     def passo(self):
         frame = self.driver.capturar()
@@ -689,7 +704,6 @@ class BotPintinho(Bot):
             self.log("tela reconhecida")
             if tela.batalha:
                 self.batalha.nova_luta()
-                self.popup_fechado = False
                 time.sleep(config.PAUSA_INICIO_BATALHA)
                 return True
         else:
@@ -699,14 +713,6 @@ class BotPintinho(Bot):
                 self.salvar_debug(frame, "travado")
 
         if tela.batalha:
-            if not self.popup_fechado:
-                x = pv.x_do_popup_missao(frame)
-                if x:
-                    self.log("fechando o quadro Requisitos/Vitória")
-                    self.driver.clicar(*x)
-                    time.sleep(0.4)
-                    frame = self.driver.capturar()
-                self.popup_fechado = x is not None or self.batalha.turno > 0
             self.batalha.passo(frame)
             return True
 

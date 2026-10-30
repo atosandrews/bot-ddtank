@@ -178,6 +178,21 @@ aprendeu o 8 do relógio às 13:59, `img/pintinho/digitos/8_auto.png`). Problema
   leitura do relógio) até 7 s da vez; força solta pela velocidade da barra × atraso
   aprendido (no lugar da folga fixa).
 
+## Grupo (estágio 4 com as outras contas)
+
+`python -m src.grupo_pintinho` ou `rodar_grupo_pintinho.bat` ([src/grupo_pintinho.py](../src/grupo_pintinho.py)).
+Reaproveita o grupo do Formigueiro (convite pela aba Amigos, Pronto, expulsar pelo X, captcha)
+sem mudar `src/grupo.py`: em cada passo troca as telas, a leitura da batalha e as opções do
+grupo pelas do Pintinho e devolve depois.
+- Sala: o banner "STAGE N" (número grande, `img/pintinho/sala_stage_*.png`; 1,0 no certo e no
+  máximo 0,58 nos outros, em todas as salas da gravação) diz o próximo estágio. Antes do 1 não
+  há número: vale o último estágio jogado. Antes de 1–3: expulsa e vai sozinha; antes do 4:
+  convida as 3 e espera o Pronto.
+- Estágio 4: a principal joga; **depois do 1º tiro dela, o bot liga o Confiar em cada convidada
+  e passa a vez** (pedido do usuário, 30/10).
+- Cartas: cada conta vira as grátis.
+**Ainda não rodou no jogo.**
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha
