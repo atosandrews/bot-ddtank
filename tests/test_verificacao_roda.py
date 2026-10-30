@@ -147,3 +147,40 @@ def test_mouse_espera_fora_do_teclado():
     executar(d, relogio, logs)
     assert d.estacionado and set(d.estacionado) == {REPOUSO}
     assert all(c[2] == REPOUSO for c in d.cliques)  # depois de cada clique volta para fora
+
+
+class VisaoComConferencia(Visao):
+    """Confere o número sob o mouse como o jogo: com hover a roda para."""
+    def __init__(self, driver):
+        self.driver = driver
+
+    def conferir(self, frame, origem, digito, ponto):
+        angulo = frame["angulo"]
+        certo = np.hypot(*np.subtract(posicao(digito, angulo), ponto)) <= 6
+        return certo, ponto
+
+
+def test_para_em_cima_do_numero_confere_e_so_entao_clica(monkeypatch):
+    monkeypatch.setattr(config, "VERIFICACAO_ESPERA_HOVER", 0.0)
+    relogio, logs = Relogio(), []
+    d = Driver(relogio, velocidade=0)
+    r = resolver(d, ocr=Ocr(), visao=VisaoComConferencia(d), dormir=relogio.dormir, relogio=relogio,
+                 log=lambda *a, **k: logs.append(a[0]), tela_conhecida=lambda f: f["fim"])
+    assert r.estado == "RESOLVIDO" and d.entrada == "0123"
+    # Antes de cada número, o mouse parou em cima dele (além das esperas no repouso).
+    alvos = [p for p in d.estacionado if p != REPOUSO]
+    assert len(alvos) == 4
+
+
+def test_numero_errado_embaixo_do_mouse_nao_e_clicado(monkeypatch):
+    monkeypatch.setattr(config, "VERIFICACAO_ESPERA_HOVER", 0.0)
+    relogio, logs = Relogio(), []
+    d = Driver(relogio, velocidade=0)
+
+    class Errada(VisaoComConferencia):
+        def conferir(self, frame, origem, digito, ponto):
+            d.fim = True  # encerra o desafio depois da recusa
+            return False, ponto
+    resolver(d, ocr=Ocr(), visao=Errada(d), dormir=relogio.dormir, relogio=relogio,
+             log=lambda *a, **k: logs.append(a[0]), tela_conhecida=lambda f: f["fim"])
+    assert d.entrada == "" and any("outro número" in l for l in logs)

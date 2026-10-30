@@ -1,4 +1,5 @@
 """Adaptador do SDK local; não captura tela nem envia comandos ao jogo."""
+from collections import Counter
 from dataclasses import dataclass
 from functools import lru_cache
 import re
@@ -11,6 +12,8 @@ SATURACAO_MIN_DIGITO = 80
 BRILHO_MAX_DIGITO = 200
 AREA_MIN_CAMADA = 40  # px no recorte de 164x68 do perfil nativo
 CORES_POR_CAPTCHA = (2, 3, 4)
+# Regra da maioria em decidir(): fração mínima das leituras de 4 dígitos no mesmo código.
+MAIORIA_FRACAO = 0.75
 # Fontes que erram juntas contam como uma: original e cinza_2x são a mesma imagem ampliada.
 FAMILIAS = {"original": "bruta", "cinza_2x": "bruta", "mascara": "mascara", "cores": "cores"}
 
@@ -181,19 +184,33 @@ def decidir(leituras, limiar=0.90):
     2. Duas fontes independentes com score >= limiar: os dois modelos, ou duas famílias
        de pré-processamento (bruta, mascara, cores). original + cinza_2x do mesmo
        modelo não bastam, pois erram juntos.
+    3. Maioria (29/10, captchas reais): sem unanimidade, ainda aceita o código que tem
+       >= MAIORIA_FRACAO das leituras de quatro dígitos, com score >= limiar nos dois
+       modelos. Nos reais, 5936 (7 de 8 leituras) e 3828 (3 de 4) eram vetados por uma
+       leitura discordante; nos sintéticos (semente 6) o erro subiu no máximo 1 em 150.
     Devolve lista vazia ou um Candidato com a leitura de maior score que o apoia.
     """
     validas = [l for l in leituras if _quatro_digitos(l)]
-    if len({l["texto"] for l in validas}) != 1:
+    if not validas:
         return []
-    apoio = [l for l in validas if l["confianca"] >= limiar]
-    modelos = {l["modelo"] for l in apoio}
-    familias = {FAMILIAS.get(l["variante"], l["variante"]) for l in apoio}
-    if len(modelos) < 2 and len(familias) < 2:
-        return []
+    if len({l["texto"] for l in validas}) == 1:
+        apoio = [l for l in validas if l["confianca"] >= limiar]
+        modelos = {l["modelo"] for l in apoio}
+        familias = {FAMILIAS.get(l["variante"], l["variante"]) for l in apoio}
+        if len(modelos) >= 2 or len(familias) >= 2:
+            return [_candidato(apoio)]
+    contagem = Counter(l["texto"] for l in validas)
+    texto, quantos = contagem.most_common(1)[0]
+    apoio = [l for l in validas if l["texto"] == texto and l["confianca"] >= limiar]
+    if (quantos / len(validas) >= MAIORIA_FRACAO and len(apoio) >= 2
+            and len({l["modelo"] for l in apoio}) >= 2):
+        return [_candidato(apoio)]
+    return []
+
+
+def _candidato(apoio):
     melhor = max(apoio, key=lambda l: l["confianca"])
-    return [Candidato(melhor["texto"], float(melhor["confianca"]), melhor["modelo"],
-                      melhor["variante"])]
+    return Candidato(melhor["texto"], float(melhor["confianca"]), melhor["modelo"], melhor["variante"])
 
 
 def _mascara_digitos(imagem):

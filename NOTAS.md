@@ -371,3 +371,16 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
 - Captchas das secundárias: nenhum foi tratado. O controlador é serial e ficou preso no da
   principal. O log mostra "5 contas: principal + 4 convidada(s)": há uma 5ª janela com o
   título do jogo aberta.
+
+## 2026-10-29 23:39 — 2ª run gravada (usuário mexendo o mouse perto dos números)
+- Foco: o clique na barra do título funcionou; o bot passou a ler o captcha.
+- Roda (vídeo, 8 fps): ~90–160°/s com o mouse longe; ~5–35°/s com o mouse perto dos números.
+  A análise entre os dois prints deixava o giro ambíguo: agora os dois prints são seguidos.
+- Clique: o mouse vai para o número previsto (com hover a roda quase para), espera
+  `VERIFICACAO_ESPERA_HOVER`, olha de novo e clica no centro do botão sob o mouse
+  (`conferir`); sem botão perto, não clica. A identidade do número vem da rotação da roda:
+  um botão sozinho é mal classificado (o 9 parecia 8/0 no print real).
+- OCR: a unanimidade vetava códigos reais certos (5936 com 7 de 8 leituras; 3828 com 3 de 4).
+  Nova regra de maioria em `decidir` (≥ 75% das leituras de 4 dígitos, 2 modelos). Reais:
+  3 certos de 8 (antes 1), 0 errados. Sintéticos semente 6: até +1 erro em 150 (difícil).
+  Recortes reais rotulados em `tests/imagens/codigo_real_*.png`.

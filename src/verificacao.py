@@ -113,6 +113,10 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
             return False
         frame, regiao = captura
         t1 = relogio()
+        # 2º print logo em seguida, antes de analisar: com a roda rápida (~150°/s no vídeo
+        # de 29/10) a análise no meio deixava o giro entre os prints ambíguo (período 36°).
+        segunda = driver.capturar_verificacao() if digito is not None else None
+        t2 = relogio()
         atual = visao.analisar(frame)
         if (atual is None or atual.identidade != base.identidade
                 or atual.origem != base.origem
@@ -123,10 +127,8 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
             destino = atual.teclas[digito]
             fase1 = getattr(atual, "fase", None)
             if fase1 is not None and callable(getattr(visao, "fase", None)):
-                segunda = driver.capturar_verificacao()
                 if segunda is None or segunda[1] != regiao:
                     return False
-                t2 = relogio()
                 fase2 = visao.fase(segunda[0], atual.origem)
                 if fase2 is not None and t2 > t1:
                     # Fase tem período de 36°: entre dois prints seguidos o giro é pequeno.
@@ -135,9 +137,23 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                     if abs(velocidade) > config.VERIFICACAO_GIRO_MAX:
                         log(f"[{nome}] roda rápida demais ({velocidade:.0f}°/s); sem clique", flush=True)
                         return False
-                    adiantar = velocidade * (t2 - t1 + config.VERIFICACAO_LATENCIA_CLIQUE)
+                    adiantar = velocidade * (relogio() - t1 + config.VERIFICACAO_LATENCIA_CLIQUE)
                     destino = visao.girar(atual.centro_roda, destino, adiantar)
-                    log(f"[{nome}] roda {velocidade:+.0f}°/s; clicando {digito}", flush=True)
+                    log(f"[{nome}] roda {velocidade:+.0f}°/s; indo ao {digito}", flush=True)
+            conferir = getattr(visao, "conferir", None)
+            if callable(conferir) and callable(getattr(driver, "estacionar_mouse", None)):
+                # Com o mouse em cima de um número a roda quase para (vídeo de 29/10):
+                # para nele, olha de novo e só clica se não houver outro número ali.
+                driver.estacionar_mouse(*destino)
+                dormir(config.VERIFICACAO_ESPERA_HOVER)
+                terceira = driver.capturar_verificacao()
+                if terceira is None or terceira[1] != regiao:
+                    return False
+                ok, ponto = conferir(terceira[0], atual.origem, digito, destino)
+                if not ok:
+                    log(f"[{nome}] outro número embaixo do mouse; sem clique", flush=True)
+                    return False
+                destino = ponto
         if repouso is not None:
             return driver.clicar_verificado(*destino, regiao_esperada=regiao, estacionar=repouso)
         return driver.clicar_verificado(*destino, regiao_esperada=regiao)

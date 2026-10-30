@@ -193,7 +193,8 @@
       ]
     },
     "mean_min": 0.6,
-    "margin_min": 0.15
+    "margin_min": 0.15,
+    "hover_raio": 8
   },
   "rest": [
     80,

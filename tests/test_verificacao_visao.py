@@ -139,3 +139,14 @@ def test_aviso_clique_no_jogo_sobre_o_captcha_da_ponto_fora_do_teclado():
 def test_sem_aviso_nao_ha_clique_de_foco():
     frame = cv2.imread(str(RODA_GIRADA.with_name("captcha_roda_girada_2.webp")))
     assert VisaoVerificacao().ponto_para_foco(frame) is None
+
+
+def test_conferir_com_mouse_em_cima_mira_o_centro_do_botao_e_recusa_lugar_vazio():
+    frame = cv2.imread(str(RODA_GIRADA.with_name("captcha_roda_girada_2.webp")))
+    v = VisaoVerificacao()
+    q = v.analisar(frame)
+    x, y = q.teclas["5"]
+    ok, ponto = v.conferir(frame, q.origem, "5", (x + 6, y + 3))  # mira um pouco torta
+    assert ok and np.hypot(*np.subtract(ponto, q.teclas["5"])) <= 4
+    ok, _ = v.conferir(frame, q.origem, "5", q.centro_roda)  # meio da roda: sem botão
+    assert not ok

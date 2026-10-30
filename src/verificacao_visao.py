@@ -190,6 +190,34 @@ class VisaoVerificacao:
         kx, ky, kw, kh = self.perfil["keyboard"]
         return frame[origem[1] + ky:origem[1] + ky + kh, origem[0] + kx:origem[0] + kx + kw]
 
+    def conferir(self, frame, origem, digito, ponto):
+        """Com o mouse parado em `ponto`: há um botão ali? Devolve (ok, centro do botão).
+
+        Qual número é cada botão vem da rotação da roda (10 leituras juntas); um botão
+        sozinho é mal classificado (no print real, o 9 parecia mais 8 e 0). Aqui só se
+        corrige a mira para o centro do botão sob o mouse; sem botão perto, não clica.
+        """
+        kx, ky, _, _ = self.perfil["keyboard"]
+        roda = self.perfil["ring"]
+        tec = self._teclado(frame, origem)
+        x, y = ponto[0] - origem[0] - kx, ponto[1] - origem[1] - ky
+        hsv = cv2.cvtColor(tec, cv2.COLOR_BGR2HSV)
+        mascara = (hsv[..., 2] < roda["dark_max"]).astype(np.uint8)
+        mascara = cv2.morphologyEx(mascara, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+        n, rotulos, estat, centros = cv2.connectedComponentsWithStats(mascara)
+        melhor, dist = None, roda["hover_raio"]
+        for i in range(1, n):
+            if not (roda["area_min"] <= estat[i, cv2.CC_STAT_AREA] <= roda["area_max"] * 2):
+                continue
+            esq, cima, larg, alt = estat[i, :4]
+            # Distância do mouse até a caixa do botão (0 se estiver dentro dela).
+            d = np.hypot(max(esq - x, 0, x - (esq + larg)), max(cima - y, 0, y - (cima + alt)))
+            if d <= dist:
+                melhor, dist = centros[i], d
+        if melhor is None:
+            return False, ponto
+        return True, (int(round(melhor[0])) + origem[0] + kx, int(round(melhor[1])) + origem[1] + ky)
+
     def fase(self, frame, origem):
         """Fase da roda num print novo (rápido: não lê os números). None se não der."""
         try:

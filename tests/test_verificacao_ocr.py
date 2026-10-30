@@ -185,3 +185,26 @@ def test_modelos_reais_leem_o_captcha_da_especificacao():
     candidatos = OcrLocal().reconhecer(VisaoVerificacao().analisar(frame).codigo)
     assert candidatos and candidatos[0].texto == "6723"
     assert {c.variante for c in candidatos} == {"cores"}
+
+
+@pytest.mark.parametrize("arquivo,codigo", [("codigo_real_3828.png", "3828"), ("codigo_real_5936.png", "5936")])
+def test_maioria_aceita_codigo_real_com_uma_leitura_discordante(arquivo, codigo):
+    # Recortes reais da run de 29/10 (logs/verificacao): só uma leitura discordava e a
+    # unanimidade vetava um código certo.
+    pytest.importorskip("ddddocr")
+    imagem = cv2.imread(str(Path(__file__).resolve().parent / "imagens" / arquivo))
+    candidatos = OcrLocal().reconhecer(imagem)
+    assert [c.texto for c in candidatos] == [codigo]
+
+
+@pytest.mark.parametrize("arquivo,codigo", [("codigo_real_7892.png", "7892"), ("codigo_real_6262.png", "6262")])
+def test_codigos_reais_sem_maioria_nao_enviam_nada_errado(arquivo, codigo):
+    pytest.importorskip("ddddocr")
+    imagem = cv2.imread(str(Path(__file__).resolve().parent / "imagens" / arquivo))
+    assert all(c.texto == codigo for c in OcrLocal().reconhecer(imagem))
+
+
+def test_maioria_sem_os_dois_modelos_nao_basta():
+    leituras = [leitura("5936", "beta", v) for v in ("original", "cinza_2x", "mascara")]
+    leituras.append(leitura("5436", "padrao", "cores"))
+    assert decidir(leituras) == []
