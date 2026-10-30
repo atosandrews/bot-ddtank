@@ -184,7 +184,7 @@ def main():
     from .drivers.tela import ativar_dpi
     ativar_dpi()
     numeros = [int(a) for a in sys.argv[1:]]
-    principal = numeros[0] if numeros else esperar_clique_real(contas_abertas())
+    principal = numeros[0] if numeros else esperar_clique_real(contas_abertas(), segundos=180)
     if principal is None:
         print("Nenhuma janela do jogo clicada.")
         return 1
