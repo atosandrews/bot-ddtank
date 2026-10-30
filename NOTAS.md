@@ -407,3 +407,5 @@ Comparado com o bot e confirmado pelo usuário:
 - Antes de recomeçar o estágio 1, o bot confere e resolve os captchas de todas as contas
   (`resolver_codigos`).
 - Baú de recompensa: o usuário preferiu deixar como estava (sem clique).
+- Ajuste (usuário, 30/10): a conferência de captcha antes do estágio 1 lê as janelas em segundo
+  plano; não traz as secundárias para frente. Elas só são visitadas no convite do estágio 2 ou com captcha.

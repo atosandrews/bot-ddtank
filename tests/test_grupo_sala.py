@@ -150,9 +150,11 @@ def preparar_volta(monkeypatch, ambiente, xis, codigo_em=None):
 def test_principal_expulsa_pelo_x_sem_clicar_nas_convidadas(ambiente, monkeypatch):
     g, janelas, convidadas, tratados = preparar_volta(
         monkeypatch, ambiente, xis=[(1, 1), (300, 280), (840, 283), (658, 475)])
+    ambiente.clear()
     g.cuidar_da_sala(g.principal)
     assert g.principal.driver.cliques == [(300, 280), (840, 283), (658, 475)]  # X das 3
     assert all(j.cliques == [] for j in janelas)  # nenhuma troca para clicar nas convidadas
+    assert ambiente == ["principal"]  # nem para olhar: só a janela da principal vem para frente
     assert all(not c.aceitou_nesta_volta and not c.pronto_sala for c in convidadas)
     assert g.convidadas_no_cais and g.convidar_direto
 
@@ -161,8 +163,10 @@ def test_com_captcha_em_alguma_conta_resolve_antes_de_dar_inicio(ambiente, monke
     g, janelas, _, tratados = preparar_volta(monkeypatch, ambiente, xis=[(1, 1)])
     janelas[1].telas = [frame("SALA_PRONTA", captcha=True)]
     monkeypatch.setattr(grupo.verificacao, "tem_codigo", lambda f: bool(f.get("captcha")))
+    ambiente.clear()
     g.cuidar_da_sala(g.principal)
     assert tratados == ["conta3"]
+    assert ambiente == ["principal"]  # conferir captcha não traz as secundárias para frente
     assert g.principal.feitos == []  # não deu Início com captcha pendente
     janelas[1].telas = [frame("SALA_PRONTA")]
     g.cuidar_da_sala(g.principal)

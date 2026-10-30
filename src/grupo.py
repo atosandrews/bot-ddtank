@@ -390,12 +390,13 @@ class Grupo:
     def resolver_codigos(self):
         """Antes de começar uma volta: resolve o captcha de qualquer conta (pedido do usuário).
 
-        Janela coberta não desenha: cada conta é trazida para frente antes do print.
+        Lê cada janela em segundo plano (sem trazer para frente): o bot só vai até uma
+        secundária quando ela tem captcha (usuário, 30/10: nada de visitar à toa).
         True se havia algum captcha (o chamador confere de novo no próximo passo).
         """
         houve = False
         for conta in self.contas:
-            if verificacao.tem_codigo(self.olhar(conta)):
+            if verificacao.tem_codigo(conta.driver.capturar()):
                 verificacao.tratar(conta.driver, conta.nome)
                 houve = True
         return houve
