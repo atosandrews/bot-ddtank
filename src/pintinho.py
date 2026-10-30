@@ -369,11 +369,12 @@ class BatalhaPintinho(Batalha):
         return True
 
     def atirar(self, ancora, forca):
-        """Segura o Espaço e solta quando o vermelho da barra chega na força pedida.
+        """Segura o Espaço e solta quando a barra (lida ao vivo) chega na força pedida.
 
-        O vermelho do tiro anterior continua na barra até o Espaço ser apertado: só aceita a
-        leitura depois de ver a barra recomeçar. Depois do tiro lê a força que ficou desenhada
-        e corrige a antecipação dos próximos (o jogo ainda enche um pouco enquanto a tecla sobe).
+        Ao apertar, a barra zera e enche de novo: só aceita a leitura depois de vê-la
+        recomeçar (antes disso pode ser o desenho do tiro anterior). Depois do tiro lê a força
+        que ficou e corrige a antecipação dos próximos (o jogo ainda enche um pouco enquanto a
+        tecla sobe).
         """
         regiao = pv.regiao_forca(ancora)
         anterior = pv.forca_na_faixa(self.driver.capturar(regiao))

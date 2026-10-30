@@ -326,10 +326,20 @@ def test_telas_do_pintinho_trocam_so_a_escolha_da_instancia():
 
 
 @pytest.mark.parametrize("nome, forca", [("e2_forca_56_jogo", 56.3), ("e2_forca_71_jogo", 70.8)])
-def test_forca_pelo_vermelho_da_barra(nome, forca):
-    # Prints do jogo de 30/10: o 1º tiro saiu com 56 (o usuário viu 55) e o log antigo dizia 62.
+def test_marca_do_tiro_anterior(nome, forca):
+    # Prints do jogo de 30/10, no começo da vez: o 1º tiro saiu com 56 (o usuário viu 55) e o
+    # log antigo dizia 62. A barra ao vivo já está escura (zera quando o Espaço é apertado).
     frame = img(nome)
-    assert pv.forca_lida(frame, batalha.ler(frame).ancora) == pytest.approx(forca, abs=0.6)
+    ancora = batalha.ler(frame).ancora
+    assert pv.ultimo_tiro(frame, ancora) == pytest.approx(forca, abs=0.6)
+    assert pv.forca_lida(frame, ancora) < 3
+
+
+@pytest.mark.parametrize("cor", [(82, 164, 226), (91, 196, 230)])  # tiro normal e voo (amarelo)
+def test_barra_ao_vivo_em_qualquer_cor(cor):
+    faixa = np.full((1, 498, 3), (28, 33, 34), np.uint8)
+    faixa[0, 3:249] = cor
+    assert pv.forca_na_faixa(faixa) == pytest.approx(50, abs=0.5)
 
 
 class DriverBarra(Driver):
@@ -340,8 +350,8 @@ class DriverBarra(Driver):
         self.valores, self.depois, self.apertado = list(valores), depois, False
 
     def faixa(self, valor, largura=498):
-        faixa = np.full((1, largura, 3), (40, 45, 46), np.uint8)
-        faixa[0, 2:int(valor / 100 * (largura - 1))] = (0, 0, 133)
+        faixa = np.full((1, largura, 3), (28, 33, 34), np.uint8)
+        faixa[0, 2:int(valor / 100 * (largura - 1))] = (82, 164, 226)
         return faixa
 
     def capturar(self, sub=None):
@@ -358,7 +368,7 @@ class DriverBarra(Driver):
 
 
 def test_atirar_espera_a_barra_recomecar_e_corrige_a_antecipacao():
-    # Antes: vermelho do tiro anterior em 56. A leitura só vale depois de a barra voltar a 0.
+    # Antes: o tiro anterior desenhado em 56. A leitura só vale depois de a barra voltar a 0.
     driver = DriverBarra([56, 0, 20, 40, 58, 61.5, 64], depois=63)
     b = BatalhaPintinho(driver, lambda m: None, lambda *a: None)
     b.antecipacao = 1.0

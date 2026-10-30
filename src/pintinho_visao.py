@@ -41,8 +41,12 @@ TOPO_MINIMAPA = 14  # acima disso (no recorte) é a faixa do contador e do botã
 # régua do jogo põe ~100 px em cada 1 de distância das tabelas (src/batalha.py).
 DISTANCIA_POR_PX_MINIMAPA = 1000 / 86.5 / 100
 
-# Linha da barra de força (x do 0, y, x do 100) em relação à âncora: 10 px acima do rótulo.
-BARRA_FORCA = (25, -10, 522)
+# Barra de força (x do 0, y, x do 100) em relação à âncora. Na linha do rótulo a barra enche ao
+# vivo (vermelha; amarela no voo) e fica no valor depois de soltar; ao apertar o Espaço ela
+# zera. 10 px acima fica a marca vermelha do tiro anterior, parada enquanto carrega
+# (gravação de 30/10: as duas linhas lidas no aperto e na soltura de 20 tiros).
+BARRA_FORCA = (25, 0, 522)
+MARCA_TIRO_ANTERIOR = -10
 
 # Retrato e barra de vida do chefe, no alto à direita do vento.
 BARRA_CHEFE = (430, -565, 645, -525)
@@ -257,21 +261,33 @@ def lado_dos_inimigos(frame, ancora):
     return 1 if direita > esquerda else -1
 
 
-def forca_na_faixa(faixa):
-    """Força (0 a 100) pelo vermelho da barra numa faixa de 1 linha (BARRA_FORCA).
+def _comprimento(cheio):
+    """Fração (0 a 100) cheia desde o começo da faixa, tolerando falhas de até 3 px."""
+    if not cheio[:15].any():
+        return 0.0
+    vazio = np.convolve(~cheio, np.ones(4, dtype=int), "valid") == 4
+    inicio = int(np.argmax(cheio))
+    fim = inicio + int(np.argmax(vazio[inicio:])) if vazio[inicio:].any() else len(cheio)
+    return fim / (len(cheio) - 1) * 100
 
-    A parte cheia é vermelho puro (~133, 0, 0) e a vazia é cinza; o tiro anterior fica
-    desenhado até o Espaço ser apertado de novo. Comparar com um print anterior (como faz
-    src/batalha.py) leu 62 num tiro que saiu com 56 no jogo de 30/10.
+
+def forca_na_faixa(faixa):
+    """Força ao vivo (0 a 100) numa faixa de 1 linha da barra (BARRA_FORCA).
+
+    A parte cheia é clara (vermelha ~(226, 164, 82), ou amarela no voo); a vazia é cinza escuro
+    (~35). No 1º teste no jogo (30/10) o bot lia a marca do tiro anterior e não via o voo
+    (amarelo): soltava pela trava de tempo, com força ~48.
     """
     faixa = faixa.reshape(-1, 3).astype(int)
-    vermelho = (faixa[:, 2] > 100) & (faixa[:, 1] < 75) & (faixa[:, 0] < 75)
-    if not vermelho[:15].any():
-        return 0.0
-    vazio = np.convolve(~vermelho, np.ones(4, dtype=int), "valid") == 4
-    inicio = int(np.argmax(vermelho))
-    fim = inicio + int(np.argmax(vazio[inicio:])) if vazio[inicio:].any() else len(vermelho)
-    return fim / (len(vermelho) - 1) * 100
+    return _comprimento(faixa.max(axis=1) > 150)
+
+
+def ultimo_tiro(frame, ancora):
+    """Força do tiro anterior pela marca vermelha (~133, 0, 0) acima da barra."""
+    ax, ay = ancora
+    x1, _, x2 = BARRA_FORCA
+    faixa = frame[ay + MARCA_TIRO_ANTERIOR, ax + x1:ax + x2 + 1].astype(int)
+    return _comprimento((faixa[:, 2] > 100) & (faixa[:, 1] < 75) & (faixa[:, 0] < 75))
 
 
 def regiao_forca(ancora):
