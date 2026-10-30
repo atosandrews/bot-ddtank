@@ -131,5 +131,68 @@
       111,
       31
     ]
+  },
+  "ring": {
+    "_nota": "Teclado em roda: botões num círculo a 36° um do outro, números decrescentes no sentido horário; só a rotação muda. Medido nos captchas reais de 28/10 (imagem 38) e 29/10.",
+    "center": [
+      135,
+      115
+    ],
+    "radius": 100,
+    "dark_max": 140,
+    "border": 10,
+    "area_min": 80,
+    "area_max": 1000,
+    "width_max": 60,
+    "radius_tol": 18,
+    "min_buttons": 4,
+    "angle_tol": 5,
+    "top_y": 18,
+    "size_at_top": 9.93,
+    "size_per_px": 0.0863,
+    "reference": {
+      "0": [
+        209,
+        49
+      ],
+      "1": [
+        156,
+        17
+      ],
+      "2": [
+        95,
+        24
+      ],
+      "3": [
+        49,
+        65
+      ],
+      "4": [
+        35,
+        125
+      ],
+      "5": [
+        62,
+        181
+      ],
+      "6": [
+        117,
+        213
+      ],
+      "7": [
+        176,
+        205
+      ],
+      "8": [
+        222,
+        165
+      ],
+      "9": [
+        235,
+        105
+      ]
+    },
+    "mean_min": 0.6,
+    "margin_min": 0.15
   }
 }

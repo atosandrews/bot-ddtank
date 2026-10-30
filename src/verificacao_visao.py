@@ -39,6 +39,7 @@ class VisaoVerificacao:
                               for nome in self.perfil["templates"]}
         except (OSError, ValueError, KeyError, TypeError) as exc:
             raise ErroInfraestrutura(f"Perfil/templates de verificação indisponíveis: {exc}") from exc
+        self._cache_roda = {}
 
     def ancora(self, frame):
         if frame is None or frame.ndim != 3 or frame.size == 0:
@@ -71,6 +72,90 @@ class VisaoVerificacao:
             raise QuadroInvalido(f"Destino ambíguo/ausente: {nome}")
         return x + w//2 + deslocamento[0], y + h//2 + deslocamento[1]
 
+    def _posicoes_da_roda(self, teclado):
+        """As 10 posições dos botões, em ordem horária na tela.
+
+        Os botões ficam num círculo (centro e raio do perfil) a 36° um do outro; só o ângulo
+        de partida muda. Ele é estimado pelos botões pequenos e soltos (os grandes de baixo
+        encostam um no outro e na moldura e não servem para isso).
+        """
+        roda = self.perfil["ring"]
+        cx, cy = roda["center"]
+        raio = roda["radius"]
+        hsv = cv2.cvtColor(teclado, cv2.COLOR_BGR2HSV)
+        mascara = (hsv[..., 2] < roda["dark_max"]).astype(np.uint8) * 255
+        borda = roda["border"]
+        mascara[:borda], mascara[-borda:], mascara[:, :borda], mascara[:, -borda:] = 0, 0, 0, 0
+        mascara = cv2.morphologyEx(mascara, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+        n, _, estat, centros = cv2.connectedComponentsWithStats(mascara)
+        resto = []
+        for i in range(1, n):
+            area, largura = estat[i, cv2.CC_STAT_AREA], estat[i, cv2.CC_STAT_WIDTH]
+            x, y = centros[i]
+            if (roda["area_min"] <= area <= roda["area_max"] and largura <= roda["width_max"]
+                    and abs(np.hypot(x - cx, y - cy) - raio) <= roda["radius_tol"]):
+                resto.append(np.degrees(np.arctan2(y - cy, x - cx)) % 36)
+        if len(resto) < roda["min_buttons"]:
+            raise QuadroInvalido(f"Teclado não reconhecido ({len(resto)} botões soltos)")
+        # Média circular com período de 36°.
+        fases = np.radians(np.array(resto) * 10)
+        inicio = np.degrees(np.arctan2(np.sin(fases).mean(), np.cos(fases).mean())) / 10 % 36
+        desvio = [min(abs(a - inicio) % 36, 36 - abs(a - inicio) % 36) for a in resto]
+        if max(desvio) > roda["angle_tol"]:
+            raise QuadroInvalido("Botões fora do círculo esperado")
+        angulos = sorted((inicio + 36 * k) % 360 for k in range(10))
+        # Ordem horária na tela (y para baixo): ângulo crescente a partir de -180°.
+        angulos = sorted(((a + 180) % 360) - 180 for a in angulos)
+        return [(cx + raio * np.cos(np.radians(a)), cy + raio * np.sin(np.radians(a)))
+                for a in angulos]
+
+    def _nota(self, teclado, digito, x, y, escala):
+        """Maior correlação do número `digito` em volta de (x, y), perto da escala dada."""
+        melhor = -1.0
+        for fator in np.linspace(escala * 0.8, escala * 1.25, 8):
+            tpl = cv2.resize(self.templates[digito], None, fx=fator, fy=fator,
+                             interpolation=cv2.INTER_AREA if fator < 1 else cv2.INTER_CUBIC)
+            h, w = tpl.shape[:2]
+            if min(h, w) < 6:
+                continue
+            x0, y0 = int(max(0, x - w / 2 - 6)), int(max(0, y - h / 2 - 6))
+            regiao = teclado[y0:y0 + h + 12, x0:x0 + w + 12]
+            if regiao.shape[0] < h or regiao.shape[1] < w:
+                continue
+            melhor = max(melhor, cv2.minMaxLoc(cv2.matchTemplate(regiao, tpl, cv2.TM_CCOEFF_NORMED))[1])
+        return melhor
+
+    def teclas_pela_roda(self, teclado, deslocamento):
+        """Números da roda: posições pelo círculo e rotação pela soma das 10 leituras.
+
+        Os números seguem em ordem decrescente no sentido horário (conferido nos dois
+        captchas reais disponíveis); só a rotação muda. Cada número tem o tamanho que o
+        botão teria na posição da referência; a escala vem da altura (botões de baixo
+        são maiores). Sem folga clara entre a melhor e a segunda rotação, não clica.
+        """
+        chave = hashlib.sha256(teclado.tobytes()).hexdigest()
+        if chave in self._cache_roda:
+            mapa = self._cache_roda[chave]
+        else:
+            roda = self.perfil["ring"]
+            posicoes = self._posicoes_da_roda(teclado)
+            altura = lambda y: roda["size_at_top"] + (y - roda["top_y"]) * roda["size_per_px"]
+            notas = np.zeros((10, 10))
+            for i, (x, y) in enumerate(posicoes):
+                for d in range(10):
+                    _, ry = roda["reference"][str(d)]
+                    notas[i, d] = self._nota(teclado, str(d), x, y, altura(y) / altura(ry))
+            totais = sorted(((sum(notas[i, (r - i) % 10] for i in range(10)), r) for r in range(10)),
+                            reverse=True)
+            (melhor, r), (segundo, _) = totais[0], totais[1]
+            if melhor / 10 < roda["mean_min"] or melhor - segundo < roda["margin_min"]:
+                raise QuadroInvalido(f"Roda ambígua (média {melhor / 10:.2f}, folga {melhor - segundo:.2f})")
+            mapa = {str((r - i) % 10): (int(round(x)), int(round(y))) for i, (x, y) in enumerate(posicoes)}
+            if len(self._cache_roda) > 32:
+                self._cache_roda.clear()
+            self._cache_roda[chave] = mapa
+        return {d: (x + deslocamento[0], y + deslocamento[1]) for d, (x, y) in mapa.items()}
+
     def analisar(self, frame):
         pos = self.ancora(frame)
         if pos is None:
@@ -83,8 +168,13 @@ class VisaoVerificacao:
         popup = frame[oy:oy+h, ox:ox+w]
         teclado = self._recortar(popup, self.perfil["keyboard"])
         kx, ky, _, _ = self.perfil["keyboard"]
-        teclas = {digito: self._alvo(teclado, digito, (ox+kx, oy+ky))
-                  for digito in "0123456789"}
+        try:
+            teclas = {digito: self._alvo(teclado, digito, (ox+kx, oy+ky))
+                      for digito in "0123456789"}
+        except QuadroInvalido:
+            # Os botões giram numa roda e mudam de tamanho a cada desafio: o recorte de
+            # tamanho fixo só casa quando cada número cai no mesmo lugar da referência.
+            teclas = self.teclas_pela_roda(teclado, (ox+kx, oy+ky))
         for a, ponto in teclas.items():
             for b, outro in teclas.items():
                 if a != b and np.linalg.norm(np.subtract(ponto, outro)) < 10:

@@ -328,3 +328,15 @@ python -m src.main "TITULO DA JANELA"
    o convite. Sair só é clicado com a tela reconhecida como sala (no lobby nunca). Convidada
    numa sala sem ter aceitado o convite da principal nesta volta também sai para o Cais.
 Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado no jogo.
+
+## 2026-10-29 — captcha: "Destino ambíguo/ausente" (teclado em roda)
+- Causa: o teclado do captcha é uma roda que gira a cada desafio; os botões mudam de lugar e
+  de tamanho (embaixo maiores). Os recortes de cada número têm o tamanho da imagem 38 e só
+  casavam quando o número caía no mesmo lugar.
+- Correção (`teclas_pela_roda`, parâmetros em `perfil.json` → `ring`): círculo de centro
+  (135, 115) e raio 100 no teclado, botões a 36°; números decrescentes no sentido horário.
+  Ângulo de partida pelos botões pequenos; rotação pela soma das 10 leituras, com folga
+  mínima (sem folga não clica). O método antigo continua sendo tentado primeiro.
+- Conferido no print do usuário (`tests/imagens/captcha_roda_girada.webp`): 10 de 10 teclas.
+- OCR desse captcha (4 4 8 3, dígitos ocos, 3 preto) não gera candidato: o bot não envia nada.
+  Camada preta testada e desfeita (o modelo devolve vazio para dígitos ocos). Pendente.

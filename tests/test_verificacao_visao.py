@@ -53,11 +53,21 @@ def test_numeros_sao_localizados_na_imagem_e_nao_por_posicao_fixa(frame):
     assert q.teclas["1"] == (433, 83)
 
 
-def test_destino_duplicado_e_rejeitado(frame):
+def test_destino_duplicado_cai_na_roda_e_usa_o_botao_de_verdade(frame):
+    # Um "0" solto no meio do teclado deixa o recorte exato ambíguo; a roda só considera
+    # as posições do círculo, então o 0 continua sendo o botão real.
     v = VisaoVerificacao()
     tpl = v.templates["0"]
     frame[110:126, 350:375] = tpl
-    with pytest.raises(QuadroInvalido, match="ambíguo"):
+    q = v.analisar(frame)
+    assert abs(q.teclas["0"][0] - 431) <= 4 and abs(q.teclas["0"][1] - 83) <= 4
+
+
+def test_teclado_sem_botoes_nao_e_clicado(frame):
+    v = VisaoVerificacao()
+    kx, ky, kw, kh = v.perfil["keyboard"]
+    frame[ky + 12:ky + kh - 12, kx + 12:kx + kw - 12] = (130, 170, 190)
+    with pytest.raises(QuadroInvalido):
         v.analisar(frame)
 
 
@@ -77,3 +87,24 @@ def test_conta_casas_preenchidas_e_rejeita_buraco(frame):
     cv2.putText(frame, "1", (120, 174), cv2.FONT_HERSHEY_SIMPLEX, .55, (0, 0, 0), 1)
     with pytest.raises(QuadroInvalido, match="inconsistentes"):
         v.analisar(frame)
+
+
+RODA_GIRADA = Path(__file__).resolve().parent / "imagens" / "captcha_roda_girada.webp"
+# Print do usuário (29/10): a roda girou; 3 e 4 embaixo e grandes, 9 e 8 em cima e pequenos.
+CENTROS_RODA_GIRADA = {"9": (994, 373), "8": (1056, 374), "0": (943, 409), "7": (1105, 412),
+                       "1": (923, 467), "6": (1123, 471), "2": (941, 526), "5": (1103, 529),
+                       "3": (990, 564), "4": (1052, 565)}
+
+
+def test_roda_girada_com_botoes_de_outro_tamanho_e_reconhecida():
+    q = VisaoVerificacao().analisar(cv2.imread(str(RODA_GIRADA)))
+    for digito, (x, y) in CENTROS_RODA_GIRADA.items():
+        assert abs(q.teclas[digito][0] - x) <= 4 and abs(q.teclas[digito][1] - y) <= 4, digito
+
+
+def test_roda_concorda_com_o_recorte_exato_na_referencia(frame):
+    v = VisaoVerificacao()
+    exato = v.analisar(frame).teclas
+    kx, ky, kw, kh = v.perfil["keyboard"]
+    roda = v.teclas_pela_roda(frame[ky:ky + kh, kx:kx + kw], (kx, ky))
+    assert all(np.hypot(*np.subtract(exato[d], roda[d])) <= 4 for d in "0123456789")
