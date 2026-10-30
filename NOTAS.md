@@ -415,3 +415,4 @@ Comparado com o bot e confirmado pelo usuário:
   (6× 0,4 s) não saiu do lugar. Prints do usuário: em +104 o ângulo 30 dá. Agora, na Pandora, se
   nascer além de +150 recua em passinhos medindo a posição até +105 (`recuar` na estratégia).
 - Só nesse lugar (+160 a +215): nascendo em outros pontos (-88, +42, +116, +351) não anda.
+- Fora desse lugar: só mira 30 e atira com força 80 (`andar: None`); o recuo às cegas foi desligado.

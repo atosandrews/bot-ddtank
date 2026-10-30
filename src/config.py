@@ -60,9 +60,10 @@ ESTRATEGIAS = {
                  "forca_colado": 1, "colado_px": 25,
                  # A 1ª vez que joga no estágio 1, só passa (pedido do usuário, 29/10).
                  "passar_primeiro_turno": True},
-    # Estágio 2: a Pandora (rainha) fica à direita; anda para trás (←) se o ângulo 30 não der.
+    # Estágio 2: a Pandora (rainha) fica à direita. Só recua no lugar do alto do morro (recuar).
     # Tecla 3 = "+2", tecla 9 = dano "max".
-    "PANDORA": {"angulo": 30, "forca": 80, "skills": ["3", "9"], "alvo": "direita", "andar": "esquerda",
+    # Fora do lugar do alto do morro: só mira 30 e atira com força 80, sem andar (usuário, 30/10).
+    "PANDORA": {"angulo": 30, "forca": 80, "skills": ["3", "9"], "alvo": "direita", "andar": None,
                 # x do personagem em relação ao rótulo "Força": SÓ nascendo naquele lugar do alto
                 # do morro (~+186, ângulo preso em ~41) recua até +105, onde o ângulo 30 dá.
                 # Em outros lugares de nascimento não anda (usuário, 30/10).

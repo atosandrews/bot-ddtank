@@ -172,3 +172,9 @@ def test_prints_reais_da_pandora_disparam_o_recuo_so_no_alto(arquivo, recua):
     minimo, maximo = config.ESTRATEGIAS["PANDORA"]["recuar"]["se_x_entre"]
     assert leitura.estagio == "PANDORA" and leitura.pelo_triangulo
     assert (minimo <= leitura.eu[0] - leitura.ancora[0] <= maximo) is recua
+
+
+def test_pandora_fora_do_morro_nao_anda_mesmo_se_o_angulo_travar(monkeypatch):
+    # Usuário (30/10): em outro lugar de nascimento é só mirar 30 e força 80.
+    assert config.ESTRATEGIAS["PANDORA"]["andar"] is None
+    assert (config.ESTRATEGIAS["PANDORA"]["angulo"], config.ESTRATEGIAS["PANDORA"]["forca"]) == (30, 80)
