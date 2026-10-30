@@ -51,9 +51,10 @@ class Conta:
         self.batalha = type("B", (), {"estagio": estagio})()
 
 
-def grupo_de_teste(monkeypatch):
+def grupo_de_teste(monkeypatch, convidadas=()):
     g = gp.GrupoPintinho.__new__(gp.GrupoPintinho)  # sem janelas do jogo
     g.convidar_direto = False
+    g.convidadas = list(convidadas)
     chamadas = []
     monkeypatch.setattr(g, "sala_sozinha", lambda principal: chamadas.append("sozinha"))
     monkeypatch.setattr(grupo.Grupo, "cuidar_da_sala",
@@ -86,3 +87,13 @@ def test_print_invalido_nao_derruba_o_grupo(monkeypatch):
     g.passo()  # não levanta
     assert soltas == [True]
     assert grupo.telas is telas  # a troca do Pintinho foi desfeita mesmo com o erro
+
+
+def test_convidada_ja_na_sala_do_estagio_4_conta_como_aceita(monkeypatch):
+    dentro, fora = Conta(img("sala_stage_4"), None), Conta(img("e1"), None)
+    for c in (dentro, fora):
+        c.aceitou_nesta_volta, c.log = False, lambda m: None
+    g, chamadas = grupo_de_teste(monkeypatch, [dentro, fora])
+    with gp.modo_pintinho():
+        g.cuidar_da_sala(Conta(img("sala_stage_4"), 3))
+    assert dentro.aceitou_nesta_volta and not fora.aceitou_nesta_volta

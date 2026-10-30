@@ -138,6 +138,13 @@ class GrupoPintinho(Grupo):
             self.convidar_direto = True
             return
         # Estágio 4: o caminho do grupo (convidar, Pronto e Início com todas prontas).
+        # Convidada numa sala com o banner STAGE 4 já está na sala da principal, mesmo que o bot
+        # não a tenha visto aceitar: o grupo do Formigueiro a mandaria sair ("sala de outra
+        # pessoa"), como a conta4 no 2º teste do grupo (30/10).
+        for c in self.convidadas:
+            if not c.aceitou_nesta_volta and proximo_estagio(c.driver.capturar()) == ULTIMO_ESTAGIO:
+                c.log("já está na sala do estágio 4 da principal")
+                c.aceitou_nesta_volta = True
         config.CONVIDAR_SO_NO_ESTAGIO_2 = False
         try:
             super().cuidar_da_sala(principal)
