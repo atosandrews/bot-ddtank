@@ -151,6 +151,29 @@ def test_estagios_1_e_3_comecam_voando():
     assert plano(3, e3, batalha.ler(e3), 0).voar and not plano(3, e3, batalha.ler(e3), 1).voar
 
 
+def test_voo_vai_sempre_para_o_centro_do_mapa(monkeypatch):
+    frame = img("e1")
+    leitura = batalha.ler(frame)
+    leitura.inimigos = []
+    monkeypatch.setattr(pv, "lado_dos_inimigos", lambda f, a: 1)  # pintinhos à direita...
+    monkeypatch.setattr(pv, "lado_do_mapa", lambda f, a: -1)  # ...mas nasceu na metade direita
+    voo = plano(1, frame, leitura, 0)
+    assert voo.voar and voo.lado == -1 and "centro do mapa" in voo.motivo
+    e3 = img("e3")
+    assert plano(3, e3, batalha.ler(e3), 0).lado == -1
+    monkeypatch.setattr(pv, "lado_do_mapa", lambda f, a: None)
+    leitura.eu = (leitura.ancora[0] + 667, leitura.eu[1])  # x do 5º teste: lado direito da tela
+    assert plano(1, frame, leitura, 0).lado == -1
+
+
+@pytest.mark.parametrize("nome, lado", [("e1", 1), ("e3", 1)])
+def test_lado_do_centro_do_mapa_nos_prints(nome, lado):
+    # e1: nasceu à esquerda do mapa (voou para a direita na gravação). e3 é o turno depois do voo
+    # do estágio 3: o personagem já está na metade esquerda (no começo nascia na direita).
+    frame = img(nome)
+    assert pv.lado_do_mapa(frame, batalha.ler(frame).ancora) == lado
+
+
 def test_pintinho_quase_colado_usa_forca_5():
     frame = img("e1")
     leitura = batalha.ler(frame)

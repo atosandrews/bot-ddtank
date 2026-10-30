@@ -134,6 +134,13 @@ Uma instância inteira. Estágio 1 perfeito e rápido; estágio 4 sem erro (gaio
   da vez); colado na casa, o personagem se acertou junto e morreu. Agora recua em passinhos
   até o minimapa mostrar **7 px** para trás (na gravação: 9, 7 e 5 px).
 
+## 5º teste (30/10, 13:28)
+
+Nasceu na direita do mapa; o lado dos pintinhos no minimapa não foi lido e o voo foi para a
+direita (o padrão), longe deles. Pedido do usuário: **voar sempre para o lado do centro do
+mapa** (estágios 1 e 3), com 40/45 e 40/60. O lado vem da posição no minimapa (metade direita
+→ esquerda); sem minimapa, da posição na tela. Os 6 voos da gravação batem com essa regra.
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha

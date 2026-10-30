@@ -39,6 +39,7 @@ PREPARO_INTERVALO = 1.0
 PERTO_PX = 250            # inimigo na tela a até isso: tiro curto
 TIRO_LONGE = (40, 45)     # voando (F) para perto deles (usuário, 30/10: sempre 40/45)
 TIRO_PERTO = (40, 10)
+CENTRO_DA_TELA = 349      # x do meio da área da luta em relação ao rótulo "Força"
 # Pintinho quase colado (ou a barra dele escondida atrás da minha): força 5, como no
 # Formigueiro (usuário, 30/10).
 TIRO_COLADO = (40, 5)
@@ -194,7 +195,8 @@ def plano(estagio, frame, leitura, tiros_no_estagio, tiros_na_gaiola=0, mortas=N
                     galinha=mortas)
     if estagio == 3:
         if tiros_no_estagio == 0:
-            return Tiro(-1, *GRANGE_PRIMEIRO, "Grange: voando para perto", voar=True)
+            lado, como = lado_do_centro(frame, leitura, padrao=-1)
+            return Tiro(lado, *GRANGE_PRIMEIRO, f"Grange: voando para o centro do mapa ({como})", voar=True)
         if tiros_no_estagio == 1:
             return Tiro(-1, *GRANGE_DEPOIS, "Grange: recuando para pegar galinha e casa",
                         recuar=GRANGE_RECUO)
@@ -226,12 +228,24 @@ def plano(estagio, frame, leitura, tiros_no_estagio, tiros_na_gaiola=0, mortas=N
         return Tiro(perto[0], *TIRO_COLADO, f"pintinho quase colado ({perto[1]} px)")
     if perto and (perto[1] <= PERTO_PX or tiros_no_estagio > 0):
         return Tiro(perto[0], *TIRO_PERTO, f"pintinho a {perto[1]} px")
-    lado = pv.lado_dos_inimigos(frame, ancora) or (perto[0] if perto else None)
     if tiros_no_estagio > 0:
         # Nenhuma barra à vista: a dele está escondida atrás da minha (colado em mim).
+        lado = pv.lado_dos_inimigos(frame, ancora) or (perto[0] if perto else None)
         return Tiro(lado or 1, *TIRO_COLADO, "pintinho colado (sem barra à vista)")
-    return Tiro(lado or 1, *TIRO_LONGE, "voando para perto dos pintinhos" + ("" if lado else " (lado ?)"),
-                voar=True)
+    lado, como = lado_do_centro(frame, leitura)
+    return Tiro(lado, *TIRO_LONGE, f"voando para o centro do mapa ({como})", voar=True)
+
+
+def lado_do_centro(frame, leitura, padrao=1):
+    """Lado do centro do mapa, para onde o voo vai sempre (usuário, 30/10: no 5º teste nasceu na
+    direita e o voo pelo lado dos pintinhos no minimapa foi errado). Pelo minimapa; sem ele,
+    pela posição na tela."""
+    lado = pv.lado_do_mapa(frame, leitura.ancora)
+    if lado is not None:
+        return lado, "pelo minimapa"
+    if leitura.eu:
+        return (-1 if leitura.eu[0] - leitura.ancora[0] > CENTRO_DA_TELA else 1), "pela tela"
+    return padrao, "sem saber: padrão"
 
 
 class BatalhaPintinho(Batalha):

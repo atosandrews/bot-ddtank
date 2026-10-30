@@ -248,6 +248,18 @@ def ler_minimapa(frame, ancora):
     return eu, sorted(x for x, _ in vermelhos)
 
 
+def lado_do_mapa(frame, ancora):
+    """Lado do centro do mapa: -1 se estou na metade direita do minimapa, 1 na esquerda."""
+    busca, ox, oy = _regiao(frame, ancora, BUSCA_ROTULO)
+    pos, nota = vision.procurar(ROTULO_MINIMAPA, busca) if busca.size else (None, 0)
+    pontos = pontos_minimapa(frame, ancora)
+    if pos is None or nota < 0.8 or pontos is None or pontos[0] is None:
+        return None
+    w = vision.carregar(ROTULO_MINIMAPA).shape[1]
+    meio = ox + pos[0] - w // 2 + (MINIMAPA[0] + MINIMAPA[2]) / 2
+    return -1 if pontos[0] > meio else 1
+
+
 def lado_dos_inimigos(frame, ancora):
     """Pelo minimapa: 1 se os inimigos estão à direita de mim, -1 à esquerda, None sem saber."""
     mapa = ler_minimapa(frame, ancora)
