@@ -150,11 +150,12 @@ def test_pandora_nascendo_no_alto_recua_ate_a_posicao_do_angulo_30(monkeypatch):
     assert jogadas and 95 <= jogadas[0] <= 110  # chegou perto de +105 antes de mirar
 
 
-def test_pandora_nascendo_em_lugar_baixo_nao_anda(monkeypatch):
+@pytest.mark.parametrize("rel", [-88, 42, 116, 351])  # outros nascimentos vistos nos logs/vídeo
+def test_pandora_nascendo_em_outro_lugar_nao_anda(monkeypatch, rel):
     from types import SimpleNamespace
     ancora = (586, 822)
     monkeypatch.setattr(batalha, "ler", lambda frame: SimpleNamespace(
-        ancora=ancora, minha_vez=True, eu=(ancora[0] + 42, 713), inimigos=[], estagio="PANDORA",
+        ancora=ancora, minha_vez=True, eu=(ancora[0] + rel, 713), inimigos=[], estagio="PANDORA",
         aliados=[], pelo_triangulo=True))
     b = nova()
     teclas = []
@@ -168,6 +169,6 @@ def test_pandora_nascendo_em_lugar_baixo_nao_anda(monkeypatch):
                                            ("pandora_depois_de_recuar.webp", False)])
 def test_prints_reais_da_pandora_disparam_o_recuo_so_no_alto(arquivo, recua):
     leitura = batalha.ler(cv2.imread(str(Path(__file__).resolve().parent / "imagens" / arquivo)))
-    regra = config.ESTRATEGIAS["PANDORA"]["recuar"]
+    minimo, maximo = config.ESTRATEGIAS["PANDORA"]["recuar"]["se_x_entre"]
     assert leitura.estagio == "PANDORA" and leitura.pelo_triangulo
-    assert (leitura.eu[0] - leitura.ancora[0] > regra["se_x_maior"]) is recua
+    assert (minimo <= leitura.eu[0] - leitura.ancora[0] <= maximo) is recua

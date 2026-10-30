@@ -414,3 +414,4 @@ Comparado com o bot e confirmado pelo usuário:
 - Run 01:15: nasceu em +186 do rótulo "Força" (alto do morro), ângulo preso em 41; o recuo às cegas
   (6× 0,4 s) não saiu do lugar. Prints do usuário: em +104 o ângulo 30 dá. Agora, na Pandora, se
   nascer além de +150 recua em passinhos medindo a posição até +105 (`recuar` na estratégia).
+- Só nesse lugar (+160 a +215): nascendo em outros pontos (-88, +42, +116, +351) não anda.

@@ -372,10 +372,11 @@ class Batalha:
 
         recuo = estrategia.get("recuar")
         if recuo and leitura.eu:
-            # Pandora: nascendo no alto do morro o ângulo não desce de ~41. Recua medindo a
-            # posição até onde o ângulo 30 dá (prints do usuário, 30/10: +186 → +104).
+            # Pandora: só no lugar de nascimento do alto do morro (~+186) o ângulo não desce de
+            # ~41. Recua medindo a posição até onde o ângulo 30 dá (prints do usuário, 30/10).
             rel = leitura.eu[0] - leitura.ancora[0]
-            if rel > recuo["se_x_maior"]:
+            minimo, maximo = recuo["se_x_entre"]
+            if minimo <= rel <= maximo:
                 self.log(f"nasceu no alto (x {rel:+d}): recuando até x {recuo['ate_x']:+d}")
                 leitura = self.juntar_com(leitura, leitura.ancora[0] + recuo["ate_x"])
 
