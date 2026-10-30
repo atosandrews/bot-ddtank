@@ -436,7 +436,12 @@ def test_relogio_le_igual_ou_melhor_que_o_do_bot(nome):
 
 
 def test_28_conta_um_toque_a_partir_do_29_e_aprende_o_8(monkeypatch, tmp_path):
+    # Como era antes de o bot aprender o 8 no jogo: só os dígitos do bot e o 6 e o 9.
+    import shutil
+    for d in ("6", "9"):
+        shutil.copy(PASTA.parent.parent.parent / "img" / "pintinho" / "digitos" / f"{d}.png", tmp_path)
     monkeypatch.setattr(pintinho, "PASTA_DIGITOS", tmp_path)
+    monkeypatch.setattr(pintinho.batalha, "_digitos", {})
     assert not pintinho.angulo_legivel(28) and pintinho.angulo_legivel(29)
     frame = img("e2_1de3_vento-2.5")
     b = batalha_de_teste(frame)
@@ -450,3 +455,21 @@ def test_28_conta_um_toque_a_partir_do_29_e_aprende_o_8(monkeypatch, tmp_path):
     assert b.ajustar_angulo(batalha.ler(frame).ancora, 28)
     assert alvos == [29] and b.driver.teclas == ["down"] and aprendidos == [28]
 
+
+
+def test_relogio_le_28_laranja(monkeypatch):
+    # 7º teste (30/10): no pixel de trás o 28 laranja ficou ilegível e o bot passou a vez.
+    monkeypatch.setattr(pintinho.batalha, "_digitos", {})  # recarrega com o 8 aprendido no jogo
+    frame = img("e2_relogio_28_laranja")
+    assert pintinho.ler_relogio(frame, batalha.ler(frame).ancora) == (28, True)
+
+
+def test_andar_ate_o_angulo_respeita_o_tempo_da_vez(monkeypatch):
+    frame = img("e4")
+    b = batalha_de_teste(frame)
+    relogio = iter([0.0, 0.0, 10.0, 10.0, 10.0])  # já passou de 9 s da vez no 2º passo
+    monkeypatch.setattr(pintinho.time, "time", lambda: next(relogio, 99.0))
+    b.inicio_vez = 0.0
+    monkeypatch.setattr(b, "ajustar_angulo", lambda ancora, alvo: False)
+    assert not b.andar_ate_angulo(batalha.ler(frame), -1, 20)
+    assert b.driver.teclas.count("right") <= 2  # um passo (e a virada), não os 9

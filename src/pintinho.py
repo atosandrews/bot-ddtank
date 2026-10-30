@@ -93,9 +93,11 @@ GAIOLA_ANGULO = 30
 GAIOLA_A_MAIS = 5.8
 GAIOLA_SEM_MAPA = 35      # sem o minimapa: a força média da gravação
 GAIOLA_TENTATIVAS = [0, 3, -3, 6]  # errou: a próxima muda um pouco a força
-ANDAR_TOQUE = 0.15        # segundos de seta em cada passinho
-ANDAR_PASSOS = (3, 6)     # passinhos para trás (longe do alvo) e, se não der, para frente
-ANDAR_TEMPO_MAX = 12      # a vez acaba: atira com o que tiver
+# 7º teste (30/10): num lugar do estágio 4 o ângulo não descia de 26; passinhos de 0,15 s quase
+# não andavam e a busca gastou ~17 s: a vez acabou e o tiro não saiu (2 vezes).
+ANDAR_TOQUE = 0.3         # segundos de seta em cada passo
+ANDAR_PASSOS = (3, 6)     # passos para trás (longe do alvo) e, se não der, para frente
+ANDAR_ATE = 9.0           # s desde o começo da vez: passou disso, atira com o ângulo que tiver
 
 CARTAS_POR_TELA = {"estagio": 1, "final": 2}
 
@@ -289,7 +291,9 @@ def ler_relogio(frame, ancora):
     faixa = mascara[y0:y0 + altura] > 0
     explicado = np.zeros(faixa.shape[1], bool)
     for _, x, _, _, w, _ in escolhidos:
-        explicado[x:x + w] = True
+        # 1 px de folga: em algumas cores o contorno sai 1 px mais largo que o modelo
+        # (28 laranja no 7º teste, 30/10: ilegível e o bot passou a vez na galinha).
+        explicado[max(x - 1, 0):x + w + 1] = True
     sobra = int(faixa[:, ~explicado].sum())
     texto = "".join(e[3] for e in escolhidos)
     if sobra <= SOBRA_RELOGIO and len(texto) <= 2:
@@ -334,6 +338,7 @@ class BatalhaPintinho(Batalha):
         self.estagio = None
         self.erros_galinha = 0  # só para o log: quantas vezes errou uma galinha
         self.preparado_em = 0.0
+        self.inicio_vez = None  # quando a vez atual começou (o andar não pode passar do tempo)
         self.antecipacao = config.FORCA_ANTECIPACAO
         self._zerar_estagio()
 
@@ -408,6 +413,7 @@ class BatalhaPintinho(Batalha):
                 time.sleep(0.25)
             return
         self.turno += 1
+        self.inicio_vez = time.time()
         if estagio is None:
             self.log("não li o estágio no quadro de missão; jogando como estágio 1")
             self.salvar_debug(frame, "sem_estagio")
@@ -607,11 +613,11 @@ class BatalhaPintinho(Batalha):
         """
         self.salvar_debug(self.driver.capturar(), "angulo_travou")
         tecla_lado = config.TECLA_DIREITA if lado > 0 else config.TECLA_ESQUERDA
-        inicio = time.time()
+        inicio = self.inicio_vez or time.time()
         for direcao, passos in zip((-lado, lado), ANDAR_PASSOS):
             tecla = config.TECLA_DIREITA if direcao > 0 else config.TECLA_ESQUERDA
             for passo in range(passos):
-                if time.time() - inicio > ANDAR_TEMPO_MAX:
+                if time.time() - inicio > ANDAR_ATE:
                     self.log("o tempo da vez está acabando: atirando com o ângulo que deu")
                     return False
                 self.log(f"ângulo {angulo} não dá aqui: andando para a "

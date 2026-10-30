@@ -155,6 +155,17 @@ Nasceu mais à frente (distância ~11,2). A de baixo morreu com 57 (tabela), mas
   28 (sem o 8) é alcançado pelo 29 exato + 1 toque, e o 8 é aprendido e salvo na 1ª vez
   (`8_auto.png`).
 
+## 7º teste (30/10, 13:56–14:18)
+
+Duas instâncias inteiras no pixel da frente (galinha de baixo com 28/60 no 1º tiro; o bot
+aprendeu o 8 do relógio às 13:59, `img/pintinho/digitos/8_auto.png`). Problemas:
+- No pixel de trás o **28 laranja** ficou ilegível (contorno 1 px mais largo que o modelo) e
+  o bot passou a vez na galinha de baixo. Corrigido com 1 px de folga em volta de cada dígito:
+  agora lê 230 de 233 números da gravação exatos, sem discordar do leitor do bot.
+- Estágio 4: num lugar o ângulo não descia de 26; passinhos de 0,15 s quase não andavam e a
+  busca gastou ~17 s: a vez acabou sem tiro (2 vezes). Agora passos de 0,3 s e no máximo até
+  9 s da vez; depois atira com o ângulo que tiver.
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha
