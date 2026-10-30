@@ -246,7 +246,9 @@ class VisaoVerificacao:
         return (int(round(centro[0] + dx * np.cos(a) - dy * np.sin(a))),
                 int(round(centro[1] + dx * np.sin(a) + dy * np.cos(a))))
 
-    def analisar(self, frame):
+    def analisar(self, frame, com_teclas=True):
+        """Quadro do captcha. `com_teclas=False` não lê o teclado (código, casas, Confirmar e
+        Resetar não dependem dele; a roda girando às vezes fica ambígua num print)."""
         pos = self.ancora(frame)
         if pos is None:
             return None
@@ -258,13 +260,16 @@ class VisaoVerificacao:
         popup = frame[oy:oy+h, ox:ox+w]
         teclado = self._recortar(popup, self.perfil["keyboard"])
         kx, ky, _, _ = self.perfil["keyboard"]
-        try:
-            teclas = {digito: self._alvo(teclado, digito, (ox+kx, oy+ky))
-                      for digito in "0123456789"}
-        except QuadroInvalido:
-            # Os botões giram numa roda e mudam de tamanho a cada desafio: o recorte de
-            # tamanho fixo só casa quando cada número cai no mesmo lugar da referência.
-            teclas = self.teclas_pela_roda(teclado, (ox+kx, oy+ky))
+        if not com_teclas:
+            teclas = {}
+        else:
+            try:
+                teclas = {digito: self._alvo(teclado, digito, (ox+kx, oy+ky))
+                          for digito in "0123456789"}
+            except QuadroInvalido:
+                # Os botões giram numa roda e mudam de tamanho a cada desafio: o recorte de
+                # tamanho fixo só casa quando cada número cai no mesmo lugar da referência.
+                teclas = self.teclas_pela_roda(teclado, (ox+kx, oy+ky))
         for a, ponto in teclas.items():
             for b, outro in teclas.items():
                 if a != b and np.linalg.norm(np.subtract(ponto, outro)) < 10:

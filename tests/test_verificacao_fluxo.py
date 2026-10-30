@@ -263,7 +263,8 @@ def test_controlador_publico_serializa_contas(monkeypatch):
     assert verificacao.tratar(Driver()).estado == "RESOLVIDO"
 
 
-def test_perda_de_foco_apos_primeiro_numero_limpa_e_recomeca():
+def test_perda_de_foco_apos_primeiro_numero_continua_de_onde_parou():
+    # Run de 30/10: acertava os primeiros números, algo falhava e o bot resetava tudo.
     d = Driver()
     interrompido = False
     def perder_foco(driver, x, y):
@@ -274,7 +275,14 @@ def test_perda_de_foco_apos_primeiro_numero_limpa_e_recomeca():
     d.ao_clicar = perder_foco
     executar(d)
     assert d.confirmados == ["0011"]
-    assert (200, 100) in d.cliques
+    assert (200, 100) not in d.cliques  # sem Resetar
+    assert [c for c in d.cliques if c[1] == 10] == [(0, 10), (0, 10), (1, 10), (1, 10)]
+
+
+def test_casas_preenchidas_por_outra_tentativa_sao_limpas():
+    d = Driver(ocupados="12")  # já havia números antes de o bot começar
+    executar(d)
+    assert (200, 100) in d.cliques and d.confirmados == ["0011"]
 
 
 def test_diagnostico_salva_desafio_sem_candidato_uma_vez_e_o_envio(monkeypatch, tmp_path):

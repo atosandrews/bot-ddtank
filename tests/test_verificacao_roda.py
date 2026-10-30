@@ -172,15 +172,34 @@ def test_para_em_cima_do_numero_confere_e_so_entao_clica(monkeypatch):
     assert len(alvos) == 4
 
 
-def test_numero_errado_embaixo_do_mouse_nao_e_clicado(monkeypatch):
+def test_sem_achar_o_botao_embaixo_do_mouse_clica_no_ponto_previsto(monkeypatch):
+    # Run de 30/10: com o hover o botão muda de aparência; o bot ficava no número certo e
+    # não clicava. Agora clica onde o mouse parou.
     monkeypatch.setattr(config, "VERIFICACAO_ESPERA_HOVER", 0.0)
     relogio, logs = Relogio(), []
     d = Driver(relogio, velocidade=0)
 
-    class Errada(VisaoComConferencia):
+    class SemBotao(VisaoComConferencia):
         def conferir(self, frame, origem, digito, ponto):
-            d.fim = True  # encerra o desafio depois da recusa
             return False, ponto
-    resolver(d, ocr=Ocr(), visao=Errada(d), dormir=relogio.dormir, relogio=relogio,
-             log=lambda *a, **k: logs.append(a[0]), tela_conhecida=lambda f: f["fim"])
-    assert d.entrada == "" and any("outro número" in l for l in logs)
+    r = resolver(d, ocr=Ocr(), visao=SemBotao(d), dormir=relogio.dormir, relogio=relogio,
+                 log=lambda *a, **k: logs.append(a[0]), tela_conhecida=lambda f: f["fim"])
+    assert r.estado == "RESOLVIDO" and d.entrada == "0123"
+
+
+def test_confirma_mesmo_com_a_roda_ambigua_depois_dos_4_numeros():
+    # Run de 30/10: acertou os 4 números mas não confirmou; a análise do teclado (desnecessária
+    # para o Confirmar) dava "Roda ambígua" e o bot resetava na volta seguinte.
+    from src.verificacao_visao import QuadroInvalido
+    relogio, logs = Relogio(), []
+    d = Driver(relogio, velocidade=0)
+
+    class AmbiguaNoFim(Visao):
+        def analisar(self, frame, com_teclas=True):
+            if com_teclas and len(frame["entrada"]) == 4:
+                raise QuadroInvalido("Roda ambígua (média 0.73, folga 0.01)")
+            return super().analisar(frame)
+    r = resolver(d, ocr=Ocr(), visao=AmbiguaNoFim(), dormir=relogio.dormir, relogio=relogio,
+                 log=lambda *a, **k: logs.append(a[0]), tela_conhecida=lambda f: f["fim"])
+    assert r.estado == "RESOLVIDO" and d.entrada == "0123"
+    assert (200, 100) not in [c[:2] for c in d.cliques]  # nunca resetou

@@ -101,6 +101,12 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         estacionar()
         return driver.capturar_verificacao()
 
+    def analisar(frame, com_teclas=True):
+        try:
+            return visao.analisar(frame, com_teclas=com_teclas)
+        except TypeError:  # visão sem o parâmetro (testes antigos)
+            return visao.analisar(frame)
+
     def clicar_atual(base, destino, ocupados, digito=None):
         """Revalida o desafio num print novo e clica.
 
@@ -118,7 +124,8 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         # de 29/10) a análise no meio deixava o giro entre os prints ambíguo (período 36°).
         segunda = driver.capturar_verificacao() if digito is not None else None
         t2 = relogio()
-        atual = visao.analisar(frame)
+        # Confirmar/Resetar não dependem do teclado: análise leve (a roda pode estar ambígua).
+        atual = analisar(frame, com_teclas=digito is not None)
         if (atual is None or atual.identidade != base.identidade
                 or atual.origem != base.origem
                 or atual.confirmar != base.confirmar or atual.resetar != base.resetar
@@ -151,10 +158,10 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                 if terceira is None or terceira[1] != regiao:
                     return False
                 ok, ponto = conferir(terceira[0], atual.origem, digito, destino)
-                if not ok:
-                    log(f"[{nome}] outro número embaixo do mouse; sem clique", flush=True)
-                    return False
-                destino = ponto
+                # Com o mouse em cima o botão muda de aparência: sem achá-lo, clica no ponto
+                # onde o mouse parou (run de 30/10: estava no número certo e não clicava).
+                if ok:
+                    destino = ponto
         if repouso is not None:
             return driver.clicar_verificado(*destino, regiao_esperada=regiao, estacionar=repouso)
         return driver.clicar_verificado(*destino, regiao_esperada=regiao)
@@ -170,6 +177,7 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
     ultimo_tempo = None
     ultimo_aviso = float("-inf")
     salvo_sem_candidato = None
+    digitando = None  # (desafio, candidato, números já digitados, início) da tentativa atual
     log(f"[{nome}] verificação automática iniciada; Ctrl+C para interromper", flush=True)
     while True:
         captura = capturar()
@@ -188,7 +196,7 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
             dormir(config.VERIFICACAO_INTERVALO)
             continue
         try:
-            quadro = visao.analisar(frame)
+            quadro = analisar(frame, com_teclas=False)
             if quadro is not None:
                 repouso = getattr(quadro, "repouso", None) or repouso
             if quadro is None:
@@ -232,16 +240,28 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                 rejeitados.add(texto)
                 log(f"[{nome}] tentativa {tentativas} sem aceitação observada; reavaliando", flush=True)
                 pendente = None
-            if quadro.ocupados:
-                # Resetar só limpa as casas (confirmado pelo usuário em 29/10: o código não muda);
-                # o teclado pode ser redesenhado, então reanalisa no próximo ciclo.
+            retomar = (digitando is not None and digitando[0] == quadro.identidade
+                       and quadro.ocupados == digitando[2])
+            if quadro.ocupados and not retomar:
+                # Casas que não foram digitadas por esta tentativa: limpa. Resetar só limpa
+                # (usuário, 29/10: o código não muda).
+                digitando = None
                 if clicar_atual(quadro, quadro.resetar, quadro.ocupados):
                     dormir(config.VERIFICACAO_ESPERA_CLIQUE)
                 else:
                     dormir(config.VERIFICACAO_INTERVALO)
                 continue
-            candidatos = ocr.reconhecer(quadro.codigo, config.VERIFICACAO_LIMIAR_OCR)
-            candidato = next((c for c in candidatos if c.texto not in rejeitados), None)
+            if retomar:
+                # Os números já digitados são desta tentativa: continua de onde parou em vez de
+                # resetar (run de 30/10: acertava e depois apagava).
+                _, candidato, inicio_digitos, inicio_tentativa = digitando
+                log(f"[{nome}] continuando {candidato.texto} do {inicio_digitos + 1}º número", flush=True)
+            else:
+                candidato = None
+            if candidato is None:
+                inicio_digitos, inicio_tentativa = 0, relogio()
+                candidatos = ocr.reconhecer(quadro.codigo, config.VERIFICACAO_LIMIAR_OCR)
+                candidato = next((c for c in candidatos if c.texto not in rejeitados), None)
             if candidato is None:
                 if quadro.identidade != salvo_sem_candidato:
                     # Uma vez por imagem: a recaptura de 1 s repetiria o mesmo arquivo.
@@ -259,19 +279,21 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                     ultimo_aviso = relogio()
                 dormir(config.VERIFICACAO_INTERVALO)
                 continue
-            inicio_tentativa = relogio()
-            for indice, digito in enumerate(candidato.texto):
-                if not clicar_atual(quadro, quadro.teclas[digito], indice, digito):
+            for indice in range(inicio_digitos, 4):
+                digito = candidato.texto[indice]
+                if not clicar_atual(quadro, None, indice, digito):
                     break
+                digitando = (quadro.identidade, candidato, indice + 1, inicio_tentativa)
                 dormir(config.VERIFICACAO_ESPERA_CLIQUE)
             else:
                 # Não confirmar se o tempo se esgotou durante OCR/preenchimento.
                 if relogio() < prazo:
                     captura_final = capturar()
                     if captura_final is not None:
-                        final = visao.analisar(captura_final[0])
+                        final = analisar(captura_final[0], com_teclas=False)
                         if final is not None and ocr.ler_tempo(final.tempo) != 0:
                             if clicar_atual(quadro, quadro.confirmar, 4):
+                                digitando = None
                                 tentativas += 1
                                 enviado_neste_desafio = True
                                 pendente = (candidato.texto, relogio()+config.VERIFICACAO_ESPERA_RESPOSTA)

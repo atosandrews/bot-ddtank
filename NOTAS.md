@@ -425,3 +425,12 @@ Comparado com o bot e confirmado pelo usuário:
   12 captchas reais rotulados: só com certeza 3 certos / 0 errados / 9 sem resposta; com palpite
   8 certos / 1 errado (6351 → 6367) / 3 sem resposta (ninguém leu 4 dígitos: 7 fino, dígitos ocos).
 - Captcha expirado não para mais o bot: registra no log e o ciclo segue.
+
+## 2026-10-30 01:56 — captcha "quase conseguindo" (3 observações do usuário)
+1. Mouse no número certo sem clicar: a conferência do botão sob o mouse falhava (com o hover o
+   botão muda de aparência) e vetava o clique. Agora clica onde o mouse parou.
+2. Resetava depois de acertar: um passo que falhava no meio deixava casas preenchidas e a volta
+   seguinte clicava Resetar. Agora, se as casas são desta tentativa, continua de onde parou.
+3. Acertou os 4 e não confirmou: o Confirmar dependia da análise do teclado, que às vezes dava
+   "Roda ambígua". Código, casas, Confirmar e Resetar usam análise leve (sem teclado).
+- Folga mínima da rotação da roda: 0,15 → 0,08 (no log a folga ficava em 0,09–0,15).
