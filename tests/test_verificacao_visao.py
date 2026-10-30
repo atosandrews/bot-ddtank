@@ -118,7 +118,7 @@ def test_segundo_captcha_real_com_roda_girada():
     q = VisaoVerificacao().analisar(cv2.imread(str(RODA_GIRADA.with_name("captcha_roda_girada_2.webp"))))
     for digito, (x, y) in esperado.items():
         assert abs(q.teclas[digito][0] - x) <= 4 and abs(q.teclas[digito][1] - y) <= 4, digito
-    assert q.repouso is not None and q.repouso[1] < q.centro_roda[1] - 100  # acima do teclado
+    assert q.repouso is not None and abs(np.hypot(*np.subtract(q.repouso, q.centro_roda)) - 75) <= 2
 
 
 def test_aviso_clique_no_jogo_sobre_o_captcha_da_ponto_fora_do_teclado():
@@ -164,5 +164,6 @@ def test_botao_grande_partido_em_pedacos_nao_derruba_a_roda():
 def test_mouse_espera_perto_dos_numeros_sem_ficar_em_cima():
     frame = cv2.imread(str(RODA_GIRADA.with_name("captcha_botao_partido.png")))
     q = VisaoVerificacao().analisar(frame)
-    assert min(np.hypot(*np.subtract(q.repouso, p)) for p in q.teclas.values()) >= 30
-    assert np.hypot(*np.subtract(q.repouso, q.centro_roda)) < 180  # dentro do painel do teclado
+    # Por dentro da roda, a 75 px do centro: os botões (a 100 px) passam perto e nunca em cima.
+    assert abs(np.hypot(*np.subtract(q.repouso, q.centro_roda)) - 75) <= 2
+    assert min(np.hypot(*np.subtract(q.repouso, p)) for p in q.teclas.values()) >= 18

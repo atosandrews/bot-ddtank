@@ -394,3 +394,5 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
   fora do padrão são descartados em vez de recusar a roda. Teste: `captcha_botao_partido.png`.
 - Saída para o Cais (run 23:57): 6 cliques em Sair sem efeito. O recorte casa na palavra
   "SAIR"; o certo é clicar na porta, 27 px acima (`SAIR_PORTA`, informado pelo usuário).
+- Ajuste pedido pelo usuário: o mouse espera por dentro da roda, 75 px acima do centro (`rest`).
+  Os botões passam a ~25–30 px dele (roda mais lenta) e nunca por cima, em qualquer rotação.

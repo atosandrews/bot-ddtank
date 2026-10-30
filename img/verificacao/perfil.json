@@ -198,10 +198,10 @@
     "aspect_min": 1.4
   },
   "rest": [
-    236,
-    46
+    357,
+    74
   ],
-  "_rest": "Onde o mouse espera no captcha: dentro do painel do teclado, no canto de cima (~50 px dos botões). Perto dos números a roda gira mais devagar (vídeos de 29/10).",
+  "_rest": "Onde o mouse espera no captcha: por dentro da roda, 75 px acima do centro. Os botões passam a 100 px (perto, a roda gira mais devagar, como o usuário mostrou) e nunca por cima do mouse, em qualquer rotação (em cima de um número os outros somem).",
   "focus_click": [
     80,
     10
