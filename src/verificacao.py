@@ -159,7 +159,17 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         if captura is None:
             dormir(config.VERIFICACAO_INTERVALO)
             continue
-        frame, _ = captura
+        frame, regiao_atual = captura
+        foco = getattr(visao, "ponto_para_foco", None)
+        alvo_foco = foco(frame) if callable(foco) else None
+        if alvo_foco is not None:
+            if relogio() - ultimo_aviso >= 3:
+                log(f"[{nome}] jogo sem foco ('Clique no jogo'): clicando na barra do título do captcha",
+                    flush=True)
+                ultimo_aviso = relogio()
+            driver.clicar_verificado(*alvo_foco, regiao_esperada=regiao_atual, estacionar=alvo_foco)
+            dormir(config.VERIFICACAO_INTERVALO)
+            continue
         try:
             quadro = visao.analisar(frame)
             if quadro is not None:

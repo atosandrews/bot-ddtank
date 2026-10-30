@@ -12,6 +12,7 @@ from .verificacao_ocr import ErroInfraestrutura
 
 PASTA = Path(__file__).resolve().parent.parent / "img" / "verificacao"
 TITULO = PASTA.parent / "codigo_verificacao.png"
+AVISO_FOCO = PASTA.parent / "clique_no_jogo.png"  # "Clique no jogo, para continuar jogando"
 
 
 class QuadroInvalido(ValueError):
@@ -166,6 +167,24 @@ class VisaoVerificacao:
                 self._cache_roda.clear()
             self._cache_roda[chave] = mapa
         return {d: (x + deslocamento[0], y + deslocamento[1]) for d, (x, y) in mapa.items()}
+
+    def ponto_para_foco(self, frame):
+        """Com o aviso "Clique no jogo" por cima do captcha: onde clicar para tirar o aviso.
+
+        O aviso escurece a tela e cobre o teclado (run de 29/10: "0 botões soltos" sem fim).
+        O ponto é a barra do título do quadro: fora do teclado e dos botões, então o clique
+        não digita nada nem se o aviso sumir antes. None se não houver aviso ou quadro.
+        """
+        if frame is None or not isinstance(frame, np.ndarray) or frame.ndim != 3:
+            return None
+        if vision.achar(AVISO_FOCO, frame, config.LIMIAR) is None:
+            return None
+        pos = self.ancora(frame)
+        if pos is None:
+            return None
+        ax, ay = self.perfil["anchor"]
+        rx, ry = self.perfil["rest"]
+        return pos[0] - ax + rx, pos[1] - ay + ry
 
     def _teclado(self, frame, origem):
         kx, ky, kw, kh = self.perfil["keyboard"]

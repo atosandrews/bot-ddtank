@@ -119,3 +119,23 @@ def test_segundo_captcha_real_com_roda_girada():
     for digito, (x, y) in esperado.items():
         assert abs(q.teclas[digito][0] - x) <= 4 and abs(q.teclas[digito][1] - y) <= 4, digito
     assert q.repouso is not None and q.repouso[1] < q.centro_roda[1] - 100  # acima do teclado
+
+
+def test_aviso_clique_no_jogo_sobre_o_captcha_da_ponto_fora_do_teclado():
+    # Quadro do vídeo da run de 29/10: "Clique no jogo" escurece e cobre o teclado.
+    frame = cv2.imread(str(RODA_GIRADA.with_name("captcha_sem_foco.jpg")))
+    v = VisaoVerificacao()
+    ponto = v.ponto_para_foco(frame)
+    assert ponto is not None
+    ax, ay = v.ancora(frame)
+    ox, oy = ax - v.perfil["anchor"][0], ay - v.perfil["anchor"][1]
+    kx, ky, kw, kh = v.perfil["keyboard"]
+    cx, cy, cw, ch = v.perfil["controls"]
+    fora = lambda x, y, w, h: not (ox + x <= ponto[0] <= ox + x + w and oy + y <= ponto[1] <= oy + y + h)
+    assert fora(kx, ky, kw, kh) and fora(cx, cy, cw, ch)
+    assert ponto[1] < oy + 25  # barra do título
+
+
+def test_sem_aviso_nao_ha_clique_de_foco():
+    frame = cv2.imread(str(RODA_GIRADA.with_name("captcha_roda_girada_2.webp")))
+    assert VisaoVerificacao().ponto_para_foco(frame) is None

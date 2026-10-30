@@ -362,3 +362,12 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
   padrão lê "61" e a leitura por cores perde o 1 preto. Sem 2 fontes, não envia. Camada preta
   testada de novo (dá "4136", errado) e desfeita. Precisa de capturas reais sem compressão
   (`logs/verificacao/`).
+
+## 2026-10-29 23:30 — run gravada (vídeo em logs/gravacao_tela/)
+- Causa real do "0 botões soltos": o jogo estava SEM FOCO. O aviso "Clique no jogo, para
+  continuar jogando" escurece a tela e cobre o teclado; o controlador nunca clica no centro
+  para recuperar foco, então esperava para sempre. Agora, com o aviso sobre o captcha, clica
+  na barra do título do quadro (fora do teclado e dos botões; `ponto_para_foco`).
+- Captchas das secundárias: nenhum foi tratado. O controlador é serial e ficou preso no da
+  principal. O log mostra "5 contas: principal + 4 convidada(s)": há uma 5ª janela com o
+  título do jogo aberta.
