@@ -51,7 +51,11 @@ COLADO_PX = 30
 # As forças sem vento e o vento vêm do ajuste das 3 voltas: a tabela explicou a diferença da
 # volta 2 (nasceu 9 px mais perto no minimapa) com erro de até 0,4 de força.
 GALINHAS = [(30, 62.2, 114), (45, 62.5, 116), (55, 70.6, 121)]  # de baixo, do meio, de cima
-FORCA_POR_VENTO = 0.17    # vento contra soma, a favor tira (ajuste das galinhas das 3 voltas)
+# Vento a favor tira 0,17 por unidade (ajuste das 3 voltas da gravação). Vento contra soma
+# 0,4: no 3º teste no jogo (30/10) o 1º tiro na do meio (62,4, vento −2,5) e na de cima
+# (70,0, vento −3,0) caíram curtos; na gravação o usuário matou com 63 e 71 (−2,5 e −2,4).
+FORCA_POR_VENTO = 0.17    # a favor
+FORCA_POR_VENTO_CONTRA = 0.4
 FORCA_VENTO_MAX = 3       # nunca corrige mais do que isso (leitura errada do vento)
 # Errar uma galinha faz elas porem escudo por um tempo (usuário, 30/10): o contador e o vento
 # são lidos em vários prints e o ângulo tem que estar exato no relógio.
@@ -103,7 +107,9 @@ def com_vento(forca, frame, ancora, lado, vento=_LER):
         vento = pv.ler_vento(frame, ancora)
     if vento is None:
         return forca, None
-    ajuste = max(-FORCA_VENTO_MAX, min(FORCA_VENTO_MAX, -FORCA_POR_VENTO * vento * lado))
+    a_favor = vento * lado  # positivo: soprando para o lado do tiro
+    por_unidade = FORCA_POR_VENTO if a_favor > 0 else FORCA_POR_VENTO_CONTRA
+    ajuste = max(-FORCA_VENTO_MAX, min(FORCA_VENTO_MAX, -por_unidade * a_favor))
     return forca + ajuste, vento
 
 
@@ -399,7 +405,8 @@ class BatalhaPintinho(Batalha):
         real = pv.forca_na_faixa(self.driver.capturar(regiao))
         if recomecou and real > 3:
             erro = real - forca
-            self.antecipacao = min(ANTECIPACAO_MAX, max(ANTECIPACAO_MIN, self.antecipacao + 0.5 * erro))
+            # Passo pequeno: a leitura varia ~0,5 por print; com 0,5 a antecipação oscilava.
+            self.antecipacao = min(ANTECIPACAO_MAX, max(ANTECIPACAO_MIN, self.antecipacao + 0.3 * erro))
         self.log(f"tiro: pedida {forca:.1f}, saiu {real:.1f} (lida ao soltar {atual:.1f}, "
                  f"antecipação agora {self.antecipacao:.1f})")
         return real

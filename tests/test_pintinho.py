@@ -114,8 +114,8 @@ def test_plano_da_galinha_de_baixo_com_vento_contra():
     frame = img("e2_0de3_vento-1.2")
     tiro = plano(2, frame, batalha.ler(frame), 0)
     assert (tiro.lado, tiro.angulo, tiro.andar, tiro.voar, tiro.galinha) == (1, 30, False, False, 0)
-    # Volta 1: nasceu no mesmo pixel da referência; vento −1,2 contra soma 0,17 × 1,2.
-    assert tiro.forca == pytest.approx(62.2 + 0.17 * 1.2, abs=0.3)
+    # Volta 1: nasceu no mesmo pixel da referência; vento −1,2 contra soma 0,4 × 1,2.
+    assert tiro.forca == pytest.approx(62.2 + 0.4 * 1.2, abs=0.3)
     assert "distância 13.2" in tiro.motivo
 
 
@@ -248,7 +248,8 @@ def test_galinha_acertada_segue_para_a_proxima(monkeypatch):
     b.galinha_mirada = 0  # o tiro anterior foi na de baixo e o contador agora mostra 1/3
     b.passo(frame)
     assert tiros[0].galinha == 1 and tiros[0].angulo == 45
-    assert tiros[0].forca == pytest.approx(62.9, abs=0.5)  # o usuário acertou com 63
+    # Vento −2,5 contra: o bot atirou 62,4 no jogo e caiu curto; o usuário matou com 63.
+    assert tiros[0].forca == pytest.approx(62.5 + 0.4 * 2.5, abs=0.3)
 
 
 def test_galinha_errada_mira_nela_de_novo(monkeypatch):

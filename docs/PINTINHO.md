@@ -111,6 +111,19 @@ Uma instância inteira. Estágio 1 perfeito e rápido; estágio 4 sem erro (gaio
 - Estágio 3: o ângulo não subiu a 41 antes do voo (voou com ~36). Corrigido: F primeiro, 40/60.
 - Ângulo antes da vez falhava às vezes ("travou"): agora tenta de novo até ficar exato.
 
+## 2º e 3º testes no jogo (30/10, 12:58 e 13:10)
+
+- 12:58: a força nova lia a marca do tiro anterior (linha vermelha fina, parada enquanto
+  carrega) e não via o voo (barra amarela): tiros curtos com ~48. Corrigido: força ao vivo
+  pela faixa clara da barra, que zera no aperto e enche em qualquer cor.
+- 13:10: força certa (saiu a até ~1 do pedido). Estágios 1 e 3 certos. Estágio 2: a de baixo
+  morreu no 1º tiro; a do meio (62,4, vento −2,5) e a de cima (70,0, vento −3,0) **caíram
+  curtas** (resposta do usuário) e o escudo fez gastar 4 e 10 tiros; o personagem morreu no
+  estágio 3. Corrigido: vento contra soma **0,4 por unidade** (a favor continua 0,17);
+  antecipação da força com passo menor (oscilava ±1,4).
+- Respostas do usuário: com escudo, continuar atirando; itens 3 e 9 sempre (se faltar
+  energia, o jogo ignora).
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha
