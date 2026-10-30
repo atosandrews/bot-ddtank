@@ -115,7 +115,27 @@ class GrupoPintinho(Grupo):
         with modo_pintinho(), pt.tolerar_print_invalido(avisar):
             if self.virar_cartas():
                 return
+            self.marcar_convidadas_na_luta()
             super().passo()
+
+    def marcar_convidadas_na_luta(self):
+        """Estágio 4: convidada com a batalha na janela está na luta (Confiar e passar), mesmo
+        que o Início não tenha passado pelo caminho do grupo que marca isso (11º teste, 30/10)."""
+        if not self.na_batalha or self.principal.batalha.estagio != ULTIMO_ESTAGIO:
+            return
+        for c in self.convidadas:
+            if not c.na_luta and not c.confiou and ler_batalha(c.driver.capturar()) is not None:
+                c.log("na luta do estágio 4")
+                c.na_luta = True
+
+    def levar_ao_cais(self, c, tentativas=6):
+        """Antes de tirar uma convidada da "sala de outra pessoa", olha o banner com a janela
+        dela na frente: com STAGE 4 é a sala da principal (11º teste: a conta2 entrou atrasada)."""
+        if proximo_estagio(self.olhar(c)) == ULTIMO_ESTAGIO:
+            c.log("já está na sala do estágio 4 da principal")
+            c.aceitou_nesta_volta = True
+            return False
+        return super().levar_ao_cais(c, tentativas)
 
     def virar_cartas(self):
         """Tela de cartas em alguma conta (fim de estágio): vira as grátis de cada uma.

@@ -79,6 +79,7 @@ def test_so_convida_antes_do_estagio_4(monkeypatch, sala, ultimo_jogado, esperad
 def test_print_invalido_nao_derruba_o_grupo(monkeypatch):
     # 1º teste do grupo (30/10): cv2.error com a janela da principal sem imagem derrubou o bot.
     g = gp.GrupoPintinho.__new__(gp.GrupoPintinho)
+    g.na_batalha = False
     monkeypatch.setattr(g, "virar_cartas", lambda: False)
     monkeypatch.setattr(grupo.Grupo, "passo", lambda self: cv2.cvtColor(np.zeros((0, 0, 3), np.uint8), cv2.COLOR_BGR2HSV))
     monkeypatch.setattr(pt.time, "sleep", lambda s: None)
@@ -111,3 +112,32 @@ def test_principal_e_a_janela_clicada_nao_a_que_ja_estava_na_frente(monkeypatch)
     monkeypatch.setattr(win32gui, "GetForegroundWindow", lambda: 222)  # a que estava na frente
     monkeypatch.setattr(gp.time, "sleep", lambda s: None)
     assert gp.esperar_clique_real([111, 222], segundos=5) == 111
+
+
+def test_convidada_atrasada_na_sala_do_estagio_4_nao_e_tirada(monkeypatch):
+    g = gp.GrupoPintinho.__new__(gp.GrupoPintinho)
+    c = Conta(img("sala_stage_4"), None)
+    c.aceitou_nesta_volta, c.log = False, lambda m: None
+    monkeypatch.setattr(g, "olhar", lambda conta: img("sala_stage_4"))
+    saiu = []
+    monkeypatch.setattr(grupo.Grupo, "levar_ao_cais", lambda self, conta, tentativas=6: saiu.append(True))
+    assert g.levar_ao_cais(c) is False and saiu == [] and c.aceitou_nesta_volta
+    monkeypatch.setattr(g, "olhar", lambda conta: img("e1"))  # outra sala: segue o caminho normal
+    g.levar_ao_cais(c)
+    assert saiu == [True]
+
+
+def test_no_estagio_4_convidada_em_batalha_vai_para_o_confiar():
+    g = gp.GrupoPintinho.__new__(gp.GrupoPintinho)
+    g.na_batalha = True
+    g.principal = Conta(img("e4"), 4)
+    luta, sala = Conta(img("e4"), None), Conta(img("sala_stage_4"), None)
+    for c in (luta, sala):
+        c.na_luta, c.confiou, c.log = False, False, lambda m: None
+    g.convidadas = [luta, sala]
+    g.marcar_convidadas_na_luta()
+    assert luta.na_luta and not sala.na_luta
+    g.principal.batalha.estagio = 3  # estágios 1–3: ninguém entra no Confiar
+    luta.na_luta = False
+    g.marcar_convidadas_na_luta()
+    assert not luta.na_luta

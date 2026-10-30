@@ -63,7 +63,9 @@ COLADO_PX = 30
 # se o chão não deixar chegar no ângulo, a força é recalculada com o que o relógio mostrar.
 GALINHA_ANGULOS = (30, 45, 55)          # de baixo, do meio, de cima
 # O modelo contra os tiros que mataram (gravação e 3º teste): a mediana da diferença por galinha.
-GALINHA_AJUSTE = (1.8, -1.1, 1.5)
+# A de cima subiu de +1,5 para +3 no 11º teste (30/10): nas duas instâncias o 1º tiro calculado
+# (65,4 e 75,5) não matou e o 2º, ~1,5 acima (67,2 e 76,9), matou.
+GALINHA_AJUSTE = (1.8, -1.1, 3.0)
 # Sem o minimapa: distância e altura (px do minimapa) no lugar em que se nasce na gravação.
 GALINHA_SEM_MAPA = ((114, 8), (116, 32), (121, 54))
 FORCA_MAXIMA = 100

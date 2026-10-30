@@ -429,7 +429,7 @@ def test_andar_ate_o_angulo_respeita_o_tempo_da_vez(monkeypatch):
     ("e2_0de3_vento-1.2", 0, 30, 62.0 + 1.8),
     ("e2_1de3_vento-2.5", 1, 45, 66.2 - 1.1),
     # Volta 2 (nasceu 9 px mais perto, vento a favor 2,7): o usuário matou a de cima com 68.
-    ("e2_vento+2.7", 2, 55, 66.9 + 1.5),
+    ("e2_vento+2.7", 2, 55, 66.9 + 3.0),
 ])
 def test_estagio_2_calcula_a_forca_pela_distancia_altura_e_vento(nome, mortas, angulo, forca):
     frame = img(nome)
