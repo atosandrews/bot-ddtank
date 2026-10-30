@@ -97,3 +97,17 @@ def test_convidada_ja_na_sala_do_estagio_4_conta_como_aceita(monkeypatch):
     with gp.modo_pintinho():
         g.cuidar_da_sala(Conta(img("sala_stage_4"), 3))
     assert dentro.aceitou_nesta_volta and not fora.aceitou_nesta_volta
+
+
+def test_principal_e_a_janela_clicada_nao_a_que_ja_estava_na_frente(monkeypatch):
+    # 30/10: uma secundária já estava na frente e virou a principal sem clique nenhum.
+    import win32api
+    import win32gui
+    botao = iter([True, True, False, False, True])  # já apertado ao iniciar, solta, clica de novo
+    monkeypatch.setattr(win32api, "GetAsyncKeyState", lambda tecla: 0x8000 if next(botao, False) else 0)
+    monkeypatch.setattr(win32api, "GetCursorPos", lambda: (10, 10))
+    monkeypatch.setattr(win32gui, "WindowFromPoint", lambda pos: 111)
+    monkeypatch.setattr(win32gui, "GetAncestor", lambda janela, tipo: janela)
+    monkeypatch.setattr(win32gui, "GetForegroundWindow", lambda: 222)  # a que estava na frente
+    monkeypatch.setattr(gp.time, "sleep", lambda s: None)
+    assert gp.esperar_clique_real([111, 222], segundos=5) == 111

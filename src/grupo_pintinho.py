@@ -82,6 +82,28 @@ def modo_pintinho():
          config.CONVIDAR_SO_NO_ESTAGIO_2, config.CONFIAR_CONVIDADAS) = antes
 
 
+def esperar_clique_real(hwnds, segundos=60):
+    """A janela do jogo que levar um clique NOVO do botão esquerdo depois de iniciar.
+
+    O grupo do Formigueiro pega a janela que está na frente: se uma janela do jogo já estava na
+    frente ao iniciar, ela vira a principal sem clique nenhum (30/10: pegou uma secundária).
+    """
+    import win32api
+    import win32gui
+    print("Clique na janela da CONTA PRINCIPAL (a dona da sala)...", flush=True)
+    apertado = bool(win32api.GetAsyncKeyState(0x01) & 0x8000)
+    limite = time.time() + segundos
+    while time.time() < limite:
+        agora = bool(win32api.GetAsyncKeyState(0x01) & 0x8000)
+        if agora and not apertado:
+            janela = win32gui.GetAncestor(win32gui.WindowFromPoint(win32api.GetCursorPos()), 2)
+            if janela in hwnds:
+                return janela
+        apertado = agora
+        time.sleep(0.02)
+    return None
+
+
 class GrupoPintinho(Grupo):
     def __init__(self, principal=None, convidadas=None):
         super().__init__(principal, convidadas)
@@ -156,7 +178,19 @@ class GrupoPintinho(Grupo):
         return super().rodar()
 
 
-if __name__ == "__main__":
+def main():
     # python -m src.grupo_pintinho [principal] [convidada ...]   (números das janelas)
+    from .drivers.conta import contas_abertas
+    from .drivers.tela import ativar_dpi
+    ativar_dpi()
     numeros = [int(a) for a in sys.argv[1:]]
-    sys.exit(0 if GrupoPintinho(numeros[0] if numeros else None, numeros[1:]).rodar() else 1)
+    principal = numeros[0] if numeros else esperar_clique_real(contas_abertas())
+    if principal is None:
+        print("Nenhuma janela do jogo clicada.")
+        return 1
+    print(f"principal: janela {principal}", flush=True)
+    return 0 if GrupoPintinho(principal, numeros[1:]).rodar() else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
