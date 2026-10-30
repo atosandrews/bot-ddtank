@@ -72,6 +72,7 @@ def forca_para(angulo, distancia):
 
 # O triângulo azul da vez fica ~106 px acima da minha barra de vida.
 TRIANGULO_ATE_BARRA = 106
+TRIANGULO_TOLERANCIA = 25  # px de folga vertical entre triângulo + 106 e a linha das barras
 
 
 def _mascara(hsv, cor):
@@ -91,13 +92,21 @@ def _barras(hsv, cor, largura_min=20):
     return centros
 
 
-def _triangulo(hsv):
-    """Centro do triângulo azul que marca quem está jogando (ou None)."""
+def _triangulo(hsv, barras_y=()):
+    """Centro do triângulo azul que marca quem está jogando (ou None).
+
+    O triângulo fica TRIANGULO_ATE_BARRA px acima da linha das barras de vida. Com barras
+    à vista, só vale um candidato nessa altura: o ícone azul do item no painel tem a
+    mesma forma e, quando o triângulo de verdade pisca, era lido no lugar dele.
+    """
     n, _, stats, _ = cv2.connectedComponentsWithStats(_mascara(hsv, "azul"))
     for x, y, w, h, area in stats[1:]:
         # Triângulo: mais ou menos quadrado e só metade preenchido.
         if 10 <= w <= 30 and 8 <= h <= 24 and 0.35 * w * h <= area <= 0.75 * w * h:
-            return int(x + w // 2), int(y + h // 2)
+            cx, cy = int(x + w // 2), int(y + h // 2)
+            if not barras_y or any(abs(cy + TRIANGULO_ATE_BARRA - by) <= TRIANGULO_TOLERANCIA
+                                   for by in barras_y):
+                return cx, cy
     return None
 
 
@@ -122,8 +131,10 @@ def ler(frame):
     ox, oy = max(ax + x1, 0), max(ay + y1, 0)
     campo = frame[oy:ay + y2, ox:ax + x2]
     hsv = cv2.cvtColor(campo, cv2.COLOR_BGR2HSV)
-    azuis = [(x + ox, y + oy) for x, y in _barras(hsv, "azul", largura_min=10)]
-    triangulo = _triangulo(hsv)
+    azuis_campo = _barras(hsv, "azul", largura_min=10)
+    vermelhas_campo = _barras(hsv, "vermelho")
+    azuis = [(x + ox, y + oy) for x, y in azuis_campo]
+    triangulo = _triangulo(hsv, [y for _, y in azuis_campo + vermelhas_campo])
     # O triângulo azul fica só em cima de quem está jogando: com várias contas (várias
     # barras azuis) é ele que diz quem sou eu. Sem triângulo, uso a barra azul (sozinho).
     # Uma formiga em cima de mim cobre parte da barra, por isso aceito pedaços pequenos.
@@ -136,7 +147,7 @@ def ler(frame):
     else:
         eu = None
     aliados = [b for b in azuis if eu is None or abs(b[0] - eu[0]) > 20]
-    inimigos = [(x + ox, y + oy) for x, y in _barras(hsv, "vermelho")]
+    inimigos = [(x + ox, y + oy) for x, y in vermelhas_campo]
     minha_vez = vision.achar(PASS, frame, LIMIAR_PASS) is not None
     estagio = "PANDORA" if vision.achar(MISSAO_PANDORA, frame, LIMIAR_MISSAO) else "FORMIGAS"
     return Leitura(ancora, minha_vez, eu, inimigos, estagio, aliados, triangulo is not None)

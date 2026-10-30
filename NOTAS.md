@@ -298,3 +298,11 @@ python -m src.main "TITULO DA JANELA"
 ## Observações sobre o Claude
 - Cada conversa começa do zero; este arquivo é a memória do projeto.
 - O Claude no chat não acessa minha máquina. Para editar o repositório direto, usar o Claude Code.
+
+## 2026-10-29 — tiro no lado errado (run individual 21:02–21:04)
+- Evidência: `logs/execucao_20261029.txt` e `logs/tiros/`. Nos turnos 2, 4, 5 e 6 o bot leu `eu x=1200`
+  com o personagem em x≈961: o ícone azul do item no painel (1200, 726), abaixo da linha das barras,
+  foi aceito como triângulo da vez quando o triângulo real piscava. Com o "eu" errado, alvo e lado saíam errados.
+- Correção: `_triangulo` só aceita candidato ~106 px acima de alguma barra de vida (`TRIANGULO_TOLERANCIA`).
+  Teste com os prints do registro em `tests/imagens/`; leitura dos prints de batalha da especificação inalterada.
+- Convites no estágio 2 não acontecem no `rodar_bot.bat` (uma conta); só em `rodar_grupo.bat`.
