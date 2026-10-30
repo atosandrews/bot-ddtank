@@ -194,11 +194,17 @@
     },
     "mean_min": 0.6,
     "margin_min": 0.15,
-    "hover_raio": 8
+    "hover_raio": 8,
+    "aspect_min": 1.4
   },
   "rest": [
+    236,
+    46
+  ],
+  "_rest": "Onde o mouse espera no captcha: dentro do painel do teclado, no canto de cima (~50 px dos botões). Perto dos números a roda gira mais devagar (vídeos de 29/10).",
+  "focus_click": [
     80,
     10
   ],
-  "_rest": "Onde o mouse espera no captcha: barra do título, fora do teclado. Com o mouse dentro da roda (inclusive no centro) os botões somem (run de 29/10: 0 botões soltos)."
+  "_focus_click": "Onde clicar para tirar o aviso 'Clique no jogo': barra do título, fora do teclado e dos botões."
 }

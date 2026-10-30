@@ -150,3 +150,19 @@ def test_conferir_com_mouse_em_cima_mira_o_centro_do_botao_e_recusa_lugar_vazio(
     assert ok and np.hypot(*np.subtract(ponto, q.teclas["5"])) <= 4
     ok, _ = v.conferir(frame, q.origem, "5", q.centro_roda)  # meio da roda: sem botão
     assert not ok
+
+
+def test_botao_grande_partido_em_pedacos_nao_derruba_a_roda():
+    # Quadro do vídeo de 30/10 (conta2): pedaços dos botões de baixo davam "fora do círculo".
+    q = VisaoVerificacao().analisar(cv2.imread(str(RODA_GIRADA.with_name("captcha_botao_partido.png"))))
+    esperado = {"8": (267, 121), "7": (305, 72), "6": (364, 54), "5": (422, 74), "4": (458, 125),
+                "3": (457, 187), "2": (419, 236), "1": (360, 254), "0": (302, 234), "9": (266, 183)}
+    for d, (x, y) in esperado.items():
+        assert abs(q.teclas[d][0] - x) <= 4 and abs(q.teclas[d][1] - y) <= 4, d
+
+
+def test_mouse_espera_perto_dos_numeros_sem_ficar_em_cima():
+    frame = cv2.imread(str(RODA_GIRADA.with_name("captcha_botao_partido.png")))
+    q = VisaoVerificacao().analisar(frame)
+    assert min(np.hypot(*np.subtract(q.repouso, p)) for p in q.teclas.values()) >= 30
+    assert np.hypot(*np.subtract(q.repouso, q.centro_roda)) < 180  # dentro do painel do teclado

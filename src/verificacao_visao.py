@@ -95,17 +95,30 @@ class VisaoVerificacao:
         resto = []
         for i in range(1, n):
             area, largura = estat[i, cv2.CC_STAT_AREA], estat[i, cv2.CC_STAT_WIDTH]
+            altura = estat[i, cv2.CC_STAT_HEIGHT]
             x, y = centros[i]
+            # Botão é ~2x mais largo que alto; pedaço de botão grande partido não é (vídeo 29/10).
             if (roda["area_min"] <= area <= roda["area_max"] and largura <= roda["width_max"]
+                    and largura >= roda["aspect_min"] * altura
                     and abs(np.hypot(x - cx, y - cy) - raio) <= roda["radius_tol"]):
                 resto.append(np.degrees(np.arctan2(y - cy, x - cx)) % 36)
         if len(resto) < roda["min_buttons"]:
             raise QuadroInvalido(f"Teclado não reconhecido ({len(resto)} botões soltos)")
-        # Média circular com período de 36°.
-        fases = np.radians(np.array(resto) * 10)
-        inicio = np.degrees(np.arctan2(np.sin(fases).mean(), np.cos(fases).mean())) / 10 % 36
-        desvio = [min(abs(a - inicio) % 36, 36 - abs(a - inicio) % 36) for a in resto]
-        if max(desvio) > roda["angle_tol"]:
+
+        def media(angulos):
+            fases = np.radians(np.array(angulos) * 10)  # média circular com período de 36°
+            return np.degrees(np.arctan2(np.sin(fases).mean(), np.cos(fases).mean())) / 10 % 36
+
+        def desvios(angulos, centro):
+            return [min(abs(a - centro) % 36, 36 - abs(a - centro) % 36) for a in angulos]
+
+        inicio = media(resto)
+        # Um ponto fora do padrão (sobra de botão) é descartado, não derruba a leitura toda.
+        while max(desvios(resto, inicio)) > roda["angle_tol"] and len(resto) > roda["min_buttons"]:
+            pior = int(np.argmax(desvios(resto, inicio)))
+            resto = resto[:pior] + resto[pior + 1:]
+            inicio = media(resto)
+        if max(desvios(resto, inicio)) > roda["angle_tol"]:
             raise QuadroInvalido("Botões fora do círculo esperado")
         return float(inicio)
 
@@ -183,7 +196,7 @@ class VisaoVerificacao:
         if pos is None:
             return None
         ax, ay = self.perfil["anchor"]
-        rx, ry = self.perfil["rest"]
+        rx, ry = self.perfil["focus_click"]
         return pos[0] - ax + rx, pos[1] - ay + ry
 
     def _teclado(self, frame, origem):

@@ -46,6 +46,8 @@ TROQUE = IMG / "troque.png"
 CONFIAR = IMG / "batalha_confiar.png"
 CANCELE = IMG / "grupo_cancele.png"  # botão da convidada depois de dar Pronto
 SAIR_SALA = IMG / "sala_sair.png"  # porta "Sair" da barra de baixo da sala (sala → Cais)
+# O centro do recorte cai na palavra "SAIR"; o clique tem que ser na porta, logo acima.
+SAIR_PORTA = (-3, -27)
 XIS = IMG / "sala_expulsar_x.png"  # X pequeno do cartão do jogador (a dona expulsa)
 PASTA_CONVIDADOS = IMG / "convidados"
 TELA_BATALHA = next(t for t in telas.TELAS if t.nome == "BATALHA")  # um recorte do nome de cada conta na lista de amigos
@@ -434,8 +436,8 @@ class Grupo:
                     c.log("botão Sair não encontrado na sala")
                     c.salvar_debug(frame, "sem_sair")
                     return False
-                c.log("saindo da sala (Sair) para esperar no Cais")
-                c.driver.clicar(*pos)
+                c.log("saindo da sala (porta Sair) para esperar no Cais")
+                c.driver.clicar(pos[0] + SAIR_PORTA[0], pos[1] + SAIR_PORTA[1])
             elif nome in ("LOBBY", "SELECAO_CANAL", "ALUNO_RECOMENDADO"):
                 c.fazer_cliques(tela, frame)  # lobby → Central → Cais
             time.sleep(random.uniform(1.0, 1.4))

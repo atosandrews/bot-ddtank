@@ -8,7 +8,10 @@ from types import SimpleNamespace
 import pytest
 
 from src import config, grupo
-from src.grupo import CANCELE, SAIR_SALA, TROQUE, Grupo
+from src.grupo import CANCELE, SAIR_PORTA, SAIR_SALA, TROQUE, Grupo
+
+# O recorte casa na palavra "SAIR" (1400, 770); o clique vai na porta, logo acima.
+PORTA = (1400 + SAIR_PORTA[0], 770 + SAIR_PORTA[1])
 
 
 class Janela:
@@ -113,7 +116,7 @@ def test_convidada_em_sala_sai_ate_o_cais(ambiente):
     c = conta("conta2", j)
     g = montar([c], frame("SALA_PRONTA"))
     assert g.levar_ao_cais(c) is True
-    assert j.cliques == [(1400, 770)]
+    assert j.cliques == [PORTA]
 
 
 def test_no_lobby_nunca_clica_em_sair(ambiente):
@@ -142,7 +145,7 @@ def test_antes_do_estagio_1_convidadas_saem_da_sala_e_voltam_a_esperar_convite(a
     monkeypatch.setattr(grupo, "contar_prontos", lambda f: 0)
 
     g.cuidar_da_sala(g.principal)
-    assert all(j.cliques == [(1400, 770)] for j in janelas)
+    assert all(j.cliques == [PORTA] for j in janelas)
     assert all(not c.aceitou_nesta_volta and not c.pronto_sala for c in convidadas)
     assert g.convidadas_no_cais and g.convidar_direto
 
@@ -153,5 +156,5 @@ def test_convidada_em_sala_de_outra_pessoa_sai_em_vez_de_dar_pronto(ambiente):
     c = conta("conta2", j)  # não aceitou o convite da principal nesta volta
     g = montar([c], frame("SALA_PRONTA"))
     g.cuidar_da_sala(g.principal)
-    assert j.cliques == [(1400, 770)]  # Sair, nunca o Pronto (170, 50)
+    assert j.cliques == [PORTA]  # Sair, nunca o Pronto (170, 50)
     assert not c.pronto_sala

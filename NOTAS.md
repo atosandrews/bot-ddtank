@@ -384,3 +384,13 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
   Nova regra de maioria em `decidir` (≥ 75% das leituras de 4 dígitos, 2 modelos). Reais:
   3 certos de 8 (antes 1), 0 errados. Sintéticos semente 6: até +1 erro em 150 (difícil).
   Recortes reais rotulados em `tests/imagens/codigo_real_*.png`.
+
+## 2026-10-30 00:00 — captcha nas secundárias e saída para o Cais
+- Primeira vez que o bot clicou números (conta2). Roda a −91…−280°/s com o mouse na barra do
+  título: o mouse agora espera dentro do painel do teclado, no canto de cima (`rest`), perto dos
+  números sem ficar em cima; o clique de foco continua na barra do título (`focus_click`).
+- "Botões fora do círculo" com números nítidos: botões grandes de baixo partidos em pedaços
+  (mais altos que largos) entravam na conta. Agora só formas largas (`aspect_min`) e pontos
+  fora do padrão são descartados em vez de recusar a roda. Teste: `captcha_botao_partido.png`.
+- Saída para o Cais (run 23:57): 6 cliques em Sair sem efeito. O recorte casa na palavra
+  "SAIR"; o certo é clicar na porta, 27 px acima (`SAIR_PORTA`, informado pelo usuário).

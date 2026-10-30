@@ -85,7 +85,8 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         if not callable(getattr(driver, metodo, None)):
             raise ErroInfraestrutura(f"Driver sem suporte a verificação: {metodo}")
 
-    # Onde o mouse espera: fora do teclado. Dentro da roda (até no centro) os botões somem.
+    # Onde o mouse espera: no painel do teclado, perto dos números sem ficar em cima deles
+    # (assim a roda gira mais devagar; em cima de um número os outros somem).
     repouso = None
 
     def estacionar():
