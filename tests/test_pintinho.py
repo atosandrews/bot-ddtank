@@ -229,15 +229,16 @@ def preparar_disparo(monkeypatch, b, angulos):
     return forcas
 
 
-def test_disparar_usa_os_itens_e_anda_ate_ter_o_angulo(monkeypatch):
+def test_disparar_usa_os_itens_e_anda_para_tras_ate_ter_o_angulo(monkeypatch):
     frame = img("e4")
     b = batalha_de_teste(frame)
-    forcas = preparar_disparo(monkeypatch, b, [False, False, True])  # travou, travou, deu
+    forcas = preparar_disparo(monkeypatch, b, [False, True])  # travou aqui; depois deu o exato
+    desce = iter([False, True])  # o 20 aparece no 2º passo para trás
+    monkeypatch.setattr(b, "angulo_desce_ate", lambda ancora, angulo: next(desce))
     assert b.disparar(batalha.ler(frame), Tiro(-1, 20, 75, "Burrinho", andar=True))
     assert forcas == [75]
     assert b.driver.teclas[-2:] == ["3", "9"]
-    passos = [t for t in b.driver.teclas if t == "right"]
-    assert len(passos) == 2  # para trás (longe do Burrinho, que está à esquerda) duas vezes
+    assert b.driver.teclas.count("right") == 2  # para trás (o Burrinho está à esquerda)
 
 
 def test_voar_aperta_f_e_nao_usa_itens(monkeypatch):
@@ -391,15 +392,19 @@ class DriverBarra(Driver):
         self.valores = []
 
 
-def test_atirar_espera_a_barra_recomecar_e_corrige_a_antecipacao():
+def test_atirar_espera_a_barra_recomecar_e_preve_pela_velocidade(monkeypatch):
     # Antes: o tiro anterior desenhado em 56. A leitura só vale depois de a barra voltar a 0.
-    driver = DriverBarra([56, 0, 20, 40, 58, 61.5, 64], depois=63)
-    b = BatalhaPintinho(driver, lambda m: None, lambda *a: None)
-    b.antecipacao = 1.0
+    relogio = iter(i * 0.05 for i in range(1000))  # um print a cada 50 ms
+    monkeypatch.setattr(pintinho.time, "time", lambda: next(relogio))
+    driver = DriverBarra([56, 0, 20, 40, 52, 58, 61.5, 64], depois=63)
+    linhas = []
+    b = BatalhaPintinho(driver, linhas.append, lambda *a: None)
+    b.atraso = 0.03
     real = b.atirar((0, 100), 62)
     assert real == pytest.approx(63, abs=0.5)
-    assert driver.valores == []  # soltou em 61,5 (62 − 1), não no 56 do tiro anterior
-    assert b.antecipacao == pytest.approx(1.5, abs=0.3)  # saiu 1 a mais: solta mais cedo
+    soltou = float(linhas[-1].split("lida ao soltar ")[1].split(",")[0])
+    assert 52 <= soltou < 61.5  # previu pela velocidade; não soltou no 56 do tiro anterior
+    assert b.atraso > 0.03  # saiu 1 a mais: solta mais cedo da próxima vez
 
 
 def test_recuo_anda_ate_o_minimapa_mostrar_os_pixels(monkeypatch):
@@ -467,9 +472,9 @@ def test_relogio_le_28_laranja(monkeypatch):
 def test_andar_ate_o_angulo_respeita_o_tempo_da_vez(monkeypatch):
     frame = img("e4")
     b = batalha_de_teste(frame)
-    relogio = iter([0.0, 0.0, 10.0, 10.0, 10.0])  # já passou de 9 s da vez no 2º passo
+    relogio = iter([0.0, 0.0, 10.0, 10.0, 10.0])  # já passou de 7 s da vez no 2º passo
     monkeypatch.setattr(pintinho.time, "time", lambda: next(relogio, 99.0))
     b.inicio_vez = 0.0
-    monkeypatch.setattr(b, "ajustar_angulo", lambda ancora, alvo: False)
+    monkeypatch.setattr(b, "angulo_desce_ate", lambda ancora, alvo: False)
     assert not b.andar_ate_angulo(batalha.ler(frame), -1, 20)
-    assert b.driver.teclas.count("right") <= 2  # um passo (e a virada), não os 9
+    assert b.driver.teclas.count("right") == 1  # um passo e parou: passou de 7 s da vez

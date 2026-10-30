@@ -166,6 +166,18 @@ aprendeu o 8 do relógio às 13:59, `img/pintinho/digitos/8_auto.png`). Problema
   busca gastou ~17 s: a vez acabou sem tiro (2 vezes). Agora passos de 0,3 s e no máximo até
   9 s da vez; depois atira com o ângulo que tiver.
 
+## 8º e 9º testes (30/10, 14:25 e 14:33)
+
+- 14:25: instância limpa do estágio 2 ao 4 (gaiola na 1ª, recuo de 7 px no estágio 3).
+- 14:33: captcha resolvido na 2ª tentativa; instância completa. A regra +5 entrou no pixel de
+  trás (vento −3,5 e −4,0). A força oscilou ±2 em volta do pedido (folga fixa em força).
+  Estágio 4: nascendo **colado no Burrinho** o ângulo não desce de 26 (print do usuário);
+  passos de 0,3 s com teste lento perderam 2 vezes. O 20 apareceu depois de ~1,2 s andando
+  para trás (direita). Depois o jogo foi fechado (janela inválida às 14:45).
+- Corrigido: nesse caso anda para trás em passos de 0,4 s com teste rápido (rajada de ↓ e
+  leitura do relógio) até 7 s da vez; força solta pela velocidade da barra × atraso
+  aprendido (no lugar da folga fixa).
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha

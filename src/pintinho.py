@@ -32,9 +32,12 @@ from .telas import IMG, Tela
 
 SKILLS = ["3", "9"]  # +2 e dano máximo em todo tiro (usuário, 30/10)
 TECLA_VOAR = "f"     # Voar: 1º turno dos estágios 1 e 3, no lugar dos itens
-# Força: solta o Espaço um pouco antes (o jogo ainda enche enquanto a tecla sobe). Começa no
-# valor do config e se corrige sozinho pela força que ficou desenhada depois de cada tiro.
-ANTECIPACAO_MIN, ANTECIPACAO_MAX = 0.0, 4.0
+# Força: o jogo ainda enche a barra enquanto a tecla sobe. O bot mede a velocidade da barra e
+# solta quando ela vai chegar na força pedida dali a ATRASO s; o atraso se corrige sozinho pela
+# força que ficou desenhada depois de cada tiro. No 8º teste (30/10) a folga fixa em força
+# oscilava ±2 (pediu 65, saiu 63,4; pediu 75, saiu 76,9).
+ATRASO_INICIAL = 0.03
+ATRASO_MIN, ATRASO_MAX = 0.0, 0.12
 # Fora da vez: confere o ângulo do próximo tiro e corrige de novo a cada isso (s).
 PREPARO_INTERVALO = 1.0
 # Dígitos do relógio de ângulo que img/digitos/ não tem (lá só 0 a 5): 6 e 9 recortados da
@@ -93,11 +96,12 @@ GAIOLA_ANGULO = 30
 GAIOLA_A_MAIS = 5.8
 GAIOLA_SEM_MAPA = 35      # sem o minimapa: a força média da gravação
 GAIOLA_TENTATIVAS = [0, 3, -3, 6]  # errou: a próxima muda um pouco a força
-# 7º teste (30/10): num lugar do estágio 4 o ângulo não descia de 26; passinhos de 0,15 s quase
-# não andavam e a busca gastou ~17 s: a vez acabou e o tiro não saiu (2 vezes).
-ANDAR_TOQUE = 0.3         # segundos de seta em cada passo
-ANDAR_PASSOS = (3, 6)     # passos para trás (longe do alvo) e, se não der, para frente
-ANDAR_ATE = 9.0           # s desde o começo da vez: passou disso, atira com o ângulo que tiver
+# 7º e 8º testes (30/10): nascendo colado no Burrinho o ângulo não desce de 26; passinhos curtos
+# não saíam do lugar e a busca lenta (3 s por passo) fazia a vez acabar sem tiro. O 20 apareceu
+# depois de ~1,2 s andando para trás (direita). Agora passos de 0,4 s com teste rápido.
+ANDAR_TOQUE = 0.4         # segundos de seta para trás em cada passo
+ANDAR_TESTE_TOQUES = 8    # toques rápidos de ↓ para ver se o ângulo já desce
+ANDAR_ATE = 7.0           # s desde o começo da vez: passou disso, atira com o ângulo que tiver
 
 CARTAS_POR_TELA = {"estagio": 1, "final": 2}
 
@@ -339,7 +343,7 @@ class BatalhaPintinho(Batalha):
         self.erros_galinha = 0  # só para o log: quantas vezes errou uma galinha
         self.preparado_em = 0.0
         self.inicio_vez = None  # quando a vez atual começou (o andar não pode passar do tempo)
-        self.antecipacao = config.FORCA_ANTECIPACAO
+        self.atraso = ATRASO_INICIAL  # s entre ler a barra e o jogo parar de encher
         self._zerar_estagio()
 
     def _zerar_estagio(self):
@@ -579,16 +583,23 @@ class BatalhaPintinho(Batalha):
         """
         regiao = pv.regiao_forca(ancora)
         anterior = pv.forca_na_faixa(self.driver.capturar(regiao))
-        alvo = forca - self.antecipacao
         limite = time.time() + config.TEMPO_MAX_FORCA
         inicio, atual, recomecou = time.time(), 0.0, anterior <= 3
+        amostras = []  # (tempo, força) depois de a barra recomeçar
+        velocidade = 0.0
         self.driver.segurar(config.TECLA_ATIRAR)
         try:
             while time.time() < limite:
                 atual = pv.forca_na_faixa(self.driver.capturar(regiao))
+                agora = time.time()
                 if not recomecou:
                     recomecou = atual < anterior - 3 or atual <= 3
-                elif atual >= alvo:
+                    continue
+                amostras.append((agora, atual))
+                velha = next((a for a in reversed(amostras) if agora - a[0] >= 0.08), None)
+                if velha and atual > velha[1]:
+                    velocidade = (atual - velha[1]) / (agora - velha[0])
+                if atual + velocidade * self.atraso >= forca:
                     break
                 if time.time() - inicio > 1.5 and (atual == 0 or not recomecou):
                     self.log("a barra de força não recomeçou; soltando sem atirar")
@@ -598,39 +609,47 @@ class BatalhaPintinho(Batalha):
             self.driver.soltar(config.TECLA_ATIRAR)
         time.sleep(0.12)
         real = pv.forca_na_faixa(self.driver.capturar(regiao))
-        if recomecou and real > 3:
-            erro = real - forca
-            # Passo pequeno: a leitura varia ~0,5 por print; com 0,5 a antecipação oscilava.
-            self.antecipacao = min(ANTECIPACAO_MAX, max(ANTECIPACAO_MIN, self.antecipacao + 0.3 * erro))
+        if recomecou and real > 3 and velocidade > 0:
+            # Saiu a mais: o jogo encheu mais tempo depois da leitura do que o previsto.
+            erro_s = (real - forca) / velocidade
+            self.atraso = min(ATRASO_MAX, max(ATRASO_MIN, self.atraso + 0.3 * erro_s))
         self.log(f"tiro: pedida {forca:.1f}, saiu {real:.1f} (lida ao soltar {atual:.1f}, "
-                 f"antecipação agora {self.antecipacao:.1f})")
+                 f"barra {velocidade:.0f}/s, atraso agora {self.atraso * 1000:.0f} ms)")
         return real
 
     def andar_ate_angulo(self, leitura, lado, angulo):
-        """O chão aqui não deixa o ângulo: passinhos para trás e, se não der, para frente.
+        """O chão aqui não deixa o ângulo (estágio 4: nascendo colado no Burrinho o mínimo é 26).
+        Anda para trás (longe do alvo) em passos e, a cada um, testa rápido se o ângulo já
+        desce até o pedido; dá, ajusta o exato. Tudo dentro de ANDAR_ATE s da vez.
 
-        Depois de cada passinho vira de volta para o alvo e tenta o ângulo de novo.
+        No 8º teste (30/10) o 20 só apareceu depois de ~1,2 s andando para a direita.
         """
         self.salvar_debug(self.driver.capturar(), "angulo_travou")
+        tecla_tras = config.TECLA_ESQUERDA if lado > 0 else config.TECLA_DIREITA
         tecla_lado = config.TECLA_DIREITA if lado > 0 else config.TECLA_ESQUERDA
         inicio = self.inicio_vez or time.time()
-        for direcao, passos in zip((-lado, lado), ANDAR_PASSOS):
-            tecla = config.TECLA_DIREITA if direcao > 0 else config.TECLA_ESQUERDA
-            for passo in range(passos):
-                if time.time() - inicio > ANDAR_ATE:
-                    self.log("o tempo da vez está acabando: atirando com o ângulo que deu")
-                    return False
-                self.log(f"ângulo {angulo} não dá aqui: andando para a "
-                         f"{'direita' if direcao > 0 else 'esquerda'} ({passo + 1})")
-                self.driver.tecla(tecla, ANDAR_TOQUE)
-                time.sleep(0.25)
-                self.driver.tecla(tecla_lado, 0.05)
-                self.virado = lado
-                time.sleep(0.25)
-                if self.ajustar_angulo(leitura.ancora, angulo):
-                    return True
-        self.log("não achei lugar com esse ângulo; atirando com o que deu")
+        passo = 0
+        while time.time() - inicio < ANDAR_ATE:
+            passo += 1
+            self.log(f"ângulo {angulo} não dá aqui: andando para trás ({passo})")
+            self.driver.tecla(tecla_tras, ANDAR_TOQUE)
+            time.sleep(0.15)
+            self.driver.tecla(tecla_lado, 0.05)
+            self.virado = lado
+            time.sleep(0.15)
+            if self.angulo_desce_ate(leitura.ancora, angulo):
+                return self.ajustar_angulo(leitura.ancora, angulo)
+        self.log("o tempo da vez está acabando: atirando com o ângulo que deu")
         return False
+
+    def angulo_desce_ate(self, ancora, angulo):
+        """Teste rápido: uma rajada de ↓ e o relógio já chega a (perto de) `angulo`?"""
+        for _ in range(ANDAR_TESTE_TOQUES):
+            self.driver.tecla(config.TECLA_ANGULO_DESCE, 0.04)
+            time.sleep(0.03)
+        time.sleep(0.3)
+        valor, _ = ler_relogio(self.driver.capturar(), ancora)
+        return valor is not None and valor <= angulo + 1
 
 
 class BotPintinho(Bot):
