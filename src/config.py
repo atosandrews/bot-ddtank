@@ -62,7 +62,10 @@ ESTRATEGIAS = {
                  "passar_primeiro_turno": True},
     # Estágio 2: a Pandora (rainha) fica à direita; anda para trás (←) se o ângulo 30 não der.
     # Tecla 3 = "+2", tecla 9 = dano "max".
-    "PANDORA": {"angulo": 30, "forca": 80, "skills": ["3", "9"], "alvo": "direita", "andar": "esquerda"},
+    "PANDORA": {"angulo": 30, "forca": 80, "skills": ["3", "9"], "alvo": "direita", "andar": "esquerda",
+                # x do personagem em relação ao rótulo "Força": nascendo além de +150 (alto do
+                # morro, ângulo preso em ~41) recua até +105, onde o ângulo 30 dá.
+                "recuar": {"se_x_maior": 150, "ate_x": 105}},
 }
 
 # ---------------- Grupo (várias contas, python -m src.grupo) ----------------

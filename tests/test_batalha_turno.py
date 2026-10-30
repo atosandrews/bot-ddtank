@@ -129,3 +129,45 @@ def test_ajuste_tem_limite_de_tempo(monkeypatch):
     monkeypatch.setattr(batalha.time, "time", lambda: next(agora))
     assert b.ajustar_angulo((0, 0), 30) is True  # 29 está a 1°: atira
     assert any("tempo do ajuste esgotado" in l for l in b.linhas)
+
+
+def test_pandora_nascendo_no_alto_recua_ate_a_posicao_do_angulo_30(monkeypatch):
+    # Prints do usuário (30/10): nasceu em +186 do rótulo "Força" (ângulo preso em 41);
+    # em +104 o ângulo 30 dá. Cada toque para a esquerda anda 8 px no teste.
+    from types import SimpleNamespace
+    ancora = (538, 752)
+    pos = {"x": ancora[0] + 186}
+
+    def leitura():
+        return SimpleNamespace(ancora=ancora, minha_vez=True, eu=(pos["x"], 643), inimigos=[],
+                               estagio="PANDORA", aliados=[], pelo_triangulo=True)
+    monkeypatch.setattr(batalha, "ler", lambda frame: leitura())
+    b = nova()
+    b.driver.tecla = lambda t, s=0.05: pos.update(x=pos["x"] - 8 if t == config.TECLA_ESQUERDA else pos["x"])
+    jogadas = []
+    monkeypatch.setattr(b, "jogar", lambda l, *a, **k: jogadas.append(l.eu[0] - ancora[0]))
+    b.passo(None)
+    assert jogadas and 95 <= jogadas[0] <= 110  # chegou perto de +105 antes de mirar
+
+
+def test_pandora_nascendo_em_lugar_baixo_nao_anda(monkeypatch):
+    from types import SimpleNamespace
+    ancora = (586, 822)
+    monkeypatch.setattr(batalha, "ler", lambda frame: SimpleNamespace(
+        ancora=ancora, minha_vez=True, eu=(ancora[0] + 42, 713), inimigos=[], estagio="PANDORA",
+        aliados=[], pelo_triangulo=True))
+    b = nova()
+    teclas = []
+    b.driver.tecla = lambda t, s=0.05: teclas.append(t)
+    monkeypatch.setattr(b, "jogar", lambda *a, **k: None)
+    b.passo(None)
+    assert teclas == []
+
+
+@pytest.mark.parametrize("arquivo,recua", [("pandora_nasceu_no_alto.webp", True),
+                                           ("pandora_depois_de_recuar.webp", False)])
+def test_prints_reais_da_pandora_disparam_o_recuo_so_no_alto(arquivo, recua):
+    leitura = batalha.ler(cv2.imread(str(Path(__file__).resolve().parent / "imagens" / arquivo)))
+    regra = config.ESTRATEGIAS["PANDORA"]["recuar"]
+    assert leitura.estagio == "PANDORA" and leitura.pelo_triangulo
+    assert (leitura.eu[0] - leitura.ancora[0] > regra["se_x_maior"]) is recua
