@@ -141,6 +141,20 @@ direita (o padrão), longe deles. Pedido do usuário: **voar sempre para o lado 
 mapa** (estágios 1 e 3), com 40/45 e 40/60. O lado vem da posição no minimapa (metade direita
 → esquerda); sem minimapa, da posição na tela. Os 6 voos da gravação batem com essa regra.
 
+## 6º teste (30/10, 13:34) e padrão novo das galinhas
+
+Nasceu mais à frente (distância ~11,2). A de baixo morreu com 57 (tabela), mas a tabela deu
+57 e 65 nas do meio e de cima e caíram curtas. Pedidos do usuário:
+- **Padrão das galinhas, nasça onde nascer: baixo 28/60, meio 45/60, cima 55/70** (sem tabela
+  pela distância). Vento: contra soma 0,4 por unidade, a favor tira 0,17.
+- **+5 só no pixel de trás** (o da gravação e da 1ª imagem) com vento de 3 ou mais para a
+  esquerda, no lugar da correção normal.
+- Relógio de ângulo: o bot só conhecia 0–5. Dígitos 6 e 9 recortados da gravação
+  (`img/pintinho/digitos/`) e leitor próprio só na faixa dos dígitos (`ler_relogio`): lê
+  exato 191 de 233 amostras da gravação, contra 89 do leitor do bot, sem discordar dele.
+  28 (sem o 8) é alcançado pelo 29 exato + 1 toque, e o 8 é aprendido e salvo na 1ª vez
+  (`8_auto.png`).
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha

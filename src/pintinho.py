@@ -20,7 +20,10 @@ import sys
 import time
 from dataclasses import dataclass
 
-from . import config, telas, verificacao, vision
+import cv2
+import numpy as np
+
+from . import batalha, config, telas, verificacao, vision
 from . import pintinho_visao as pv
 from .batalha import LIMIAR_PASS, PASS, TABELAS, Batalha, forca_para, lado_virado, ler, ler_numero
 from .bot import Bot
@@ -34,6 +37,10 @@ TECLA_VOAR = "f"     # Voar: 1º turno dos estágios 1 e 3, no lugar dos itens
 ANTECIPACAO_MIN, ANTECIPACAO_MAX = 0.0, 4.0
 # Fora da vez: confere o ângulo do próximo tiro e corrige de novo a cada isso (s).
 PREPARO_INTERVALO = 1.0
+# Dígitos do relógio de ângulo que img/digitos/ não tem (lá só 0 a 5): 6 e 9 recortados da
+# gravação de 30/10 (relógio em 36 e 39). Um ângulo com dígito ainda desconhecido (ex.: 28) é
+# alcançado contando toques a partir do vizinho legível (29) e o dígito novo é salvo aqui.
+PASTA_DIGITOS = pv.PASTA / "digitos"
 
 # Estágio 1 (pintinhos): no começo eles estão longe; depois vêm até o personagem.
 PERTO_PX = 250            # inimigo na tela a até isso: tiro curto
@@ -44,22 +51,19 @@ CENTRO_DA_TELA = 349      # x do meio da área da luta em relação ao rótulo "
 # Formigueiro (usuário, 30/10).
 TIRO_COLADO = (40, 5)
 COLADO_PX = 30
-# Estágio 2 (3 galinhas à direita): o contador "n/3" diz qual é a próxima. A força segue a
-# tabela da moldura do jogo pela distância medida no minimapa (o pixel em que nasceu muda),
-# partindo do tiro que acertou na gravação: (ângulo, força sem vento, distância no minimapa).
-# Ângulo fora da tabela (45, 55) interpola entre as tabelas vizinhas.
-# Baixo: o usuário disse 25/60, mas nas voltas 2 e 3 (o padrão) usou 30/62 e acertou as duas.
-# As forças sem vento e o vento vêm do ajuste das 3 voltas: a tabela explicou a diferença da
-# volta 2 (nasceu 9 px mais perto no minimapa) com erro de até 0,4 de força.
-GALINHAS = [(30, 62.2, 114), (45, 62.5, 116), (55, 70.6, 121)]  # de baixo, do meio, de cima
+# Estágio 2 (3 galinhas à direita): o contador "n/3" diz qual é a próxima. Padrão do usuário
+# (30/10, depois do 6º teste), nasça onde nascer: (ângulo, força, distância no minimapa da
+# galinha quando se nasce no pixel de trás, o da gravação). A tabela pela distância foi
+# tirada: nascendo mais à frente ela descontou e as do meio e de cima caíram curtas.
+GALINHAS = [(28, 60, 114), (45, 60, 116), (55, 70, 121)]  # de baixo, do meio, de cima
 # Vento a favor tira 0,17 por unidade (ajuste das 3 voltas da gravação). Vento contra soma
 # 0,4: no 3º teste no jogo (30/10) o 1º tiro na do meio (62,4, vento −2,5) e na de cima
 # (70,0, vento −3,0) caíram curtos; na gravação o usuário matou com 63 e 71 (−2,5 e −2,4).
 FORCA_POR_VENTO = 0.17    # a favor
 FORCA_POR_VENTO_CONTRA = 0.4
-# Regra do usuário (30/10), só neste caso: nascendo no pixel de trás (o da gravação, a
-# galinha a pelo menos a distância gravada no minimapa, com 2 px de folga) e vento de 3 ou
-# mais para a esquerda, a força é a da tabela + 5 (no lugar da correção normal do vento).
+# Regra do usuário (30/10), "apenas nessa ocasião": nascendo no pixel de trás (o da gravação: a
+# galinha a pelo menos a distância gravada no minimapa, 2 px de folga) e vento de 3 ou mais
+# para a esquerda, força + 5 (no lugar da correção normal do vento).
 VENTO_FORTE_CONTRA = 3.0
 FORCA_A_MAIS_VENTO_FORTE = 5
 FOLGA_PIXEL_DE_TRAS = 2
@@ -171,24 +175,21 @@ def plano(estagio, frame, leitura, tiros_no_estagio, tiros_na_gaiola=0, mortas=N
             mortas = pv.galinhas_mortas(frame, ancora)
         if mortas is None:
             mortas = min(tiros_no_estagio, 2)  # contador ilegível: segue a ordem dos tiros
-        angulo, forca, dx_gravacao = GALINHAS[mortas]
+        angulo, forca, dx_de_tras = GALINHAS[mortas]
         pontos = pv.pontos_minimapa(frame, ancora)
         x = galinha_no_minimapa(pontos, mortas)
-        pixel_de_tras = x is None  # sem minimapa: vale o lugar da gravação (o de trás)
         if x is not None:
-            distancia = distancia_minimapa(pontos[0], x)
-            gravacao = dx_gravacao * pv.DISTANCIA_POR_PX_MINIMAPA
-            forca += forca_tabela(angulo, distancia) - forca_tabela(angulo, gravacao)
-            pixel_de_tras = abs(x - pontos[0]) >= dx_gravacao - FOLGA_PIXEL_DE_TRAS
-            onde = f"distância {distancia:.1f}"
+            de_tras = abs(x - pontos[0]) >= dx_de_tras - FOLGA_PIXEL_DE_TRAS
+            onde = f"distância {distancia_minimapa(pontos[0], x):.1f}, " + (
+                "pixel de trás" if de_tras else "mais à frente")
         else:
-            onde = "distância da gravação (minimapa ilegível)"
+            de_tras, onde = False, "pixel ? (minimapa ilegível)"
         if vento is _LER:
             vento = pv.ler_vento(frame, ancora)
         nome = ("de baixo", "do meio", "de cima")[mortas]
-        if pixel_de_tras and vento is not None and vento <= -VENTO_FORTE_CONTRA:
+        if de_tras and vento is not None and vento <= -VENTO_FORTE_CONTRA:
             return Tiro(1, angulo, forca + FORCA_A_MAIS_VENTO_FORTE,
-                        f"galinha {nome} ({mortas}/3 mortas), {onde}, pixel de trás com vento {vento}: "
+                        f"galinha {nome} ({mortas}/3 mortas), {onde}, vento forte {vento}: "
                         f"+{FORCA_A_MAIS_VENTO_FORTE}", galinha=mortas)
         forca, vento = com_vento(forca, frame, ancora, 1, vento)
         return Tiro(1, angulo, forca, f"galinha {nome} ({mortas}/3 mortas), {onde}, vento {vento}",
@@ -248,9 +249,88 @@ def lado_do_centro(frame, leitura, padrao=1):
     return padrao, "sem saber: padrão"
 
 
+def carregar_digitos():
+    """Os dígitos do relógio do bot (src/batalha.py) mais os do Pintinho (só neste processo)."""
+    digitos = batalha._carregar_digitos()
+    for arq in sorted(PASTA_DIGITOS.glob("*.png")):
+        digitos[f"{arq.stem}_pintinho"] = cv2.imread(str(arq), cv2.IMREAD_GRAYSCALE)
+    return digitos
+
+
+LIMIAR_RELOGIO = 0.7  # o "0" verde do 40 deu 0,73 (o bot pede 0,75)
+SOBRA_RELOGIO = 6     # px de dígito que nenhum modelo explicou e ainda conta como exato
+
+
+def ler_relogio(frame, ancora):
+    """Número do relógio de ângulo: (valor, exato) como batalha.ler_numero, mas só na faixa
+    dos dígitos (sujeira acima/abaixo não conta) e com os dígitos do Pintinho.
+
+    O leitor do bot devolvia nada para 35 e 36 (um risco claro na região) e 45 para 40.
+    """
+    mascara = batalha.mascara_numero(frame, ancora)
+    if not mascara.any():
+        return None, False
+    achados = []
+    for nome, tpl in carregar_digitos().items():
+        if tpl.shape[0] > mascara.shape[0] or tpl.shape[1] > mascara.shape[1]:
+            continue
+        res = cv2.matchTemplate(mascara, tpl, cv2.TM_CCOEFF_NORMED)
+        for y, x in zip(*np.where(res >= LIMIAR_RELOGIO)):
+            achados.append((float(res[y, x]), int(x), int(y), nome[0], tpl.shape[1], tpl.shape[0]))
+    escolhidos = []
+    for achado in sorted(achados, reverse=True):
+        _, x, _, _, w, _ = achado
+        if all(min(x + w, x2 + w2) - max(x, x2) <= 2 for _, x2, _, _, w2, _ in escolhidos):
+            escolhidos.append(achado)
+    if not escolhidos:
+        return None, False
+    escolhidos.sort(key=lambda e: e[1])
+    y0, altura = escolhidos[0][2], escolhidos[0][5]
+    faixa = mascara[y0:y0 + altura] > 0
+    explicado = np.zeros(faixa.shape[1], bool)
+    for _, x, _, _, w, _ in escolhidos:
+        explicado[x:x + w] = True
+    sobra = int(faixa[:, ~explicado].sum())
+    texto = "".join(e[3] for e in escolhidos)
+    if sobra <= SOBRA_RELOGIO and len(texto) <= 2:
+        return int(texto), True
+    valor, exato = ler_numero(frame, ancora)  # o leitor do bot (o original, não o trocado)
+    if exato:
+        return valor, True  # na gravação: 2 prints (20 e 26) que só ele leu
+    cols = np.where(faixa.any(axis=0))[0]
+    if len(texto) == 1 and cols.max() - cols.min() > 12 and escolhidos[0][1] <= cols.min() + 2:
+        return int(texto) * 10 + 5, False  # dezena conhecida, unidade desconhecida (direção)
+    return None, False
+
+
+def angulo_legivel(angulo):
+    """O relógio mostra esse ângulo com dígitos que o bot conhece?"""
+    conhecidos = {nome[0] for nome in carregar_digitos()}
+    return all(d in conhecidos for d in str(angulo))
+
+
+def unidade_do_numero(mascara, dezena):
+    """Recorte (13 px de altura) do dígito das unidades, logo à direita da dezena conhecida."""
+    tpl = carregar_digitos().get(dezena)
+    if tpl is None or tpl.shape[0] > mascara.shape[0] or tpl.shape[1] > mascara.shape[1]:
+        return None
+    res = cv2.matchTemplate(mascara, tpl, cv2.TM_CCOEFF_NORMED)
+    _, nota, _, (x, y) = cv2.minMaxLoc(res)
+    if nota < batalha.LIMIAR_DIGITO:
+        return None
+    resto = mascara[y:y + tpl.shape[0], x + tpl.shape[1]:]
+    cols = np.where(resto.any(axis=0))[0]
+    if len(cols) == 0:
+        return None
+    glifo = resto[:, cols.min():]
+    vazias = np.where(~glifo.any(axis=0))[0]
+    return glifo[:, :vazias[0]] if len(vazias) else glifo
+
+
 class BatalhaPintinho(Batalha):
     def __init__(self, driver, log, salvar_debug):
         super().__init__(driver, log, salvar_debug, estrategias={})
+        carregar_digitos()
         self.estagio = None
         self.erros_galinha = 0  # só para o log: quantas vezes errou uma galinha
         self.preparado_em = 0.0
@@ -284,7 +364,7 @@ class BatalhaPintinho(Batalha):
                 or self.estagio is None or time.time() - self.preparado_em < PREPARO_INTERVALO):
             return False
         tiro = plano(self.estagio, frame, leitura, self.tiros_no_estagio, self.tiros_na_gaiola)
-        valor, exato = ler_numero(frame, leitura.ancora)
+        valor, exato = ler_relogio(frame, leitura.ancora)
         if exato and valor == tiro.angulo:
             return False
         self.preparado_em = time.time()
@@ -350,7 +430,7 @@ class BatalhaPintinho(Batalha):
 
     def angulo_exato(self, ancora, angulo):
         """O número do relógio mostra exatamente o ângulo pedido (sem aproximação)?"""
-        valor, exato = ler_numero(self.driver.capturar(), ancora)
+        valor, exato = ler_relogio(self.driver.capturar(), ancora)
         return exato and valor == angulo
 
     def passar_a_vez(self, motivo):
@@ -401,6 +481,64 @@ class BatalhaPintinho(Batalha):
         self.atirar(leitura.ancora, tiro.forca)
         self.esperar_fim_da_vez()
         return True
+
+    def ajustar_angulo(self, ancora, alvo):
+        """Como o do bot; se o relógio não sabe mostrar o alvo (dígito desconhecido), vai até o
+        vizinho legível mais perto e conta os toques, conferindo que o número mudou a cada um.
+        Na 1ª vez que chega assim, aprende o dígito novo."""
+        if angulo_legivel(alvo):
+            return self._ajustar_com_relogio(ancora, alvo)
+        vizinhos = sorted((v for v in range(alvo - 3, alvo + 4) if v != alvo and angulo_legivel(v)),
+                          key=lambda v: abs(v - alvo))
+        if not vizinhos:
+            return self._ajustar_com_relogio(ancora, alvo)
+        base = vizinhos[0]
+        if not self._ajustar_com_relogio(ancora, base):
+            return False
+        tecla = config.TECLA_ANGULO_SOBE if alvo > base else config.TECLA_ANGULO_DESCE
+        for _ in range(abs(alvo - base)):
+            antes = batalha.mascara_numero(self.driver.capturar(), ancora)
+            self.driver.tecla(tecla, 0.06)
+            limite = time.time() + 0.6
+            while time.time() < limite:
+                time.sleep(0.05)
+                depois = batalha.mascara_numero(self.driver.capturar(), ancora)
+                if depois.shape != antes.shape or np.count_nonzero(depois != antes) > 3:
+                    break
+            else:
+                self.log(f"o relógio não mudou indo de {base} para {alvo}")
+                return False
+        time.sleep(0.05)
+        valor, exato = ler_relogio(self.driver.capturar(), ancora)
+        if exato and valor != alvo:
+            self.log(f"contando toques cheguei em {valor}, não em {alvo}")
+            return False
+        if not exato:
+            self.aprender_digito(ancora, alvo)
+        self.log(f"ângulo {alvo} (contando {abs(alvo - base)} toque(s) a partir de {base})")
+        return True
+
+    def _ajustar_com_relogio(self, ancora, alvo):
+        """O ajuste do bot (src/batalha.py) lendo o relógio com ler_relogio."""
+        original = batalha.ler_numero
+        batalha.ler_numero = ler_relogio
+        try:
+            return Batalha.ajustar_angulo(self, ancora, alvo)
+        finally:
+            batalha.ler_numero = original
+
+    def aprender_digito(self, ancora, alvo):
+        """Salva o desenho da unidade de `alvo` (ex.: o 8 de 28) para ler o relógio exato."""
+        texto = str(alvo)
+        if len(texto) != 2 or angulo_legivel(alvo):
+            return
+        glifo = unidade_do_numero(batalha.mascara_numero(self.driver.capturar(), ancora), texto[0])
+        if glifo is None or glifo.shape[0] < 10 or not 4 <= glifo.shape[1] <= 12:
+            return
+        PASTA_DIGITOS.mkdir(parents=True, exist_ok=True)
+        cv2.imwrite(str(PASTA_DIGITOS / f"{texto[1]}_auto.png"), glifo)
+        batalha._carregar_digitos()[f"{texto[1]}_auto_pintinho"] = glifo
+        self.log(f"aprendi o dígito {texto[1]} do relógio (em {alvo})")
 
     def recuar(self, ancora, lado, pixels):
         """Anda para trás (o lado oposto ao tiro) em passinhos até o minimapa mostrar que

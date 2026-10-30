@@ -113,19 +113,18 @@ def test_fora_das_cartas_e_da_batalha_nada_e_lido():
 def test_plano_da_galinha_de_baixo_com_vento_contra():
     frame = img("e2_0de3_vento-1.2")
     tiro = plano(2, frame, batalha.ler(frame), 0)
-    assert (tiro.lado, tiro.angulo, tiro.andar, tiro.voar, tiro.galinha) == (1, 30, False, False, 0)
-    # Volta 1: nasceu no mesmo pixel da referência; vento −1,2 contra soma 0,4 × 1,2.
-    assert tiro.forca == pytest.approx(62.2 + 0.4 * 1.2, abs=0.3)
-    assert "distância 13.2" in tiro.motivo
+    assert (tiro.lado, tiro.angulo, tiro.andar, tiro.voar, tiro.galinha) == (1, 28, False, False, 0)
+    # Padrão do usuário 28/60; vento −1,2 contra soma 0,4 × 1,2.
+    assert tiro.forca == pytest.approx(60 + 0.4 * 1.2)
+    assert "distância 13.2, pixel de trás" in tiro.motivo
 
 
 def test_plano_da_galinha_de_cima_com_vento_a_favor():
     frame = img("e2_vento+2.7")
     tiro = plano(2, frame, batalha.ler(frame), 2)
     assert (tiro.lado, tiro.angulo, tiro.galinha) == (1, 55, 2) and "de cima" in tiro.motivo
-    # Volta 2: nasceu ~1 de distância mais perto; a tabela tira ~2,5 e o vento a favor 0,46.
-    # O usuário acertou com 68.
-    assert tiro.forca == pytest.approx(67.1, abs=0.5)
+    # Padrão 55/70 nasça onde nascer; o vento a favor tira 0,17 × 2,7.
+    assert tiro.forca == pytest.approx(70 - 0.17 * 2.7) and "mais à frente" in tiro.motivo
 
 
 def test_plano_do_estagio_4_burrinho_e_depois_a_gaiola():
@@ -273,7 +272,7 @@ def test_galinha_acertada_segue_para_a_proxima(monkeypatch):
     b.passo(frame)
     assert tiros[0].galinha == 1 and tiros[0].angulo == 45
     # Vento −2,5 contra: o bot atirou 62,4 no jogo e caiu curto; o usuário matou com 63.
-    assert tiros[0].forca == pytest.approx(62.5 + 0.4 * 2.5, abs=0.3)
+    assert tiros[0].forca == pytest.approx(60 + 0.4 * 2.5)
 
 
 def test_galinha_errada_mira_nela_de_novo(monkeypatch):
@@ -412,18 +411,42 @@ def test_recuo_anda_ate_o_minimapa_mostrar_os_pixels(monkeypatch):
     assert b.driver.teclas == ["right"] * 4  # 101, 103, 106, 108: parou ao passar de 7
 
 
-def test_pixel_de_tras_com_vento_forte_para_a_esquerda_soma_5(monkeypatch):
-    frame = img("e2_1de3_vento-2.5")  # nasceu no pixel de trás (o da gravação)
-    leitura = batalha.ler(frame)
-    forte = plano(2, frame, leitura, 1, mortas=1, vento=-3.0)
-    assert forte.forca == pytest.approx(62.5 + 5, abs=0.3) and "+5" in forte.motivo
-    fraco = plano(2, frame, leitura, 1, mortas=1, vento=-2.9)
-    assert fraco.forca == pytest.approx(62.5 + 0.4 * 2.9, abs=0.3)
-    a_favor = plano(2, frame, leitura, 1, mortas=1, vento=3.0)
-    assert a_favor.forca == pytest.approx(62.5 - 0.17 * 3.0, abs=0.3)
+def test_padrao_das_galinhas_e_mais_5_so_no_pixel_de_tras_com_vento_forte():
+    tras = img("e2_1de3_vento-2.5")  # nasceu no pixel de trás (o da gravação)
+    leitura = batalha.ler(tras)
+    assert plano(2, tras, leitura, 1, mortas=1, vento=-3.0).forca == pytest.approx(60 + 5)
+    assert plano(2, tras, leitura, 1, mortas=1, vento=-2.9).forca == pytest.approx(60 + 0.4 * 2.9)
+    assert plano(2, tras, leitura, 1, mortas=1, vento=3.0).forca == pytest.approx(60 - 0.17 * 3.0)
+    frente = img("e2_vento+2.7")  # volta 2: nasceu 9 px mais à frente no minimapa
+    tiro = plano(2, frente, batalha.ler(frente), 2, mortas=2, vento=-3.5)
+    assert "+5" not in tiro.motivo and tiro.forca == pytest.approx(70 + 0.4 * 3.5)
+    # Mais à frente não desconta pela distância (6º teste: 57 e 65 caíram curtos).
+    assert plano(2, frente, batalha.ler(frente), 2, mortas=2, vento=0.0).forca == pytest.approx(70)
 
 
-def test_mais_a_frente_o_vento_forte_nao_soma_5():
-    frame = img("e2_vento+2.7")  # volta 2: nasceu 9 px mais perto no minimapa
-    tiro = plano(2, frame, batalha.ler(frame), 2, mortas=2, vento=-3.5)
-    assert "+5" not in tiro.motivo
+@pytest.mark.parametrize("nome", ["e1", "e3", "e4", "e2_0de3_vento-1.2"])
+def test_relogio_le_igual_ou_melhor_que_o_do_bot(nome):
+    frame = img(nome)
+    ancora = batalha.ler(frame).ancora
+    bot = batalha.ler_numero(frame, ancora)
+    novo = pintinho.ler_relogio(frame, ancora)
+    assert novo[1]
+    if bot[1]:
+        assert novo == bot
+
+
+def test_28_conta_um_toque_a_partir_do_29_e_aprende_o_8(monkeypatch, tmp_path):
+    monkeypatch.setattr(pintinho, "PASTA_DIGITOS", tmp_path)
+    assert not pintinho.angulo_legivel(28) and pintinho.angulo_legivel(29)
+    frame = img("e2_1de3_vento-2.5")
+    b = batalha_de_teste(frame)
+    alvos = []
+    monkeypatch.setattr(b, "_ajustar_com_relogio", lambda ancora, alvo: alvos.append(alvo) or True)
+    mascaras = iter([np.zeros((28, 50), np.uint8), np.ones((28, 50), np.uint8) * 255])
+    monkeypatch.setattr(pintinho.batalha, "mascara_numero", lambda f, a: next(mascaras, np.ones((28, 50), np.uint8) * 255))
+    monkeypatch.setattr(pintinho, "ler_relogio", lambda f, a: (25, False))
+    aprendidos = []
+    monkeypatch.setattr(b, "aprender_digito", lambda ancora, alvo: aprendidos.append(alvo))
+    assert b.ajustar_angulo(batalha.ler(frame).ancora, 28)
+    assert alvos == [29] and b.driver.teclas == ["down"] and aprendidos == [28]
+
