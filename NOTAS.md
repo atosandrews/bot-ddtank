@@ -340,3 +340,4 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
 - Conferido no print do usuário (`tests/imagens/captcha_roda_girada.webp`): 10 de 10 teclas.
 - OCR desse captcha (4 4 8 3, dígitos ocos, 3 preto) não gera candidato: o bot não envia nada.
   Camada preta testada e desfeita (o modelo devolve vazio para dígitos ocos). Pendente.
+- 29/10: Resetar só limpa as casas digitadas; o código do captcha não muda (resposta do usuário).

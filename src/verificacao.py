@@ -169,7 +169,8 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                 log(f"[{nome}] tentativa {tentativas} sem aceitação observada; reavaliando", flush=True)
                 pendente = None
             if quadro.ocupados:
-                # Resetar pode trocar o código/teclado: sempre reanalisar no próximo ciclo.
+                # Resetar só limpa as casas (confirmado pelo usuário em 29/10: o código não muda);
+                # o teclado pode ser redesenhado, então reanalisa no próximo ciclo.
                 if clicar_atual(quadro, quadro.resetar, quadro.ocupados):
                     dormir(config.VERIFICACAO_ESPERA_CLIQUE)
                 else:

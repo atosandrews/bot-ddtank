@@ -34,7 +34,7 @@ Os comandos seguintes **controlam o jogo** e não foram usados na validação of
 
 Os modelos são carregados antes do laço individual/de grupo. Quando aparece a verificação, as demais ações ficam suspensas. O controlador confirma que a janela existe, traz somente seu HWND para frente, recaptura pixels e localiza os controles. Antes de cada clique, confere desafio, origem, teclado, estado das quatro casas, foco, geometria e janela sob o destino.
 
-Entrada parcial é limpa com Resetar; após isso o quadro é recapturado, porque Resetar pode mudar o desafio. Mudança de imagem durante preenchimento descarta a sequência. Apenas candidatos de quatro dígitos ASCII com score mínimo são enviados; zeros iniciais e repetições são preservados. Não há conversão de letras parecidas com números.
+Entrada parcial é limpa com Resetar; após isso o quadro é recapturado. Resetar só limpa as casas: o código não muda (confirmado pelo usuário em 29/10), então não serve para pedir outro desafio. Mudança de imagem durante preenchimento descarta a sequência. Apenas candidatos de quatro dígitos ASCII com score mínimo são enviados; zeros iniciais e repetições são preservados. Não há conversão de letras parecidas com números.
 
 Após Confirmar, o controlador aguarda resposta. Se o quadro permanece, o candidato é marcado como sem aceitação observada e outro candidato é considerado. Um candidato já rejeitado não é repetido na mesma imagem; sem candidatos novos, continuam as capturas e inferências até mudar a imagem ou acabar o prazo. Nenhum mecanismo garante gerar novos candidatos para uma imagem estática que os modelos não conseguem ler.
 
@@ -109,6 +109,6 @@ Ainda faltam imagens rotuladas adicionais e validação em sessão real dos esta
 
 **Correção seguinte em `_intercaladas`:** quando dígitos da mesma cor se ligam por cima de outra camada, viram um pedaço só e o intervalo entre centroides some. Agora cada pedaço guarda a extensão x, e uma camada de vários dígitos com pedaço único usa a metade central da largura. Coberto por teste. Conferência final na semente 4 (n=150, não usada em nenhum ajuste): ERRADO 0,0 / 0,0 / 0,67 / 0,0%, certo 98,0 / 79,3 / 61,3 / 70,7%, imagem 38 certa.
 
-**Impacto de "sem candidato" no fluxo:** o bot recaptura a mesma imagem; se o quadro some ao fim do prazo, `tratar()` levanta `ErroInfraestrutura` e o bot para. `Resetar` só é clicado para limpar casas preenchidas; não se sabe se troca o código. Validar isso no jogo é o caminho para recuperar cobertura sem enviar código errado.
+**Impacto de "sem candidato" no fluxo:** o bot recaptura a mesma imagem; se o quadro some ao fim do prazo, `tratar()` levanta `ErroInfraestrutura` e o bot para. `Resetar` só é clicado para limpar casas preenchidas e não troca o código (confirmado pelo usuário em 29/10). Sem candidato, a única saída sem chutar é esperar o prazo acabar.
 
 Reproduzir: `tools/avaliar_ocr.py --n 300 --semente 3 --json logs/avaliacao.json` (amostras: `tools/gerar_captchas.py --n 8 --semente 1 --ampliar 3 --saida logs/captchas_amostra`).
