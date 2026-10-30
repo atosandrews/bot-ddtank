@@ -28,6 +28,8 @@ class Quadro:
     confirmar: tuple
     resetar: tuple
     ocupados: int
+    centro_roda: tuple = None  # centro do círculo dos botões, em coordenadas da janela
+    fase: float = None  # ângulo de partida da roda (graus, módulo 36) neste print
 
 
 class VisaoVerificacao:
@@ -72,12 +74,12 @@ class VisaoVerificacao:
             raise QuadroInvalido(f"Destino ambíguo/ausente: {nome}")
         return x + w//2 + deslocamento[0], y + h//2 + deslocamento[1]
 
-    def _posicoes_da_roda(self, teclado):
-        """As 10 posições dos botões, em ordem horária na tela.
+    def fase_da_roda(self, teclado):
+        """Ângulo de partida da roda (graus, módulo 36) neste print.
 
-        Os botões ficam num círculo (centro e raio do perfil) a 36° um do outro; só o ângulo
-        de partida muda. Ele é estimado pelos botões pequenos e soltos (os grandes de baixo
-        encostam um no outro e na moldura e não servem para isso).
+        Os botões ficam num círculo (centro e raio do perfil) a 36° um do outro; só esse
+        ângulo muda. É estimado pelos botões pequenos e soltos (os grandes de baixo encostam
+        um no outro e na moldura e não servem para isso).
         """
         roda = self.perfil["ring"]
         cx, cy = roda["center"]
@@ -103,6 +105,14 @@ class VisaoVerificacao:
         desvio = [min(abs(a - inicio) % 36, 36 - abs(a - inicio) % 36) for a in resto]
         if max(desvio) > roda["angle_tol"]:
             raise QuadroInvalido("Botões fora do círculo esperado")
+        return float(inicio)
+
+    def _posicoes_da_roda(self, teclado):
+        """As 10 posições dos botões, em ordem horária na tela."""
+        roda = self.perfil["ring"]
+        cx, cy = roda["center"]
+        raio = roda["radius"]
+        inicio = self.fase_da_roda(teclado)
         angulos = sorted((inicio + 36 * k) % 360 for k in range(10))
         # Ordem horária na tela (y para baixo): ângulo crescente a partir de -180°.
         angulos = sorted(((a + 180) % 360) - 180 for a in angulos)
@@ -156,6 +166,25 @@ class VisaoVerificacao:
             self._cache_roda[chave] = mapa
         return {d: (x + deslocamento[0], y + deslocamento[1]) for d, (x, y) in mapa.items()}
 
+    def _teclado(self, frame, origem):
+        kx, ky, kw, kh = self.perfil["keyboard"]
+        return frame[origem[1] + ky:origem[1] + ky + kh, origem[0] + kx:origem[0] + kx + kw]
+
+    def fase(self, frame, origem):
+        """Fase da roda num print novo (rápido: não lê os números). None se não der."""
+        try:
+            return self.fase_da_roda(self._teclado(frame, origem))
+        except QuadroInvalido:
+            return None
+
+    @staticmethod
+    def girar(centro, ponto, graus):
+        """Gira `ponto` em volta de `centro` (sentido horário na tela para graus > 0)."""
+        a = np.radians(graus)
+        dx, dy = ponto[0] - centro[0], ponto[1] - centro[1]
+        return (int(round(centro[0] + dx * np.cos(a) - dy * np.sin(a))),
+                int(round(centro[1] + dx * np.sin(a) + dy * np.cos(a))))
+
     def analisar(self, frame):
         pos = self.ancora(frame)
         if pos is None:
@@ -192,5 +221,11 @@ class VisaoVerificacao:
             raise QuadroInvalido("Casas de entrada inconsistentes")
         codigo = self._recortar(popup, self.perfil["code"]).copy()
         identidade = hashlib.sha256(codigo.tobytes()).hexdigest()
+        cx, cy = self.perfil["ring"]["center"]
+        try:
+            fase = self.fase_da_roda(teclado)
+        except QuadroInvalido:
+            fase = None
         return Quadro((ox, oy), codigo, self._recortar(popup, self.perfil["timer"]).copy(),
-                      identidade, teclas, confirmar, resetar, ocupados)
+                      identidade, teclas, confirmar, resetar, ocupados,
+                      (ox + kx + cx, oy + ky + cy), fase)

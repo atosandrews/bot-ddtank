@@ -341,3 +341,14 @@ Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado 
 - OCR desse captcha (4 4 8 3, dígitos ocos, 3 preto) não gera candidato: o bot não envia nada.
   Camada preta testada e desfeita (o modelo devolve vazio para dígitos ocos). Pendente.
 - 29/10: Resetar só limpa as casas digitadas; o código do captcha não muda (resposta do usuário).
+
+## 2026-10-29 — captcha: roda girando (informações do usuário)
+- O código só troca quando o tempo acaba ou quando os 4 dígitos enviados estão errados.
+- A roda dos números gira sozinha. Com o mouse em cima de uma tecla os outros números somem;
+  com o mouse perto (fora dos números) ela gira mais devagar.
+- Antes, o clique exigia as 10 teclas no mesmo lugar do print anterior: com a roda girando
+  nunca clicaria, e o mouse ia para o canto (roda na velocidade máxima).
+- Agora: mouse estacionado no centro da roda antes de cada print e depois de cada clique;
+  o número é localizado no print mais recente e adiantado pelo giro medido entre dois prints
+  (`VERIFICACAO_LATENCIA_CLIQUE`); acima de `VERIFICACAO_GIRO_MAX` °/s não clica. O log
+  mostra "roda +N°/s" a cada número, para calibrar com a próxima run.

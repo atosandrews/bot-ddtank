@@ -10,6 +10,10 @@ VERIFICACAO_INTERVALO = 1.0
 VERIFICACAO_ESPERA_CLIQUE = 0.25
 VERIFICACAO_ESPERA_RESPOSTA = 2.5
 VERIFICACAO_DURACAO_DESAFIO = 30.0
+# A roda dos números gira. Acima desta velocidade (°/s), medida entre dois prints, não clica.
+VERIFICACAO_GIRO_MAX = 120.0
+# Tempo (s) entre o 2º print e o clique de fato (mover o mouse e clicar), para adiantar o giro.
+VERIFICACAO_LATENCIA_CLIQUE = 0.12
 VERIFICACAO_SALVAR_DIAGNOSTICO = True  # grava recortes em logs/verificacao/ para calibrar o OCR
 
 # Confiança mínima (0 a 1) para considerar que um template foi encontrado.

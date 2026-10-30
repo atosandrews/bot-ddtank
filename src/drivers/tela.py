@@ -118,8 +118,26 @@ class DriverTela:
         frame = DriverTela.capturar(self)
         return (frame, regiao) if self._verificacao_pronta(regiao) else None
 
-    def clicar_verificado(self, x, y, *, regiao_esperada):
-        """Aborta se foco, geometria ou janela sob o destino mudarem."""
+    def estacionar_mouse(self, x, y):
+        """Põe o mouse em (x, y) da janela sem clicar (só com o jogo em primeiro plano).
+
+        No captcha o mouse fica no centro da roda: perto das teclas ela gira mais devagar e,
+        longe de cima dos números, eles não somem.
+        """
+        import win32gui
+        if not self.janela_valida() or win32gui.GetForegroundWindow() != self.hwnd:
+            return False
+        self._atualizar_regiao()
+        if not (0 <= x < self.regiao["width"] and 0 <= y < self.regiao["height"]):
+            return False
+        pyautogui.moveTo(self.regiao["left"] + int(x), self.regiao["top"] + int(y), duration=0.05)
+        return True
+
+    def clicar_verificado(self, x, y, *, regiao_esperada, estacionar=None):
+        """Aborta se foco, geometria ou janela sob o destino mudarem.
+
+        `estacionar`: onde deixar o mouse depois do clique (padrão: canto da janela).
+        """
         import win32gui
         if not self._verificacao_pronta(regiao_esperada):
             return False
@@ -137,8 +155,9 @@ class DriverTela:
         if not alvo_correto():
             return False
         pyautogui.click(*ponto)
-        # Remover hover antes da próxima leitura dos templates.
-        pyautogui.moveTo(self.regiao["left"] + 5, self.regiao["top"] + 5)
+        # Tirar o mouse de cima do número antes da próxima leitura (o hover esconde os outros).
+        fx, fy = estacionar if estacionar is not None else (5, 5)
+        pyautogui.moveTo(self.regiao["left"] + int(fx), self.regiao["top"] + int(fy))
         return True
 
     @classmethod

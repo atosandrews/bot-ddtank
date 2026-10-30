@@ -85,26 +85,60 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         if not callable(getattr(driver, metodo, None)):
             raise ErroInfraestrutura(f"Driver sem suporte a verificação: {metodo}")
 
+    centro = None  # centro da roda: onde o mouse espera (perto das teclas, fora dos números)
+
+    def estacionar():
+        if centro is not None and callable(getattr(driver, "estacionar_mouse", None)):
+            driver.estacionar_mouse(*centro)
+
     def capturar():
         if not driver.janela_valida():
             raise ErroInfraestrutura(f"Janela de {nome} fechada ou indisponível")
         if not driver.preparar_verificacao():
             return None
+        estacionar()
         return driver.capturar_verificacao()
 
-    def clicar_atual(base, destino, ocupados):
+    def clicar_atual(base, destino, ocupados, digito=None):
+        """Revalida o desafio num print novo e clica.
+
+        A roda dos números gira: a posição de `digito` vem do print mais recente e é
+        adiantada pelo giro medido entre dois prints seguidos até o momento do clique.
+        """
         if relogio() >= prazo:
             return False
         captura = capturar()
         if captura is None:
             return False
         frame, regiao = captura
+        t1 = relogio()
         atual = visao.analisar(frame)
         if (atual is None or atual.identidade != base.identidade
-                or atual.origem != base.origem or atual.teclas != base.teclas
+                or atual.origem != base.origem
                 or atual.confirmar != base.confirmar or atual.resetar != base.resetar
                 or atual.ocupados != ocupados):
             return False
+        if digito is not None:
+            destino = atual.teclas[digito]
+            fase1 = getattr(atual, "fase", None)
+            if fase1 is not None and callable(getattr(visao, "fase", None)):
+                segunda = driver.capturar_verificacao()
+                if segunda is None or segunda[1] != regiao:
+                    return False
+                t2 = relogio()
+                fase2 = visao.fase(segunda[0], atual.origem)
+                if fase2 is not None and t2 > t1:
+                    # Fase tem período de 36°: entre dois prints seguidos o giro é pequeno.
+                    giro = (((fase2 - fase1) + 18) % 36) - 18
+                    velocidade = giro / (t2 - t1)
+                    if abs(velocidade) > config.VERIFICACAO_GIRO_MAX:
+                        log(f"[{nome}] roda rápida demais ({velocidade:.0f}°/s); sem clique", flush=True)
+                        return False
+                    adiantar = velocidade * (t2 - t1 + config.VERIFICACAO_LATENCIA_CLIQUE)
+                    destino = visao.girar(atual.centro_roda, destino, adiantar)
+                    log(f"[{nome}] roda {velocidade:+.0f}°/s; clicando {digito}", flush=True)
+        if centro is not None:
+            return driver.clicar_verificado(*destino, regiao_esperada=regiao, estacionar=centro)
         return driver.clicar_verificado(*destino, regiao_esperada=regiao)
 
     identidade = None
@@ -127,6 +161,8 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
         frame, _ = captura
         try:
             quadro = visao.analisar(frame)
+            if quadro is not None:
+                centro = getattr(quadro, "centro_roda", None) or centro
             if quadro is None:
                 if identidade is not None and relogio() >= prazo:
                     expirado = True
@@ -190,7 +226,7 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                 continue
             inicio_tentativa = relogio()
             for indice, digito in enumerate(candidato.texto):
-                if not clicar_atual(quadro, quadro.teclas[digito], indice):
+                if not clicar_atual(quadro, quadro.teclas[digito], indice, digito):
                     break
                 dormir(config.VERIFICACAO_ESPERA_CLIQUE)
             else:

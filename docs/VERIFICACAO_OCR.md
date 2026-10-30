@@ -112,3 +112,5 @@ Ainda faltam imagens rotuladas adicionais e validação em sessão real dos esta
 **Impacto de "sem candidato" no fluxo:** o bot recaptura a mesma imagem; se o quadro some ao fim do prazo, `tratar()` levanta `ErroInfraestrutura` e o bot para. `Resetar` só é clicado para limpar casas preenchidas e não troca o código (confirmado pelo usuário em 29/10). Sem candidato, a única saída sem chutar é esperar o prazo acabar.
 
 Reproduzir: `tools/avaliar_ocr.py --n 300 --semente 3 --json logs/avaliacao.json` (amostras: `tools/gerar_captchas.py --n 8 --semente 1 --ampliar 3 --saida logs/captchas_amostra`).
+
+**Roda girando (29/10):** o código só troca quando o tempo acaba ou com 4 dígitos errados. Os botões giram; o bot deixa o mouse no centro da roda (gira mais devagar e os números não somem), localiza cada número no print mais recente (`teclas_pela_roda` quando o recorte exato falha) e adianta a posição pelo giro medido entre dois prints. Ver `VERIFICACAO_GIRO_MAX` e `VERIFICACAO_LATENCIA_CLIQUE` em `src/config.py`. Testado com captcha simulado; velocidade real ainda não medida.
