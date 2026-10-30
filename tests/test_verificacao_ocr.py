@@ -208,3 +208,25 @@ def test_maioria_sem_os_dois_modelos_nao_basta():
     leituras = [leitura("5936", "beta", v) for v in ("original", "cinza_2x", "mascara")]
     leituras.append(leitura("5436", "padrao", "cores"))
     assert decidir(leituras) == []
+
+
+@pytest.mark.parametrize("arquivo,codigo", [("codigo_real_2296.png", "2296"), ("codigo_real_6261.png", "6261"),
+                                            ("codigo_real_6262.png", "6262")])
+def test_palpite_acerta_captchas_reais_sem_certeza(arquivo, codigo):
+    # Recortes reais (29–30/10): sem certeza pela regra de segurança, mas o palpite (mais
+    # apoio somado entre as leituras de 4 dígitos) é o código certo.
+    pytest.importorskip("ddddocr")
+    from src.verificacao_ocr import palpite
+    ocr = OcrLocal()
+    assert ocr.reconhecer(cv2.imread(str(Path(__file__).resolve().parent / "imagens" / arquivo))) == []
+    assert palpite(ocr.ultimas_leituras).texto == codigo
+
+
+def test_palpite_soma_o_apoio_e_nao_repete_rejeitado():
+    from src.verificacao_ocr import palpite
+    leituras = [leitura("6261", "padrao", "original", .98), leitura("6261", "padrao", "cinza_2x", .99),
+                leitura("6267", "beta", "original", .97), leitura("6267", "beta", "cinza_2x", .97),
+                leitura("626", "beta", "mascara", 1.0)]
+    assert palpite(leituras).texto == "6261"
+    assert palpite(leituras, rejeitados={"6261"}).texto == "6267"
+    assert palpite([leitura("225", "beta", "original", .99)]) is None  # sem 4 dígitos, sem palpite

@@ -48,7 +48,9 @@ def test_modelos_sao_carregados_uma_vez_por_processo(monkeypatch):
         obter_ocr.cache_clear()
 
 
-def test_expiracao_nao_e_apresentada_pelo_chamador_como_resolucao(monkeypatch):
+def test_expiracao_e_registrada_mas_nao_para_o_bot(monkeypatch):
+    # Usuário (30/10): o código troca ao expirar; o ciclo segue depois dos captchas.
     monkeypatch.setattr(verificacao, "resolver", lambda *args: verificacao.Resultado("EXPIRADO", 1))
-    with pytest.raises(ErroInfraestrutura, match="expirou"):
-        verificacao.tratar(object())
+    linhas = []
+    r = verificacao.tratar(object(), "conta2", log=lambda m, **k: linhas.append(m))
+    assert r.estado == "EXPIRADO" and any("expirou" in l and "seguindo" in l for l in linhas)

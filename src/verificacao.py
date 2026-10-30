@@ -12,7 +12,7 @@ import cv2
 from . import config, vision
 from .telas import IMG
 from .registro import imprimir
-from .verificacao_ocr import ErroInfraestrutura, obter_ocr
+from .verificacao_ocr import ErroInfraestrutura, obter_ocr, palpite
 from .verificacao_visao import QuadroInvalido, VisaoVerificacao
 
 CODIGO = IMG / "codigo_verificacao.png"
@@ -247,6 +247,13 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
                     # Uma vez por imagem: a recaptura de 1 s repetiria o mesmo arquivo.
                     _diagnostico(nome, quadro, None, tentativas, getattr(ocr, "ultimas_leituras", ()))
                     salvo_sem_candidato = quadro.identidade
+                if config.VERIFICACAO_ENVIAR_PALPITE:
+                    # Errar só troca o código (usuário, 30/10): melhor palpite em vez de esperar.
+                    candidato = palpite(getattr(ocr, "ultimas_leituras", ()), rejeitados)
+                    if candidato is not None:
+                        log(f"[{nome}] sem certeza; palpite {candidato.texto} "
+                            f"(apoio {candidato.confianca:.2f})", flush=True)
+            if candidato is None:
                 if relogio() - ultimo_aviso >= 5:
                     log(f"[{nome}] sem candidato novo de quatro dígitos; recapturando", flush=True)
                     ultimo_aviso = relogio()
@@ -283,9 +290,11 @@ def resolver(driver, nome="bot", *, ocr=None, visao=None, dormir=time.sleep,
             dormir(config.VERIFICACAO_INTERVALO)
 
 
-def tratar(driver, nome="bot"):
+def tratar(driver, nome="bot", log=imprimir):
+    """Resolve o captcha desta conta. Expirado não para mais o bot (usuário, 30/10): o
+    jogo troca o código; com os quadros de todas as contas resolvidos o ciclo continua."""
     with _EXCLUSAO:
         resultado = resolver(driver, nome)
     if resultado.estado == "EXPIRADO":
-        raise ErroInfraestrutura("Verificação expirou sem aceitação observada; fluxo interrompido")
+        log(f"[{nome}] verificação expirou sem aceitação observada; seguindo o ciclo", flush=True)
     return resultado

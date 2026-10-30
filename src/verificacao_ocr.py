@@ -208,6 +208,25 @@ def decidir(leituras, limiar=0.90):
     return []
 
 
+def palpite(leituras, rejeitados=()):
+    """Melhor palpite quando decidir() não tem certeza: o código de 4 dígitos com mais
+    apoio somado (soma das confianças das leituras iguais), sem repetir um já rejeitado.
+
+    Usado só com VERIFICACAO_ENVIAR_PALPITE: errar troca o código, esperar também.
+    O Candidato devolvido traz a soma do apoio em `confianca`. None sem leitura de 4 dígitos.
+    """
+    apoio = {}
+    for l in leituras:
+        if _quatro_digitos(l) and l["texto"] not in rejeitados:
+            apoio.setdefault(l["texto"], []).append(l)
+    if not apoio:
+        return None
+    texto, iguais = max(apoio.items(), key=lambda kv: (sum(l["confianca"] for l in kv[1]),
+                                                     max(l["confianca"] for l in kv[1])))
+    melhor = max(iguais, key=lambda l: l["confianca"])
+    return Candidato(texto, float(sum(l["confianca"] for l in iguais)), melhor["modelo"], "palpite")
+
+
 def _candidato(apoio):
     melhor = max(apoio, key=lambda l: l["confianca"])
     return Candidato(melhor["texto"], float(melhor["confianca"]), melhor["modelo"], melhor["variante"])

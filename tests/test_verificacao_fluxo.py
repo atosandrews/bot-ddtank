@@ -308,3 +308,31 @@ def test_diagnostico_salva_desafio_sem_candidato_uma_vez_e_o_envio(monkeypatch, 
     enviados = [p for p in tmp_path.glob("*.json") if "sem_candidato" not in p.name]
     assert json.loads(enviados[0].read_text(encoding="utf-8"))["candidato"] == "0011"
     assert len(list(tmp_path.glob("*.png"))) == 2
+
+
+def test_sem_certeza_envia_o_melhor_palpite(monkeypatch):
+    monkeypatch.setattr(config, "VERIFICACAO_ENVIAR_PALPITE", True)
+
+    class OcrSemCerteza(Ocr):
+        def reconhecer(self, imagem, limiar):
+            self.ultimas_leituras = [{"texto": "0011", "confianca": .97, "modelo": "beta", "variante": "original"},
+                                     {"texto": "011", "confianca": .99, "modelo": "padrao", "variante": "original"}]
+            return []
+    d = Driver()
+    r = executar(d, OcrSemCerteza())
+    assert r.estado == "RESOLVIDO" and d.confirmados == ["0011"]
+
+
+def test_palpite_desligado_espera(monkeypatch):
+    monkeypatch.setattr(config, "VERIFICACAO_ENVIAR_PALPITE", False)
+
+    class OcrSemCerteza(Ocr):
+        def reconhecer(self, imagem, limiar):
+            self.leituras += 1
+            if self.leituras > 5:
+                d.fim = True
+            self.ultimas_leituras = [{"texto": "0011", "confianca": .97, "modelo": "beta", "variante": "original"}]
+            return []
+    d = Driver()
+    executar(d, OcrSemCerteza())
+    assert d.confirmados == []

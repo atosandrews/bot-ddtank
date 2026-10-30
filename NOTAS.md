@@ -416,3 +416,12 @@ Comparado com o bot e confirmado pelo usuário:
   nascer além de +150 recua em passinhos medindo a posição até +105 (`recuar` na estratégia).
 - Só nesse lugar (+160 a +215): nascendo em outros pontos (-88, +42, +116, +351) não anda.
 - Fora desse lugar: só mira 30 e atira com força 80 (`andar: None`); o recuo às cegas foi desligado.
+
+## 2026-10-30 — captcha: palpite e expiração (decisões do usuário)
+- Roda em câmera lenta com o mouse por dentro dela: na run das 01:44 quase não houve mais erro visual;
+  o que travava era o OCR (sem certeza do código).
+- Usuário: errar só troca o código, então sem certeza o bot envia o melhor palpite
+  (`palpite`: código de 4 dígitos com mais apoio somado; `VERIFICACAO_ENVIAR_PALPITE`).
+  12 captchas reais rotulados: só com certeza 3 certos / 0 errados / 9 sem resposta; com palpite
+  8 certos / 1 errado (6351 → 6367) / 3 sem resposta (ninguém leu 4 dígitos: 7 fino, dígitos ocos).
+- Captcha expirado não para mais o bot: registra no log e o ciclo segue.
