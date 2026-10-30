@@ -206,6 +206,9 @@ class Grupo:
         self.principal = self.contas[0]
         self.convidadas = self.contas[1:]
         self.ultimo_convite = 0.0
+        # Depois do estágio 1 sozinha as convidadas estão fora da sala (foram expulsas antes):
+        # a principal convida direto, sem passar antes em cada janela para conferir.
+        self.convidar_direto = False
         self.visita = -1  # rodízio de contas visitadas na batalha
         self.ordem = []  # ordem das vezes na batalha, aprendida nos primeiros turnos
         self.proxima = None  # conta que deve jogar em seguida
@@ -313,6 +316,12 @@ class Grupo:
         if config.CONVIDAR_SO_NO_ESTAGIO_2 and principal.batalha.estagio != "FORMIGAS":
             # Próxima luta é o estágio 1: a principal vai sozinha. Convidada na sala sai.
             self.sala_sozinha(principal)
+            self.convidar_direto = True
+            return
+        if self.convidar_direto:
+            frame = self.olhar(principal)
+            if self.convidar(principal, frame, [c.nome for c in self.convidadas]):
+                self.convidar_direto = False
             return
 
         fora, prontas = [], 0
@@ -623,23 +632,24 @@ class Grupo:
         return achados
 
     def convidar(self, conta, frame, nomes):
+        """Convide → aba Amigos → Convidar de cada conta minha. True se clicou nos convites."""
         conta.log(f"convidando ({', '.join(nomes)} fora da sala)")
         self.ultimo_convite = time.time()
         # A janela do Convide pode ter ficado aberta: clicar em Convide de novo a fecharia.
         if vision.achar(ABA_AMIGOS, frame, config.LIMIAR) is None:
             if not conta.clicar_em(CONVIDE, frame):
                 conta.log("botão Convide não encontrado")
-                return
+                return False
         if not conta.clicar_em(ABA_AMIGOS):
             conta.log("aba Amigos não apareceu")
             conta.salvar_debug(conta.driver.capturar(), "sem_aba_amigos")
-            return
+            return False
         # Segue assim que a lista de amigos mostrar os botões Convidar (até 1,5 s).
         botoes = self.botoes_das_contas(self.esperar_imagem(conta, CONVIDAR, 0.85, 1.5))
         if not botoes:
             conta.log("nenhuma das minhas contas na lista (aba errada?): não convidei ninguém")
             conta.salvar_debug(conta.driver.capturar(), "lista_convite")
-            return
+            return False
         for nome, (x, y) in botoes:
             conta.log(f"convidando {nome}")
             conta.driver.clicar(x, y)
@@ -653,6 +663,7 @@ class Grupo:
                 if convidada.aceitar_convite():
                     break
                 time.sleep(0.3)
+        return True
 
     def rodar(self):
         avisar("Grupo iniciado (Ctrl+C para parar; mouse no canto da tela também para)")

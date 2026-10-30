@@ -306,3 +306,11 @@ python -m src.main "TITULO DA JANELA"
 - Correção: `_triangulo` só aceita candidato ~106 px acima de alguma barra de vida (`TRIANGULO_TOLERANCIA`).
   Teste com os prints do registro em `tests/imagens/`; leitura dos prints de batalha da especificação inalterada.
 - Convites no estágio 2 não acontecem no `rodar_bot.bat` (uma conta); só em `rodar_grupo.bat`.
+
+## 2026-10-29 — grupo com 3 convidadas (run 21:26–21:30)
+- Só 2 convites: faltava `img/convidados/fakeddt1.png` (convite é por nome). Recortado do print
+  da aba Amigos enviado pelo usuário (mesma escala do jogo: os outros recortes casam com 1,00).
+- Depois do estágio 1 a principal convidava só após visitar cada convidada para ver quem estava
+  fora da sala (~13 s). Agora convida direto (`convidar_direto`): as convidadas foram expulsas
+  antes do estágio 1, então estão fora. A visita às convidadas continua só para Confirmar e Pronto,
+  que o jogo exige (janela coberta não desenha o convite).
