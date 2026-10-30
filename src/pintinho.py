@@ -55,11 +55,16 @@ CENTRO_DA_TELA = 349      # x do meio da área da luta em relação ao rótulo "
 # Formigueiro (usuário, 30/10).
 TIRO_COLADO = (40, 5)
 COLADO_PX = 30
-# Estágio 2 (3 galinhas à direita): o contador "n/3" diz qual é a próxima. Padrão do usuário
-# (30/10, depois do 6º teste), nasça onde nascer: (ângulo, força, distância no minimapa da
-# galinha quando se nasce no pixel de trás, o da gravação). A tabela pela distância foi
-# tirada: nascendo mais à frente ela descontou e as do meio e de cima caíram curtas.
-GALINHAS = [(28, 60, 114), (45, 60, 116), (55, 70, 121)]  # de baixo, do meio, de cima
+# Estágio 2 (3 galinhas à direita): o contador "n/3" diz qual é a próxima. Pedido do usuário
+# (30/10, depois do grupo): nasça onde nascer, o personagem vai primeiro ao pixel de trás (o da
+# gravação e do print dele: a galinha a essa distância no minimapa) e atira de lá.
+# (ângulo, força, distância no minimapa da galinha no pixel de trás)
+GALINHAS = [(25, 65, 114), (25, 100, 116), (45, 75, 121)]  # de baixo, do meio, de cima
+FORCA_MAXIMA = 100
+# Ida ao pixel de trás: passinhos para trás (esquerda) até a galinha ficar à distância gravada.
+PIXEL_TOLERANCIA = 1      # px do minimapa (~12 px da tela)
+PIXEL_TOQUE = 0.15        # segundos de seta em cada passinho
+PIXEL_TEMPO_MAX = 6.0     # s andando, no máximo
 # Vento a favor tira 0,17 por unidade (ajuste das 3 voltas da gravação). Vento contra soma
 # 0,4: no 3º teste no jogo (30/10) o 1º tiro na do meio (62,4, vento −2,5) e na de cima
 # (70,0, vento −3,0) caíram curtos; na gravação o usuário matou com 63 e 71 (−2,5 e −2,4).
@@ -195,12 +200,12 @@ def plano(estagio, frame, leitura, tiros_no_estagio, tiros_na_gaiola=0, mortas=N
             vento = pv.ler_vento(frame, ancora)
         nome = ("de baixo", "do meio", "de cima")[mortas]
         if de_tras and vento is not None and vento <= -VENTO_FORTE_CONTRA:
-            return Tiro(1, angulo, forca + FORCA_A_MAIS_VENTO_FORTE,
+            return Tiro(1, angulo, min(FORCA_MAXIMA, forca + FORCA_A_MAIS_VENTO_FORTE),
                         f"galinha {nome} ({mortas}/3 mortas), {onde}, vento forte {vento}: "
                         f"+{FORCA_A_MAIS_VENTO_FORTE}", galinha=mortas)
         forca, vento = com_vento(forca, frame, ancora, 1, vento)
-        return Tiro(1, angulo, forca, f"galinha {nome} ({mortas}/3 mortas), {onde}, vento {vento}",
-                    galinha=mortas)
+        return Tiro(1, angulo, min(FORCA_MAXIMA, forca),
+                    f"galinha {nome} ({mortas}/3 mortas), {onde}, vento {vento}", galinha=mortas)
     if estagio == 3:
         if tiros_no_estagio == 0:
             lado, como = lado_do_centro(frame, leitura, padrao=-1)
@@ -468,6 +473,7 @@ class BatalhaPintinho(Batalha):
         mortas, vento = None, _LER
         if estagio == 2:
             mortas = self.conferir_galinha(leitura.ancora)
+            self.ir_ao_pixel_de_tras(leitura.ancora, mortas)
             vento = self.ler_com_calma(pv.ler_vento, leitura.ancora)
             if vento is None:
                 self.log("não li o vento; atirando sem corrigir")
@@ -481,6 +487,35 @@ class BatalhaPintinho(Batalha):
         self.tiros_na_gaiola += tiro.gaiola
         if tiro.galinha is not None:
             self.galinha_mirada = tiro.galinha
+
+    def ir_ao_pixel_de_tras(self, ancora, mortas):
+        """Estágio 2: anda para trás (esquerda) até a galinha da vez ficar, no minimapa, à
+        distância do pixel de trás; passou do ponto, volta. Depois fica virado para trás (o
+        disparo vira para as galinhas)."""
+        indice = min(mortas if mortas is not None else self.tiros_no_estagio, 2)
+        dx_alvo = GALINHAS[indice][2]
+
+        def falta():
+            pontos = pv.pontos_minimapa(self.driver.capturar(), ancora)
+            x = galinha_no_minimapa(pontos, indice)
+            return None if x is None else dx_alvo - (x - pontos[0])  # > 0: estou perto demais
+
+        agora = falta()
+        if agora is None:
+            self.log("não achei a galinha no minimapa; atirando de onde estou")
+            return
+        if abs(agora) <= PIXEL_TOLERANCIA:
+            return
+        self.log(f"indo ao pixel de trás: {agora:+d} px no minimapa")
+        limite = time.time() + PIXEL_TEMPO_MAX
+        while time.time() < limite and agora is not None and abs(agora) > PIXEL_TOLERANCIA:
+            tecla = config.TECLA_ESQUERDA if agora > 0 else config.TECLA_DIREITA
+            self.driver.tecla(tecla, PIXEL_TOQUE)
+            self.virado = -1 if agora > 0 else 1
+            time.sleep(0.12)
+            agora = falta()
+        self.log(f"no pixel de trás (falta {agora} px)" if agora is not None and abs(agora) <= PIXEL_TOLERANCIA
+                 else f"não cheguei ao pixel de trás (falta {agora} px)")
 
     def angulo_exato(self, ancora, angulo):
         """O número do relógio mostra exatamente o ângulo pedido (sem aproximação)?"""

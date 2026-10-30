@@ -193,6 +193,19 @@ grupo pelas do Pintinho e devolve depois.
 - Cartas: cada conta vira as grátis.
 **Ainda não rodou no jogo.**
 
+## Grupo no jogo e estágio 2 novo (30/10, 16:37–16:55)
+
+- O grupo rodou de ponta a ponta: 1–3 sozinha, convite das 3 antes do 4 (as 3 aceitaram e
+  deram Pronto), Confiar + passar nas convidadas depois do 1º tiro da principal, gaiola,
+  cartas, expulsar e recomeçar.
+- Estágio 2 no pixel de trás: a galinha do meio não morreu com 45/60 (6 tiros).
+- **Pedido do usuário (print dele):** no estágio 2, nasça onde nascer, ir ao **pixel de trás**
+  (o mesmo da gravação: +164 px do rótulo na tela, galinha de cima a 122 px no minimapa) e
+  atirar de lá com **baixo 25/65, meio 25/100, cima 45/75**. O bot anda em passinhos para
+  trás (ou volta, se passou) até a galinha da vez ficar à distância gravada no minimapa
+  (±1 px). As regras do vento continuam (contra +0,4/unidade, a favor −0,17, +5 com vento de 3
+  ou mais para a esquerda); força máxima 100.
+
 ## Validação offline (30/10)
 
 Sem o jogo, sobre os 824 prints da gravação: estágio certo em 680 de 681 prints de batalha
