@@ -45,6 +45,7 @@ CARIMBO = IMG / "grupo_pronto_carimbo.png"
 TROQUE = IMG / "troque.png"
 CONFIAR = IMG / "batalha_confiar.png"
 CANCELE = IMG / "grupo_cancele.png"  # botão da convidada depois de dar Pronto
+SAIR_SALA = IMG / "sala_sair.png"  # porta "Sair" da barra de baixo da sala (sala → Cais)
 XIS = IMG / "sala_expulsar_x.png"  # X pequeno do cartão do jogador (a dona expulsa)
 PASTA_CONVIDADOS = IMG / "convidados"
 TELA_BATALHA = next(t for t in telas.TELAS if t.nome == "BATALHA")  # um recorte do nome de cada conta na lista de amigos
@@ -99,6 +100,10 @@ class Conta:
         self.confiou = False  # Confiar ligado neste estágio (modo só a principal joga)
         self.clicou_pronto = 0  # voltas desde o último clique em Pronto (0 = não clicou)
         self.na_luta = False  # entrou na luta atual com a principal (estágio 2)
+        # Volta atual do estágio 2: aceitou o convite da principal / Pronto já confirmado.
+        # Sala sem convite aceito nesta volta não é a da principal: a convidada sai dela.
+        self.aceitou_nesta_volta = False
+        self.pronto_sala = False
 
     def log(self, msg):
         linha = f"[{datetime.now():%H:%M:%S}] [{self.nome}] [{self.tela}] {msg}"
@@ -134,6 +139,7 @@ class Conta:
             return False
         self.log("convite recebido: confirmando")
         self.aceitou_em = time.time()
+        self.aceitou_nesta_volta = True
         # Direto no Confirmar: o aviso "Clique no jogo" fica no meio e não cobre o botão,
         # e o convite expira em 12 s (não dá tempo de clicar no aviso antes).
         trazer_para_frente(self.driver.hwnd)
@@ -209,6 +215,8 @@ class Grupo:
         # Depois do estágio 1 sozinha as convidadas estão fora da sala (foram expulsas antes):
         # a principal convida direto, sem passar antes em cada janela para conferir.
         self.convidar_direto = False
+        # Convidadas já mandadas para o Cais antes do estágio 1 desta volta.
+        self.convidadas_no_cais = False
         self.visita = -1  # rodízio de contas visitadas na batalha
         self.ordem = []  # ordem das vezes na batalha, aprendida nos primeiros turnos
         self.proxima = None  # conta que deve jogar em seguida
@@ -324,34 +332,27 @@ class Grupo:
                 self.convidar_direto = False
             return
 
-        fora, prontas = [], 0
+        fora = []
         for c in self.convidadas:
+            if c.pronto_sala:
+                continue  # Pronto já confirmado nesta volta: não troca de janela de novo
             frame = self.olhar(c)
             if c.aceitar_convite(frame):
                 # Espera a sala carregar (até 3 s), seguindo assim que o Troque aparecer.
                 frame = self.esperar_imagem(c, TROQUE, config.LIMIAR, 3.0)
-            if vision.achar(CANCELE, frame, 0.75):
-                prontas += 1
+            na_sala = (vision.achar(CANCELE, frame, 0.75) is not None
+                       or vision.achar(TROQUE, frame, config.LIMIAR) is not None)
+            if na_sala and not c.aceitou_nesta_volta:
+                # Sala de outra pessoa (não aceitou o convite da principal): sai e espera no Cais.
+                self.levar_ao_cais(c)
+                fora.append(c)
                 continue
-            troque = vision.achar(TROQUE, frame, config.LIMIAR)
-            if troque is None:
+            if not na_sala:
                 fora.append(c)
                 c.clicou_pronto = 0
                 continue
-            # O mesmo botão marca e desmarca o Pronto: só clica de novo depois de 3 voltas
-            # sem ver o 'Cancele' (o clique pode não ter pegado).
-            if c.clicou_pronto and c.clicou_pronto < 3:
-                c.clicou_pronto += 1
-                continue
-            c.log("clicando em Pronto")
-            c.driver.clicar(troque[0] + 70, troque[1])
-            c.clicou_pronto = 1
-            # Segue assim que o botão virar 'Cancele' (até 1,5 s).
-            if vision.achar(CANCELE, self.esperar_imagem(c, CANCELE, 0.75, 1.5), 0.75):
-                prontas += 1
-            else:
-                c.log("o botão não virou 'Cancele' ainda")
-                c.salvar_debug(c.driver.capturar(), "sem_cancele")
+            self.dar_pronto_na_sala(c, frame)
+        prontas = sum(c.pronto_sala for c in self.convidadas)
 
         frame = self.olhar(principal)
         tela = telas.identificar(frame, config.LIMIAR, ignorar=("SEM_FOCO",))
@@ -377,10 +378,69 @@ class Grupo:
             principal.log(f"{prontas} de {prontas} convidada(s) pronta(s): iniciando")
             for c in self.convidadas:
                 c.na_luta = True  # na batalha: Confiar e passar a vez
+                c.pronto_sala = False  # na próxima sala o Pronto é outro
+            self.convidadas_no_cais = False  # depois da Pandora estarão na sala de novo
             principal.fazer_cliques(tela, frame)
             time.sleep(random.uniform(*config.ESPERA_TRANSICAO))
         else:
             principal.log(f"{prontas} de {len(self.convidadas)} convidada(s) pronta(s)")
+
+    def dar_pronto_na_sala(self, c, frame=None):
+        """Numa visita só: espera a sala da convidada, clica em Pronto e confere o 'Cancele'.
+
+        O mesmo botão marca e desmarca o Pronto: sem ver o 'Cancele', só clica de novo
+        depois de 3 voltas (o clique pode ter pegado e o botão demorado a trocar).
+        """
+        frame = frame if frame is not None else self.olhar(c)
+        if (vision.achar(CANCELE, frame, 0.75) is None
+                and vision.achar(TROQUE, frame, config.LIMIAR) is None):
+            frame = self.esperar_imagem(c, TROQUE, config.LIMIAR, 3.0)
+        if vision.achar(CANCELE, frame, 0.75):
+            c.pronto_sala = True
+            return True
+        troque = vision.achar(TROQUE, frame, config.LIMIAR)
+        if troque is None:
+            return False
+        if c.clicou_pronto and c.clicou_pronto < 3:
+            c.clicou_pronto += 1
+            return False
+        c.log("clicando em Pronto")
+        c.driver.clicar(troque[0] + 70, troque[1])
+        c.clicou_pronto = 1
+        # Segue assim que o botão virar 'Cancele' (até 2 s).
+        if vision.achar(CANCELE, self.esperar_imagem(c, CANCELE, 0.75, 2.0), 0.75):
+            c.pronto_sala = True
+            return True
+        c.log("o botão não virou 'Cancele' ainda")
+        c.salvar_debug(c.driver.capturar(), "sem_cancele")
+        return False
+
+    def levar_ao_cais(self, c, tentativas=6):
+        """Convidada fora do estágio 2: clica em Sair até chegar ao Cais e espera lá o convite.
+
+        Sair só é clicado com a tela reconhecida como sala; no lobby (onde Sair fecharia o
+        jogo) segue o caminho normal até o Cais (Central). True se chegou ao Cais.
+        """
+        for _ in range(tentativas):
+            frame = self.olhar(c)
+            tela = telas.identificar(frame, config.LIMIAR, ignorar=("SEM_FOCO",))
+            nome = tela.nome if tela else None
+            if nome == "CAIS_EXPEDICAO":
+                c.log("no Cais, esperando o convite do estágio 2")
+                return True
+            if nome in NA_SALA:
+                pos = vision.achar(SAIR_SALA, frame, config.LIMIAR)
+                if pos is None:
+                    c.log("botão Sair não encontrado na sala")
+                    c.salvar_debug(frame, "sem_sair")
+                    return False
+                c.log("saindo da sala (Sair) para esperar no Cais")
+                c.driver.clicar(*pos)
+            elif nome in ("LOBBY", "SELECAO_CANAL", "ALUNO_RECOMENDADO"):
+                c.fazer_cliques(tela, frame)  # lobby → Central → Cais
+            time.sleep(random.uniform(1.0, 1.4))
+        c.log("não cheguei ao Cais")
+        return False
 
     @staticmethod
     def xis_dos_cartoes(frame):
@@ -400,7 +460,15 @@ class Grupo:
     def sala_sozinha(self, principal):
         """Antes do estágio 1: a dona da sala expulsa as convidadas (X do cartão) e inicia
         sozinha, confirmando o aviso de lutar sozinha."""
-        # A dona da sala expulsa as convidadas: X pequeno no cartão de cada uma.
+        if not self.convidadas_no_cais:
+            # Pedido do usuário: cada convidada sai da sala (Sair) e espera no Cais.
+            for c in self.convidadas:
+                self.levar_ao_cais(c)
+                c.aceitou_nesta_volta = False
+                c.pronto_sala = False
+                c.clicou_pronto = 0
+            self.convidadas_no_cais = True
+        # Reserva: se alguma continuou na sala, a dona expulsa pelo X do cartão.
         frame = self.olhar(principal)
         outros = self.xis_dos_cartoes(frame)[1:]  # o 1º (em cima à esquerda) é o dela
         if outros:
@@ -437,6 +505,7 @@ class Grupo:
                 c.confiou = False  # estágio novo: o Confiar precisa ser ligado de novo
                 c.na_luta = False
             self.principal_jogou = False
+            principal.batalha.nova_luta()
             return False
         alguma_batalha = any(t is not None and t.batalha for _, _, t in vistas)
         if not alguma_batalha:
@@ -455,7 +524,7 @@ class Grupo:
                 principal.driver.ativar_com_clique()
                 principal.batalha.passo(principal.driver.capturar())
                 self.principal_jogou = True
-            else:
+            elif not principal.batalha.preparar_angulo(frame, leitura):
                 time.sleep(0.3)
             return True
         # Convidadas que entraram nesta luta (marcadas ao iniciar). A janela delas pode estar
@@ -509,7 +578,7 @@ class Grupo:
         if leitura.minha_vez:
             principal.driver.ativar_com_clique()
             principal.batalha.passo(principal.driver.capturar())
-        else:
+        elif not principal.batalha.preparar_angulo(frame, leitura):
             time.sleep(0.3)
         return True
 
@@ -663,6 +732,10 @@ class Grupo:
                 if convidada.aceitar_convite():
                     break
                 time.sleep(0.3)
+        # Logo em seguida, uma visita a cada uma para o Pronto (em vez de várias voltas).
+        for convidada in self.convidadas:
+            if convidada.aceitou_nesta_volta and not convidada.pronto_sala:
+                self.dar_pronto_na_sala(convidada)
         return True
 
     def rodar(self):

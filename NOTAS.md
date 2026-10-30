@@ -314,3 +314,17 @@ python -m src.main "TITULO DA JANELA"
   fora da sala (~13 s). Agora convida direto (`convidar_direto`): as convidadas foram expulsas
   antes do estágio 1, então estão fora. A visita às convidadas continua só para Confirmar e Pronto,
   que o jogo exige (janela coberta não desenha o convite).
+
+## 2026-10-29 — 5 pedidos do usuário (batalha e grupo)
+1. Estágio 1: a principal passa (PASS) a 1ª vez que joga; depois ângulo 30, força 10
+   (`passar_primeiro_turno` nas estratégias do estágio 1; vale de novo a cada luta).
+2. Ângulo ajustado fora da vez, uma vez por estágio (`Batalha.preparar_angulo`), no bot
+   individual e na principal do grupo. Se o jogo ignorar ↑/↓ fora da vez, desiste em ~3 toques.
+3. Oscilação 29/30: o ajuste tem limite de `ANGULO_TEMPO_MAX` (5 s) e, depois de 2 inversões
+   de direção a 1° do alvo, aceita e atira. Antes podia gastar até ~36 s e perder a vez.
+4. Sala do estágio 2: depois de aceitar o convite, uma visita por convidada para o Pronto
+   (`dar_pronto_na_sala`); convidada com Pronto confirmado não é visitada de novo.
+5. Antes do estágio 1 cada convidada clica em Sair (`img/sala_sair.png`) até o Cais e espera
+   o convite. Sair só é clicado com a tela reconhecida como sala (no lobby nunca). Convidada
+   numa sala sem ter aceitado o convite da principal nesta volta também sai para o Cais.
+Testes: `tests/test_batalha_turno.py`, `tests/test_grupo_sala.py`. Não testado no jogo.

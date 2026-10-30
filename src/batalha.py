@@ -306,11 +306,39 @@ class Batalha:
         self.virado = None  # lado para onde o personagem está virado (1, -1 ou None)
         self.lado_alternado = 1  # 1 = direita, -1 = esquerda
         self.alvo_dx = None  # distância em px até o alvo escolhido no turno (diagnóstico)
+        self.angulo_preparado = None  # estágio em que o ângulo já foi ajustado antes da vez
+        self.passou_estagio = None  # estágio em que o 1º turno já foi passado
+
+    def nova_luta(self):
+        """Chamado ao entrar numa luta: ângulo e PASS do 1º turno valem de novo."""
+        self.angulo_preparado = None
+        self.passou_estagio = None
+
+    def preparar_angulo(self, frame, leitura=None):
+        """Fora da vez: ajusta o ângulo do estágio uma vez, para a vez já começar pronta.
+
+        ↑/↓ funcionam antes da vez; esperar por ela gastava o tempo do turno. True se ajustou.
+        """
+        leitura = leitura or ler(frame)
+        if (leitura is None or leitura.minha_vez or not config.AJUSTAR_ANGULO
+                or self.angulo_preparado == leitura.estagio):
+            return False
+        self.angulo_preparado = leitura.estagio
+        estrategia = self.estrategias.get(leitura.estagio)
+        if not estrategia:
+            return False
+        self.log(f"ajustando o ângulo para {estrategia['angulo']} antes da vez")
+        self.ajustar_angulo(leitura.ancora, estrategia["angulo"])
+        return True
 
     def passo(self, frame):
         leitura = ler(frame)
-        if leitura is None or not leitura.minha_vez:
+        if leitura is None:
             time.sleep(0.25)
+            return
+        if not leitura.minha_vez:
+            if not self.preparar_angulo(frame, leitura):
+                time.sleep(0.25)
             return
         self.turno += 1
         if leitura.estagio != self.estagio:
@@ -318,6 +346,17 @@ class Batalha:
             self.virado = None  # estágio novo: não sei para onde o personagem está virado
             self.log(f"estágio: {self.estagio}")
         estrategia = self.estrategias[leitura.estagio]
+
+        if estrategia.get("passar_primeiro_turno") and self.passou_estagio != leitura.estagio:
+            # Pedido do usuário: no estágio 1 a principal passa a 1ª vez que joga.
+            self.passou_estagio = leitura.estagio
+            pos = vision.achar(PASS, frame, LIMIAR_PASS)
+            if pos:
+                self.log(f"turno {self.turno}: 1º turno do estágio, passando")
+                self.driver.clicar(*pos)
+                self.esperar_fim_da_vez()
+                return
+            self.log("PASS não encontrado no 1º turno; jogando normalmente")
 
         # Com aliados, só o triângulo diz qual barra azul sou eu; ele é animado,
         # então tento alguns prints até pegá-lo inteiro.
@@ -563,8 +602,16 @@ class Batalha:
         de mudar antes de chegar (o chão aqui não deixa esse ângulo).
         """
         parado, atual, rajada_feita = 0, None, False
+        inicio, ultima_tecla, reversoes = time.time(), None, 0
         frame = self.driver.capturar()
         for _ in range(60):
+            if time.time() - inicio > config.ANGULO_TEMPO_MAX:
+                # Sem limite o laço podia passar da vez inteira (60 toques de até 0,6 s).
+                if atual is not None and abs(alvo - atual) <= config.ANGULO_TOLERANCIA:
+                    self.log(f"ângulo {atual:.0f} (perto de {alvo}; tempo do ajuste esgotado)")
+                    return True
+                self.log(f"tempo do ajuste esgotado longe de {alvo} (último lido {atual})")
+                return False
             atual, exato = ler_numero(frame, ancora)
             if atual is None:
                 atual = ler_angulo(frame, ancora)
@@ -578,6 +625,14 @@ class Batalha:
                 self.log(f"ângulo {atual}")
                 return True
             tecla = config.TECLA_ANGULO_SOBE if alvo > atual else config.TECLA_ANGULO_DESCE
+            if ultima_tecla is not None and tecla != ultima_tecla:
+                reversoes += 1
+                # 29 → 30 → 29 → 30...: o toque às vezes vale 2° ou o número é lido atrasado.
+                # Um grau não muda o tiro; parar evita perder a vez subindo e descendo.
+                if reversoes >= 2 and abs(alvo - atual) <= 1:
+                    self.log(f"ângulo oscilando em volta de {alvo}: ficando em {atual:.0f}")
+                    return True
+            ultima_tecla = tecla
             if exato and abs(alvo - atual) > 3 and not rajada_feita:
                 # Longe do alvo: uma rajada de toques rápidos (como segurar a seta), sem
                 # esperar o relógio a cada um. Para 3° antes e termina no modo cuidadoso.

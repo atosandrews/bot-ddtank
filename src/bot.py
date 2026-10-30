@@ -79,6 +79,7 @@ class Bot:
             self.repeticoes = 0
             self.log("tela reconhecida")
             if tela.batalha:
+                self.batalha.nova_luta()
                 ajuste = "eu ajusto" if config.AJUSTAR_ANGULO else "ajuste à mão com ↑/↓"
                 self.log(f"batalha: ângulo {ajuste}; começo em {config.PAUSA_INICIO_BATALHA} s")
                 time.sleep(config.PAUSA_INICIO_BATALHA)

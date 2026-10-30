@@ -51,7 +51,9 @@ SALVAR_PRINT_TIRO = True
 ESTRATEGIAS = {
     # Estágio 1: as formigas vêm até o personagem. Formiga colada em cima dele: força 1.
     "FORMIGAS": {"angulo": 30, "forca": 10, "skills": [], "alvo": "perto", "andar": None,
-                 "forca_colado": 1, "colado_px": 25},
+                 "forca_colado": 1, "colado_px": 25,
+                 # A 1ª vez que joga no estágio 1, só passa (pedido do usuário, 29/10).
+                 "passar_primeiro_turno": True},
     # Estágio 2: a Pandora (rainha) fica à direita; anda para trás (←) se o ângulo 30 não der.
     # Tecla 3 = "+2", tecla 9 = dano "max".
     "PANDORA": {"angulo": 30, "forca": 80, "skills": ["3", "9"], "alvo": "direita", "andar": "esquerda"},
@@ -79,7 +81,7 @@ ESTRATEGIAS_SO_PRINCIPAL = {
     # A principal fica parada (as convidadas vêm até ela). Só ela ataca e as formigas vêm
     # dos dois lados: alterna o lado a cada turno.
     "FORMIGAS": {"angulo": 30, "forca": 10, "skills": ["9"], "alvo": "perto", "andar": None,
-                 "alternar_lados": True},
+                 "alternar_lados": True, "passar_primeiro_turno": True},
     "PANDORA": ESTRATEGIAS["PANDORA"],
 }
 DUPLA_MAX_PX = 150      # mais longe que isso, a conta mais próxima não é da minha dupla
@@ -102,6 +104,8 @@ MAX_PASSOS = 6
 # A leitura erra ~1°; False = não mexer no ângulo (você ajusta à mão).
 AJUSTAR_ANGULO = True
 ANGULO_TOLERANCIA = 1.5
+# Tempo máximo (s) para acertar o ângulo; passado isso atira com ±1° ou desiste do ajuste.
+ANGULO_TEMPO_MAX = 5.0
 TECLA_ANGULO_SOBE = "up"
 TECLA_ANGULO_DESCE = "down"
 
