@@ -78,7 +78,8 @@ Vento do estágio 2 em cada tiro (sinal + = soprando para a direita, a favor do 
   Se errar (contador não subiu no turno seguinte), salva o print `errou_galinha` e mira na
   mesma galinha de novo: o escudo dela some sozinho (usuário, 30/10).
   Para a galinha de baixo o bot usa **30°** (o que acertou nas voltas 2 e 3), não 25/60.
-- **Estágio 3**: 1º turno **voa (F)** com 41°/62. No turno seguinte **recua 0,45 s** (para a
+- **Estágio 3**: 1º turno aperta **F primeiro** (voando o ângulo sobe mais) e voa com
+  **40°/60**. No turno seguinte **recua 0,45 s** (para a
   direita, como nas 3 voltas: 0,42–0,55 s), vira de volta e atira **30°/20 para a esquerda**
   (lado da casa); depois, 30°/20 para a esquerda sem andar.
 - **Estágio 4**: o alvo da esquerda é o **Burrinho**, que protege a gaiola com um escudo.
@@ -92,6 +93,23 @@ Vento do estágio 2 em cada tiro (sinal + = soprando para a direita, a favor do 
   volta 3 o Burrinho estava a 11,5 de distância e na volta 2 a 14,7, e 74–78 acertou nas
   duas); ficam os valores fixos do usuário.
 - **Cartas**: 1 entre os estágios, 2 no fim. **Popup** "Requisitos/Vitória": fechado no X.
+
+- **Força**: medida pelo **vermelho da barra** (linha 10 px acima do rótulo "Força"), não pela
+  diferença com um print anterior. A leitura só vale depois de a barra recomeçar (o vermelho
+  do tiro anterior fica desenhado). Depois de cada tiro lê a força que saiu e corrige sozinho
+  quanto solta antes (antecipação, 0 a 4).
+- **Ângulo antes da vez** (todos os estágios): fora da vez confere o relógio a cada 1 s e
+  ajusta até mostrar o ângulo exato do próximo tiro.
+
+## 1º teste no jogo (30/10, 12:27–12:37)
+
+Uma instância inteira. Estágio 1 perfeito e rápido; estágio 4 sem erro (gaiola na 1ª).
+- Estágio 2: o 1º tiro na galinha de baixo **saiu com 56** (o log dizia 62: a medida antiga da
+  barra se enganou), não matou, ela pôs escudo e o bot gastou mais 3 tiros. Os outros tiros
+  saíram com 62–63 e 70,8. Corrigido com a leitura pelo vermelho (prints em
+  `tests/imagens/pintinho/e2_forca_*_jogo.png`).
+- Estágio 3: o ângulo não subiu a 41 antes do voo (voou com ~36). Corrigido: F primeiro, 40/60.
+- Ângulo antes da vez falhava às vezes ("travou"): agora tenta de novo até ficar exato.
 
 ## Validação offline (30/10)
 

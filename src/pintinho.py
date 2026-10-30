@@ -29,6 +29,11 @@ from .telas import IMG, Tela
 
 SKILLS = ["3", "9"]  # +2 e dano máximo em todo tiro (usuário, 30/10)
 TECLA_VOAR = "f"     # Voar: 1º turno dos estágios 1 e 3, no lugar dos itens
+# Força: solta o Espaço um pouco antes (o jogo ainda enche enquanto a tecla sobe). Começa no
+# valor do config e se corrige sozinho pela força que ficou desenhada depois de cada tiro.
+ANTECIPACAO_MIN, ANTECIPACAO_MAX = 0.0, 4.0
+# Fora da vez: confere o ângulo do próximo tiro e corrige de novo a cada isso (s).
+PREPARO_INTERVALO = 1.0
 
 # Estágio 1 (pintinhos): no começo eles estão longe; depois vêm até o personagem.
 PERTO_PX = 250            # inimigo na tela a até isso: tiro curto
@@ -51,11 +56,11 @@ FORCA_VENTO_MAX = 3       # nunca corrige mais do que isso (leitura errada do ve
 # Errar uma galinha faz elas porem escudo por um tempo (usuário, 30/10): o contador e o vento
 # são lidos em vários prints e o ângulo tem que estar exato no relógio.
 LEITURAS_ESTAGIO_2 = 8
-# Estágio 3 (Grange, à esquerda): 1º turno voa (F) para perto dele. No turno seguinte anda um
-# pouco para trás (direita) para pegar a galinha e a casa no mesmo tiro, e daí em diante atira
-# sempre para o lado da casa (esquerda) com 30/20 (usuário, 30/10). Na gravação o recuo foi
-# de 0,42–0,55 s nas 3 voltas.
-GRANGE_PRIMEIRO = (41, 62)
+# Estágio 3 (Grange, à esquerda): 1º turno voa (F) com 40/60 — o F primeiro, porque voando o
+# ângulo sobe mais. No turno seguinte anda um pouco para trás (direita) para pegar a galinha e
+# a casa no mesmo tiro, e daí em diante atira sempre para o lado da casa (esquerda) com 30/20
+# (usuário, 30/10). Na gravação o recuo foi de 0,42–0,55 s nas 3 voltas.
+GRANGE_PRIMEIRO = (40, 60)
 GRANGE_DEPOIS = (30, 20)
 GRANGE_RECUO = 0.45       # segundos de seta para trás, só no 1º turno depois do voo
 # Estágio 4: o Burrinho (à esquerda) protege a gaiola com um escudo. Sempre 20/75 nele até
@@ -209,6 +214,8 @@ class BatalhaPintinho(Batalha):
         super().__init__(driver, log, salvar_debug, estrategias={})
         self.estagio = None
         self.erros_galinha = 0  # só para o log: quantas vezes errou uma galinha
+        self.preparado_em = 0.0
+        self.antecipacao = config.FORCA_ANTECIPACAO
         self._zerar_estagio()
 
     def _zerar_estagio(self):
@@ -230,16 +237,21 @@ class BatalhaPintinho(Batalha):
         return self.estagio
 
     def preparar_angulo(self, frame, leitura=None):
-        """Fora da vez: já deixa o ângulo do próximo tiro (uma vez por turno)."""
+        """Fora da vez: deixa o ângulo do próximo tiro pronto (usuário, 30/10: não perder tempo
+        subindo quando a vez chega). Confere de novo a cada PREPARO_INTERVALO até o relógio
+        mostrar o ângulo exato: antes da vez as setas às vezes não pegam (animação do inimigo)."""
         leitura = leitura or ler(frame)
-        if leitura is None or leitura.minha_vez or not config.AJUSTAR_ANGULO:
+        if (leitura is None or leitura.minha_vez or not config.AJUSTAR_ANGULO
+                or self.estagio is None or time.time() - self.preparado_em < PREPARO_INTERVALO):
             return False
-        chave = (self.estagio, self.tiros_no_estagio)
-        if self.estagio is None or self.angulo_preparado == chave:
-            return False
-        self.angulo_preparado = chave
         tiro = plano(self.estagio, frame, leitura, self.tiros_no_estagio, self.tiros_na_gaiola)
-        self.log(f"ajustando o ângulo para {tiro.angulo} antes da vez")
+        valor, exato = ler_numero(frame, leitura.ancora)
+        if exato and valor == tiro.angulo:
+            return False
+        self.preparado_em = time.time()
+        if self.angulo_preparado != tiro.angulo:
+            self.angulo_preparado = tiro.angulo
+            self.log(f"ajustando o ângulo para {tiro.angulo} antes da vez")
         self.ajustar_angulo(leitura.ancora, tiro.angulo)
         return True
 
@@ -258,7 +270,8 @@ class BatalhaPintinho(Batalha):
         mortas = self.ler_com_calma(pv.galinhas_mortas, ancora)
         if self.galinha_mirada is not None and mortas == self.galinha_mirada:
             self.erros_galinha += 1
-            self.log(f"ERREI a galinha ({mortas}/3 continua, {self.erros_galinha}º erro): mirando nela de novo")
+            self.log(f"a galinha não morreu ({mortas}/3 continua, {self.erros_galinha}ª vez): mirando nela "
+                     f"de novo (se pôs escudo, ele some sozinho)")
             self.salvar_debug(self.driver.capturar(), "errou_galinha")
         elif mortas is None:
             self.log("não li o contador de galinhas; seguindo a ordem dos tiros")
@@ -319,6 +332,10 @@ class BatalhaPintinho(Batalha):
         self.registrar_tiro(frame, leitura, lado, virado, virar=(virado or self.virado) != lado)
         if virado is not None:
             self.virado = virado
+        if tiro.voar:
+            # Primeiro o F: voando, o ângulo sobe mais do que no chão (usuário, 30/10).
+            self.driver.tecla(TECLA_VOAR)
+            time.sleep(random.uniform(0.15, 0.25))
         if tiro.recuar:
             # Anda para trás (o lado oposto ao tiro) e vira de volta para o alvo.
             self.log(f"recuando {tiro.recuar:.2f} s")
@@ -343,16 +360,48 @@ class BatalhaPintinho(Batalha):
                 if not self.angulo_exato(leitura.ancora, tiro.angulo):
                     self.passar_a_vez(f"ângulo {tiro.angulo} não confirmado")
                     return False
-        if tiro.voar:
-            self.driver.tecla(TECLA_VOAR)
-            time.sleep(random.uniform(0.15, 0.25))
-        else:
+        if not tiro.voar:
             for tecla in SKILLS:
                 self.driver.tecla(tecla)
                 time.sleep(random.uniform(0.12, 0.22))
         self.atirar(leitura.ancora, tiro.forca)
         self.esperar_fim_da_vez()
         return True
+
+    def atirar(self, ancora, forca):
+        """Segura o Espaço e solta quando o vermelho da barra chega na força pedida.
+
+        O vermelho do tiro anterior continua na barra até o Espaço ser apertado: só aceita a
+        leitura depois de ver a barra recomeçar. Depois do tiro lê a força que ficou desenhada
+        e corrige a antecipação dos próximos (o jogo ainda enche um pouco enquanto a tecla sobe).
+        """
+        regiao = pv.regiao_forca(ancora)
+        anterior = pv.forca_na_faixa(self.driver.capturar(regiao))
+        alvo = forca - self.antecipacao
+        limite = time.time() + config.TEMPO_MAX_FORCA
+        inicio, atual, recomecou = time.time(), 0.0, anterior <= 3
+        self.driver.segurar(config.TECLA_ATIRAR)
+        try:
+            while time.time() < limite:
+                atual = pv.forca_na_faixa(self.driver.capturar(regiao))
+                if not recomecou:
+                    recomecou = atual < anterior - 3 or atual <= 3
+                elif atual >= alvo:
+                    break
+                if time.time() - inicio > 1.5 and (atual == 0 or not recomecou):
+                    self.log("a barra de força não recomeçou; soltando sem atirar")
+                    self.salvar_debug(self.driver.capturar(), "barra_parada")
+                    break
+        finally:
+            self.driver.soltar(config.TECLA_ATIRAR)
+        time.sleep(0.12)
+        real = pv.forca_na_faixa(self.driver.capturar(regiao))
+        if recomecou and real > 3:
+            erro = real - forca
+            self.antecipacao = min(ANTECIPACAO_MAX, max(ANTECIPACAO_MIN, self.antecipacao + 0.5 * erro))
+        self.log(f"tiro: pedida {forca:.1f}, saiu {real:.1f} (lida ao soltar {atual:.1f}, "
+                 f"antecipação agora {self.antecipacao:.1f})")
+        return real
 
     def andar_ate_angulo(self, leitura, lado, angulo):
         """O chão aqui não deixa o ângulo: passinhos para trás e, se não der, para frente.

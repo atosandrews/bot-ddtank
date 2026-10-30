@@ -41,6 +41,9 @@ TOPO_MINIMAPA = 14  # acima disso (no recorte) é a faixa do contador e do botã
 # régua do jogo põe ~100 px em cada 1 de distância das tabelas (src/batalha.py).
 DISTANCIA_POR_PX_MINIMAPA = 1000 / 86.5 / 100
 
+# Linha da barra de força (x do 0, y, x do 100) em relação à âncora: 10 px acima do rótulo.
+BARRA_FORCA = (25, -10, 522)
+
 # Retrato e barra de vida do chefe, no alto à direita do vento.
 BARRA_CHEFE = (430, -565, 645, -525)
 CHEFE_VERMELHO_MIN = 20
@@ -252,6 +255,35 @@ def lado_dos_inimigos(frame, ancora):
     if direita == esquerda:
         return None
     return 1 if direita > esquerda else -1
+
+
+def forca_na_faixa(faixa):
+    """Força (0 a 100) pelo vermelho da barra numa faixa de 1 linha (BARRA_FORCA).
+
+    A parte cheia é vermelho puro (~133, 0, 0) e a vazia é cinza; o tiro anterior fica
+    desenhado até o Espaço ser apertado de novo. Comparar com um print anterior (como faz
+    src/batalha.py) leu 62 num tiro que saiu com 56 no jogo de 30/10.
+    """
+    faixa = faixa.reshape(-1, 3).astype(int)
+    vermelho = (faixa[:, 2] > 100) & (faixa[:, 1] < 75) & (faixa[:, 0] < 75)
+    if not vermelho[:15].any():
+        return 0.0
+    vazio = np.convolve(~vermelho, np.ones(4, dtype=int), "valid") == 4
+    inicio = int(np.argmax(vermelho))
+    fim = inicio + int(np.argmax(vazio[inicio:])) if vazio[inicio:].any() else len(vermelho)
+    return fim / (len(vermelho) - 1) * 100
+
+
+def regiao_forca(ancora):
+    """(x, y, largura, altura) da linha da barra de força, para capturar só ela (rápido)."""
+    ax, ay = ancora
+    x1, dy, x2 = BARRA_FORCA
+    return ax + x1, ay + dy, x2 - x1 + 1, 1
+
+
+def forca_lida(frame, ancora):
+    x, y, w, h = regiao_forca(ancora)
+    return forca_na_faixa(frame[y:y + h, x:x + w])
 
 
 def chefe_vivo(frame, ancora):
