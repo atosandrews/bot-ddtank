@@ -1,0 +1,22 @@
+return {
+    id = 2398,
+    name = "高冷范儿",
+    category_id = 2,
+    attack = 195,
+    defence = 195,
+    agility = 195,
+    luck = 195,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

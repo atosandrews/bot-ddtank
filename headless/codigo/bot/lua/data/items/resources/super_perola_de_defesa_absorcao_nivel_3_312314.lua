@@ -1,0 +1,22 @@
+return {
+    id = 312314,
+    name = "Super Pérola de Defesa - Absorção nível 3",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 6,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "15",
+        [4] = "3000",
+        [5] = "6",
+        [6] = "0",
+        [7] = "4",
+        [8] = "0",
+    },
+}

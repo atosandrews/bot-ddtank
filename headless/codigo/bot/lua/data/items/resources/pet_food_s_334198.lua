@@ -1,0 +1,22 @@
+return {
+    id = 334198,
+    name = "Pet Food S",
+    category_id = 34,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1500",
+        [2] = "40000",
+        [3] = "40000",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

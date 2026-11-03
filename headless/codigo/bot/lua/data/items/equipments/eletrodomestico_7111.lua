@@ -1,0 +1,22 @@
+return {
+    id = 7111,
+    name = "Eletrodoméstico",
+    category_id = 7,
+    attack = 57,
+    defence = 57,
+    agility = 57,
+    luck = 57,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "200",
+        [8] = "0",
+    },
+}

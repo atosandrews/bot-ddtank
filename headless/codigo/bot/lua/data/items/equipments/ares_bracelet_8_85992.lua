@@ -1,0 +1,22 @@
+return {
+    id = 85992,
+    name = "Ares Bracelet +8",
+    category_id = 8,
+    attack = 405,
+    defence = 405,
+    agility = 405,
+    luck = 405,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "8",
+        [2] = "575078400",
+        [3] = "3",
+        [4] = "85991",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

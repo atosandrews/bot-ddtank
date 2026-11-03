@@ -1,0 +1,22 @@
+return {
+    id = 71862,
+    name = "Sapo Surfista",
+    category_id = 7,
+    attack = 93,
+    defence = 312,
+    agility = 93,
+    luck = 312,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

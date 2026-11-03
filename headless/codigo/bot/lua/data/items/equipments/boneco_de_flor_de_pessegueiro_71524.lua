@@ -1,0 +1,22 @@
+return {
+    id = 71524,
+    name = "Boneco de flor de pessegueiro",
+    category_id = 7,
+    attack = 601,
+    defence = 136,
+    agility = 517,
+    luck = 136,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 70561,
+    name = "Arma do Deus verdadeiramente rebelde",
+    category_id = 7,
+    attack = 174,
+    defence = 174,
+    agility = 174,
+    luck = 30,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "70",
+        [2] = "71",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

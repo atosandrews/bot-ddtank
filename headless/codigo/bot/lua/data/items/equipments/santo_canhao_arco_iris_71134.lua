@@ -1,0 +1,22 @@
+return {
+    id = 71134,
+    name = "Santo - Canhão Arco-Íris",
+    category_id = 7,
+    attack = 114,
+    defence = 618,
+    agility = 87,
+    luck = 164,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "55",
+        [6] = "70",
+        [7] = "235",
+        [8] = "0",
+    },
+}

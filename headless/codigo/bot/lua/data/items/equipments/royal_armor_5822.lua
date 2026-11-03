@@ -1,0 +1,22 @@
+return {
+    id = 5822,
+    name = "Royal Armor",
+    category_id = 5,
+    attack = 90,
+    defence = 85,
+    agility = 90,
+    luck = 85,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "123",
+    },
+}

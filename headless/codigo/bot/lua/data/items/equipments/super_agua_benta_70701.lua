@@ -1,0 +1,22 @@
+return {
+    id = 70701,
+    name = "Super.Água benta",
+    category_id = 7,
+    attack = 336,
+    defence = 336,
+    agility = 336,
+    luck = 92,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "261",
+        [8] = "0",
+    },
+}

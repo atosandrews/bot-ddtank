@@ -1,0 +1,22 @@
+return {
+    id = 90000006,
+    name = "<赞>钻石手链+9",
+    category_id = 8,
+    attack = 1088,
+    defence = 1088,
+    agility = 1088,
+    luck = 1088,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "9",
+        [2] = "3763200",
+        [3] = "3",
+        [4] = "85162",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

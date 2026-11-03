@@ -1,0 +1,22 @@
+return {
+    id = 7133,
+    name = "Epic - Cetro De gelo",
+    category_id = 7,
+    attack = 213,
+    defence = 56,
+    agility = 213,
+    luck = 213,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "40",
+        [2] = "41",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "280",
+        [8] = "0",
+    },
+}

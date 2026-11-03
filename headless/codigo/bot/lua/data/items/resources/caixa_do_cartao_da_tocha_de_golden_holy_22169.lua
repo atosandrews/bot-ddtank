@@ -1,0 +1,22 @@
+return {
+    id = 22169,
+    name = "Caixa do cartão da tocha de Golden.Holy",
+    category_id = 66,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 15,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "2000",
+        [3] = "5000",
+        [4] = "2",
+        [5] = "314169",
+        [6] = "0",
+        [7] = "16",
+        [8] = "1",
+    },
+}

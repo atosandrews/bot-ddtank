@@ -1,0 +1,22 @@
+return {
+    id = 314144,
+    name = "Cartão Regrey",
+    category_id = 26,
+    attack = 3,
+    defence = 3,
+    agility = 3,
+    luck = 3,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "-7",
+        [2] = "25",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "1",
+        [7] = "10",
+        [8] = "1",
+    },
+}

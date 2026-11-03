@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+import "proto/ddbot/v1/value.proto";
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+enum PacketDirection {
+  PACKET_DIRECTION_UNSPECIFIED = 0;
+  PACKET_DIRECTION_CLIENT_TO_SERVER = 1;
+  PACKET_DIRECTION_SERVER_TO_CLIENT = 2;
+}
+
+enum PacketOrigin {
+  PACKET_ORIGIN_UNSPECIFIED = 0;
+  PACKET_ORIGIN_NETWORK = 1;
+  PACKET_ORIGIN_SCRIPT = 2;
+}
+
+enum DecodeStatus {
+  DECODE_STATUS_UNSPECIFIED = 0;
+  DECODE_STATUS_DECODED = 1;
+  DECODE_STATUS_PARTIAL = 2;
+  DECODE_STATUS_UNKNOWN = 3;
+  DECODE_STATUS_INVALID = 4;
+}
+
+enum Compression {
+  COMPRESSION_UNSPECIFIED = 0;
+  COMPRESSION_NONE = 1;
+  COMPRESSION_ZLIB = 2;
+}
+
+message Header {
+  int32 code = 1;
+  int32 client_id = 2;
+  int32 parameter1 = 3;
+  int32 parameter2 = 4;
+  uint32 length = 5;
+  uint32 checksum = 6;
+}
+
+message PacketEvent {
+  uint64 sequence = 1;
+  int64 unix_nano = 2;
+  PacketDirection direction = 3;
+  PacketOrigin origin = 4;
+  Header header = 5;
+  string name = 6;
+  DecodeStatus status = 7;
+  Object fields = 8;
+  uint32 consumed = 9;
+  uint32 total = 10;
+  uint32 remaining = 11;
+  Compression compression = 12;
+  uint64 command_id = 13;
+}
+
+message EventsApplied {
+  uint64 sequence = 1;
+}

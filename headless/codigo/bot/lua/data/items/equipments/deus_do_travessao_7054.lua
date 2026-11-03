@@ -1,0 +1,22 @@
+return {
+    id = 7054,
+    name = "Deus do Travessão",
+    category_id = 7,
+    attack = 295,
+    defence = 80,
+    agility = 58,
+    luck = 48,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "237",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+import "proto/ddbot/v1/session.proto";
+import "proto/ddbot/v1/packet.proto";
+import "proto/ddbot/v1/script.proto";
+import "proto/ddbot/v1/command.proto";
+import "proto/ddbot/v1/receipt.proto";
+import "proto/ddbot/v1/failure.proto";
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message RelayMessage {
+  string bot_session_id = 1;
+  uint64 generation = 2;
+  oneof payload {
+    OpenSession open = 3;
+    ResumeSession resume = 4;
+    PacketEvent packet = 5;
+    Evaluate evaluate = 6;
+    LoadScript load = 7;
+    StopScript stop = 8;
+    CommandReceipt receipt = 9;
+    Gap gap = 10;
+    Close close = 11;
+    Heartbeat heartbeat = 12;
+  }
+}
+
+message BotMessage {
+  oneof payload {
+    SessionOpened opened = 1;
+    EventsApplied applied = 2;
+    CommandBatch batch = 3;
+    ScriptResult result = 4;
+    Failure failure = 5;
+    Heartbeat heartbeat = 6;
+    Log log = 7;
+  }
+}

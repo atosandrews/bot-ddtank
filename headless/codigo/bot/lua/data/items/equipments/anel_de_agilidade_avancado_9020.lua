@@ -1,0 +1,22 @@
+return {
+    id = 9020,
+    name = "Anel de Agilidade Avançado",
+    category_id = 9,
+    attack = 0,
+    defence = 0,
+    agility = 1000,
+    luck = 0,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

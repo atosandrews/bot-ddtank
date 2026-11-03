@@ -1,0 +1,22 @@
+return {
+    id = 71784,
+    name = "Super.Harpa Lira Sagrada",
+    category_id = 7,
+    attack = 671,
+    defence = 780,
+    agility = 610,
+    luck = 450,
+    level = 3,
+    need_level = 1,
+    quality = 410,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "265",
+        [8] = "0",
+    },
+}

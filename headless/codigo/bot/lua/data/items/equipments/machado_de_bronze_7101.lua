@@ -1,0 +1,22 @@
+return {
+    id = 7101,
+    name = "Machado de bronze",
+    category_id = 7,
+    attack = 10,
+    defence = 20,
+    agility = 10,
+    luck = 2,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "26",
+        [2] = "27",
+        [3] = "0",
+        [4] = "0",
+        [5] = "35",
+        [6] = "55",
+        [7] = "165",
+        [8] = "0",
+    },
+}

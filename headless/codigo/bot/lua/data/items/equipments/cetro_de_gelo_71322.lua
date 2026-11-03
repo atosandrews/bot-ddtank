@@ -1,0 +1,22 @@
+return {
+    id = 71322,
+    name = "Cetro de Gelo",
+    category_id = 7,
+    attack = 262,
+    defence = 66,
+    agility = 262,
+    luck = 262,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "40",
+        [2] = "41",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "252",
+        [8] = "0",
+    },
+}

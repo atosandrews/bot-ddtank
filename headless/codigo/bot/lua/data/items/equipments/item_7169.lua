@@ -1,0 +1,22 @@
+return {
+    id = 7169,
+    name = "真·神风",
+    category_id = 7,
+    attack = 195,
+    defence = 100,
+    agility = 815,
+    luck = 130,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "12",
+        [2] = "13",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "50",
+        [7] = "200",
+        [8] = "0",
+    },
+}

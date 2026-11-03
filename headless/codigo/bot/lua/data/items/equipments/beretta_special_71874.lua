@@ -1,0 +1,22 @@
+return {
+    id = 71874,
+    name = "☆ Beretta (Special)",
+    category_id = 7,
+    attack = 320,
+    defence = 135,
+    agility = 215,
+    luck = 135,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "235",
+        [8] = "0",
+    },
+}

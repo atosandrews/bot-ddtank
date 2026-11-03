@@ -1,0 +1,22 @@
+return {
+    id = 71553,
+    name = "Luxuoso •Carpa de lótus",
+    category_id = 7,
+    attack = 1050,
+    defence = 1050,
+    agility = 950,
+    luck = 1050,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "287",
+        [8] = "0",
+    },
+}

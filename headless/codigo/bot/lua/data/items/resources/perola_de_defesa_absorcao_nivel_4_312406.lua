@@ -1,0 +1,22 @@
+return {
+    id = 312406,
+    name = "Pérola de Defesa - Absorção nível 4",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 7,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "15",
+        [4] = "3500",
+        [5] = "6",
+        [6] = "1",
+        [7] = "3",
+        [8] = "0",
+    },
+}

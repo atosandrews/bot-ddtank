@@ -1,0 +1,22 @@
+return {
+    id = 85162,
+    name = "9周年手链+8",
+    category_id = 8,
+    attack = 327,
+    defence = 244,
+    agility = 327,
+    luck = 244,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "8",
+        [2] = "1881600",
+        [3] = "3",
+        [4] = "85161",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

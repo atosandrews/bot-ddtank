@@ -1,0 +1,22 @@
+return {
+    id = 70491,
+    name = "放逐之刃",
+    category_id = 7,
+    attack = 275,
+    defence = 275,
+    agility = 275,
+    luck = 125,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "60",
+        [7] = "252",
+        [8] = "0",
+    },
+}

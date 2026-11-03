@@ -1,0 +1,22 @@
+return {
+    id = 8402,
+    name = "Benção do Mestre+4",
+    category_id = 8,
+    attack = 19,
+    defence = 19,
+    agility = 19,
+    luck = 38,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 313109,
+    name = "Super Pérola de atributo - Agilidade nível 1",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "3",
+        [3] = "0",
+        [4] = "0",
+        [5] = "18",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

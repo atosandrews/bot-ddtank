@@ -1,0 +1,22 @@
+return {
+    id = 7087,
+    name = "Super·Arma Deus",
+    category_id = 7,
+    attack = 115,
+    defence = 245,
+    agility = 245,
+    luck = 245,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "255",
+        [8] = "0",
+    },
+}

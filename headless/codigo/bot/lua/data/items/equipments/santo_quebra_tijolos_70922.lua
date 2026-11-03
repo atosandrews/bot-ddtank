@@ -1,0 +1,22 @@
+return {
+    id = 70922,
+    name = "Santo - Quebra Tijolos",
+    category_id = 7,
+    attack = 316,
+    defence = 232,
+    agility = 58,
+    luck = 76,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "235",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 70000025,
+    name = "Pérola de Defesa - Refletir Nível 6",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 8,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "20",
+        [4] = "2500",
+        [5] = "7",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

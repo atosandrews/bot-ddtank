@@ -1,0 +1,22 @@
+return {
+    id = 71662,
+    name = "Livro mágico",
+    category_id = 7,
+    attack = 566,
+    defence = 199,
+    agility = 199,
+    luck = 115,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

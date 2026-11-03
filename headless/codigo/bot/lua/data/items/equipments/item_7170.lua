@@ -1,0 +1,22 @@
+return {
+    id = 7170,
+    name = "真·雷霆",
+    category_id = 7,
+    attack = 100,
+    defence = 130,
+    agility = 195,
+    luck = 815,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "14",
+        [2] = "15",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "200",
+        [8] = "0",
+    },
+}

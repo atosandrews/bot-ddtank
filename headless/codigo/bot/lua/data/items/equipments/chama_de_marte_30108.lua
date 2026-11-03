@@ -1,0 +1,22 @@
+return {
+    id = 30108,
+    name = "Chama de Marte",
+    category_id = 50,
+    attack = 270,
+    defence = 69,
+    agility = 115,
+    luck = 69,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "25",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 8308,
+    name = "Pulseira de EXP + 2",
+    category_id = 8,
+    attack = 1,
+    defence = 1,
+    agility = 1,
+    luck = 1,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "1000",
+        [3] = "1",
+        [4] = "0",
+        [5] = "1",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

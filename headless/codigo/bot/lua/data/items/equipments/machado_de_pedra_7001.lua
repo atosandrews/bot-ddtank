@@ -1,0 +1,22 @@
+return {
+    id = 7001,
+    name = "Machado de pedra",
+    category_id = 7,
+    attack = 16,
+    defence = 100,
+    agility = 10,
+    luck = 24,
+    level = 1,
+    need_level = 1,
+    quality = 1,
+    properties = {
+        [1] = "20",
+        [2] = "21",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "175",
+        [8] = "0",
+    },
+}

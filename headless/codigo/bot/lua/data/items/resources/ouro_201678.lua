@@ -1,0 +1,22 @@
+return {
+    id = 201678,
+    name = "Ouro",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "294",
+        [3] = "294",
+        [4] = "294",
+        [5] = "295",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

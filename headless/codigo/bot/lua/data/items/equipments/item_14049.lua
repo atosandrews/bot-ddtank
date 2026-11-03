@@ -1,0 +1,22 @@
+return {
+    id = 14049,
+    name = "海洋之心",
+    category_id = 14,
+    attack = 290,
+    defence = 290,
+    agility = 290,
+    luck = 290,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "150",
+        [2] = "7",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

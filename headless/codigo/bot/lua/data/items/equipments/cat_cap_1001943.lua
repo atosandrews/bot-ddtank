@@ -1,0 +1,22 @@
+return {
+    id = 1001943,
+    name = "Cat Cap",
+    category_id = 1,
+    attack = 45,
+    defence = 45,
+    agility = 45,
+    luck = 45,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "12",
+    },
+}

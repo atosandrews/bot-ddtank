@@ -1,0 +1,22 @@
+return {
+    id = 10451,
+    name = "Ataque adicional 4 vezes",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "14",
+        [2] = "4",
+        [3] = "0",
+        [4] = "110",
+        [5] = "600",
+        [6] = "0",
+        [7] = "750",
+        [8] = "1",
+    },
+}

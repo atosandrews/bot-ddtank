@@ -1,0 +1,22 @@
+return {
+    id = 70312,
+    name = "Verdadeira - Punhal antigo",
+    category_id = 7,
+    attack = 273,
+    defence = 54,
+    agility = 241,
+    luck = 241,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "34",
+        [2] = "35",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "60",
+        [7] = "242",
+        [8] = "0",
+    },
+}

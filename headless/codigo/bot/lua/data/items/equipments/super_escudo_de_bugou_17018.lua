@@ -1,0 +1,22 @@
+return {
+    id = 17018,
+    name = "Super - Escudo de Bugou",
+    category_id = 17,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "64",
+        [2] = "1",
+        [3] = "32",
+        [4] = "110",
+        [5] = "0",
+        [6] = "2",
+        [7] = "3000",
+        [8] = "500",
+    },
+}

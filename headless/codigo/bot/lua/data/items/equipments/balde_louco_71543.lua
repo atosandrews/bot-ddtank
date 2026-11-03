@@ -1,0 +1,22 @@
+return {
+    id = 71543,
+    name = "Balde louco",
+    category_id = 7,
+    attack = 250,
+    defence = 250,
+    agility = 250,
+    luck = 250,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "246",
+        [8] = "0",
+    },
+}

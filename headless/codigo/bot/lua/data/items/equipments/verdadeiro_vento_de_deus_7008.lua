@@ -1,0 +1,22 @@
+return {
+    id = 7008,
+    name = "Verdadeiro - Vento de Deus",
+    category_id = 7,
+    attack = 60,
+    defence = 30,
+    agility = 250,
+    luck = 40,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "12",
+        [2] = "13",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "50",
+        [7] = "200",
+        [8] = "0",
+    },
+}

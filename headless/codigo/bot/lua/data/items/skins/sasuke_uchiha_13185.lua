@@ -1,0 +1,22 @@
+return {
+    id = 13185,
+    name = "Sasuke Uchiha",
+    category_id = 13,
+    attack = 12,
+    defence = 12,
+    agility = 12,
+    luck = 12,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message Direction {
+  int32 direction = 1;
+}
+
+message LoadProgress {
+  int32 progress = 1;
+}
+
+message MissionReady {
+  bool ready = 1;
+}
+
+message MissionStart {
+  bool flag = 1;
+}
+
+message MoveStart {
+  bool moving = 1;
+  int32 move_type = 2;
+  int32 x = 3;
+  int32 y = 4;
+  int32 direction = 5;
+  bool living = 6;
+  int32 turn_number = 7;
+}
+
+message MoveStop {
+  int32 x = 1;
+  int32 y = 2;
+  bool move_flag = 3;
+}
+
+message Shoot {
+  int32 x = 1;
+  int32 y = 2;
+  int32 force = 3;
+  int32 angle = 4;
+}
+
+message ShootTag {
+  bool started = 1;
+  int32 shot_type = 2;
+}
+
+message SkipTurn {
+  int32 argument = 1;
+}
+
+message UseProp {
+  int32 bag_type = 1;
+  int32 place = 2;
+  int32 template_id = 3;
+}
+
+message Pow {}

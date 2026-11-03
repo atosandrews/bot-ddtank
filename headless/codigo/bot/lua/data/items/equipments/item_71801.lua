@@ -1,0 +1,22 @@
+return {
+    id = 71801,
+    name = "招财进宝",
+    category_id = 7,
+    attack = 308,
+    defence = 68,
+    agility = 86,
+    luck = 36,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "240",
+        [8] = "0",
+    },
+}

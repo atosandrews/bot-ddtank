@@ -1,0 +1,22 @@
+return {
+    id = 72201,
+    name = "☆☆ Epic - Spear",
+    category_id = 7,
+    attack = 410,
+    defence = 410,
+    agility = 410,
+    luck = 250,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "48",
+        [2] = "49",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "300",
+        [8] = "0",
+    },
+}

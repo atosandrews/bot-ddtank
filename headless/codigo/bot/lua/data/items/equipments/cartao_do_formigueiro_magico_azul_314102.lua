@@ -1,0 +1,22 @@
+return {
+    id = 314102,
+    name = "Cartão do Formigueiro Mágico Azul",
+    category_id = 26,
+    attack = 1,
+    defence = 1,
+    agility = 1,
+    luck = 1,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "1",
+        [7] = "1",
+        [8] = "0",
+    },
+}

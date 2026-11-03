@@ -1,0 +1,22 @@
+return {
+    id = 7137,
+    name = "Epic Ares Antigo",
+    category_id = 7,
+    attack = 510,
+    defence = 445,
+    agility = 445,
+    luck = 510,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "48",
+        [2] = "49",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "70",
+        [7] = "285",
+        [8] = "0",
+    },
+}

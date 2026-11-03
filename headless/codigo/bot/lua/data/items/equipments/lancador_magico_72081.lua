@@ -1,0 +1,22 @@
+return {
+    id = 72081,
+    name = "Lançador Mágico",
+    category_id = 7,
+    attack = 715,
+    defence = 142,
+    agility = 311,
+    luck = 111,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "287",
+        [8] = "0",
+    },
+}

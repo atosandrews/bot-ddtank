@@ -1,0 +1,22 @@
+return {
+    id = 71403,
+    name = "战神锤",
+    category_id = 7,
+    attack = 422,
+    defence = 169,
+    agility = 169,
+    luck = 211,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

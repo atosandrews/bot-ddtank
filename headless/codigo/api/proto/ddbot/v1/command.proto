@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+import "proto/ddbot/v1/captcha.proto";
+import "proto/ddbot/v1/fight.proto";
+import "proto/ddbot/v1/social.proto";
+import "proto/ddbot/v1/cards.proto";
+import "proto/ddbot/v1/room.proto";
+import "proto/ddbot/v1/scene.proto";
+import "proto/ddbot/v1/inventory.proto";
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message CommandBatch {
+  uint64 id = 1;
+  uint64 base_sequence = 2;
+  uint64 generation = 3;
+  repeated Command commands = 4;
+  uint64 script_generation = 5;
+}
+
+message Command {
+  uint64 id = 1;
+  oneof payload {
+    Direction direction = 2;
+    LoadProgress load_progress = 3;
+    MissionReady mission_ready = 4;
+    MissionStart mission_start = 5;
+    MoveStart move_start = 6;
+    MoveStop move_stop = 7;
+    RoomCreate room_create = 8;
+    RoomJoin room_join = 9;
+    RoomLeave room_leave = 10;
+    RoomReady room_ready = 11;
+    RoomSetup room_setup = 12;
+    RoomStart room_start = 13;
+    SceneLogin scene_login = 14;
+    SceneState scene_state = 15;
+    Shoot shoot = 16;
+    ShootTag shoot_tag = 17;
+    SkipTurn skip_turn = 18;
+    UseProp use_prop = 19;
+    FriendAdd friend_add = 20;
+    RoomInvite room_invite = 21;
+    CardTake card_take = 22;
+    CardTakeBoss card_take_boss = 23;
+    CardTakeExtra card_take_extra = 24;
+    CardFinish card_finish = 25;
+    CardFinishBoss card_finish_boss = 26;
+    Pow pow = 27;
+    CaptchaAnswer captcha_answer = 28;
+    CollectTemporaryRewards collect_temporary_rewards = 29;
+    UnlockBag unlock_bag = 30;
+    OrganizeInventory organize_inventory = 31;
+
+  }
+}

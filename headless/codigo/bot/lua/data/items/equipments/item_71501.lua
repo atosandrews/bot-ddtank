@@ -1,0 +1,22 @@
+return {
+    id = 71501,
+    name = "中华神药",
+    category_id = 7,
+    attack = 65,
+    defence = 65,
+    agility = 260,
+    luck = 360,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "240",
+        [8] = "0",
+    },
+}

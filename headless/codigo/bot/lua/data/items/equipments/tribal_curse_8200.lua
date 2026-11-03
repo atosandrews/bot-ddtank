@@ -1,0 +1,22 @@
+return {
+    id = 8200,
+    name = "Tribal Curse",
+    category_id = 8,
+    attack = 80,
+    defence = 80,
+    agility = 90,
+    luck = 80,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "3584",
+        [3] = "1",
+        [4] = "8503",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

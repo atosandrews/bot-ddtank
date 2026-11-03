@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message Value {
+  oneof kind {
+    bool null_value = 1;
+    sint64 signed_value = 2;
+    uint64 unsigned_value = 3;
+    double number_value = 4;
+    bool bool_value = 5;
+    string string_value = 6;
+    bytes bytes_value = 7;
+    Object object_value = 8;
+    List list_value = 9;
+  }
+}
+
+message Object {
+  map<string, Value> fields = 1;
+}
+
+message List {
+  repeated Value values = 1;
+}

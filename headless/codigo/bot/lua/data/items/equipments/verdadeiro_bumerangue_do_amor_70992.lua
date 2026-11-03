@@ -1,0 +1,22 @@
+return {
+    id = 70992,
+    name = "Verdadeiro - Bumerangue do amor",
+    category_id = 7,
+    attack = 226,
+    defence = 39,
+    agility = 226,
+    luck = 226,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

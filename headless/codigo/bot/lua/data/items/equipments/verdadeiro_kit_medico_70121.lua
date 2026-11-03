@@ -1,0 +1,22 @@
+return {
+    id = 70121,
+    name = "Verdadeiro - Kit médico",
+    category_id = 7,
+    attack = 156,
+    defence = 36,
+    agility = 216,
+    luck = 48,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "34",
+        [2] = "35",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "60",
+        [7] = "200",
+        [8] = "0",
+    },
+}

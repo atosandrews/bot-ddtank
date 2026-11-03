@@ -1,0 +1,22 @@
+return {
+    id = 71761,
+    name = "Harpa Lira Sagrada",
+    category_id = 7,
+    attack = 115,
+    defence = 245,
+    agility = 245,
+    luck = 245,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "246",
+        [8] = "0",
+    },
+}

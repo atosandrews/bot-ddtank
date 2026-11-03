@@ -1,0 +1,22 @@
+return {
+    id = 7005,
+    name = "Pistola de ouro",
+    category_id = 7,
+    attack = 100,
+    defence = 55,
+    agility = 20,
+    luck = 15,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "30",
+        [2] = "31",
+        [3] = "1",
+        [4] = "0",
+        [5] = "20",
+        [6] = "40",
+        [7] = "185",
+        [8] = "0",
+    },
+}

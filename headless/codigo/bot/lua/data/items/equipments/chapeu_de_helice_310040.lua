@@ -1,0 +1,22 @@
+return {
+    id = 310040,
+    name = "Chapéu de Hélice",
+    category_id = 51,
+    attack = 40,
+    defence = 40,
+    agility = 80,
+    luck = 80,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "25",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

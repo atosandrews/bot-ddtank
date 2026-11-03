@@ -1,0 +1,22 @@
+return {
+    id = 7072,
+    name = "Loyal Member Exclusive - Gold",
+    category_id = 7,
+    attack = 193,
+    defence = 138,
+    agility = 28,
+    luck = 39,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

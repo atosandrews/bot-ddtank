@@ -1,0 +1,22 @@
+return {
+    id = 4473,
+    name = "Brincos milenar",
+    category_id = 4,
+    attack = 950,
+    defence = 950,
+    agility = 950,
+    luck = 950,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 10605,
+    name = "Purificar nv5",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "55",
+        [2] = "3",
+        [3] = "2",
+        [4] = "145",
+        [5] = "750",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

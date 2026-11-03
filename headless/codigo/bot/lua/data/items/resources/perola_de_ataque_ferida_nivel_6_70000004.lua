@@ -1,0 +1,22 @@
+return {
+    id = 70000004,
+    name = "Pérola de Ataque - Ferida Nível 6",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 8,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "1",
+        [3] = "5",
+        [4] = "1800",
+        [5] = "5",
+        [6] = "0",
+        [7] = "3",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7108,
+    name = "Cesto de Frutas de Newton",
+    category_id = 7,
+    attack = 24,
+    defence = 18,
+    agility = 78,
+    luck = 108,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "40",
+        [2] = "41",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "195",
+        [8] = "0",
+    },
+}

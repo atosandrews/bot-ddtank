@@ -1,0 +1,22 @@
+return {
+    id = 100903,
+    name = "Pedra Mág.Imagem 4 ",
+    category_id = 61,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "81",
+        [2] = "3",
+        [3] = "4",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

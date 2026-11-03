@@ -1,0 +1,22 @@
+return {
+    id = 1103104,
+    name = "Pedra de Tigre Branco nível 10",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "3",
+        [3] = "4",
+        [4] = "100",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

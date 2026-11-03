@@ -1,0 +1,22 @@
+return {
+    id = 10632,
+    name = "绿色炮弹",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "142",
+        [2] = "0",
+        [3] = "0",
+        [4] = "150",
+        [5] = "600",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

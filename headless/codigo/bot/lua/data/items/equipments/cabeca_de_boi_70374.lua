@@ -1,0 +1,22 @@
+return {
+    id = 70374,
+    name = "Cabeça de Boi",
+    category_id = 7,
+    attack = 54,
+    defence = 316,
+    agility = 316,
+    luck = 316,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "66",
+        [2] = "67",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

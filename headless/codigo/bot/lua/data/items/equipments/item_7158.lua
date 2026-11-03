@@ -1,0 +1,22 @@
+return {
+    id = 7158,
+    name = "王者之剑",
+    category_id = 7,
+    attack = 530,
+    defence = 570,
+    agility = 535,
+    luck = 480,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "267",
+        [8] = "0",
+    },
+}

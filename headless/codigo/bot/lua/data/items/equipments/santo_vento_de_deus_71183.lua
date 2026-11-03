@@ -1,0 +1,22 @@
+return {
+    id = 71183,
+    name = "Santo - Vento de Deus",
+    category_id = 7,
+    attack = 159,
+    defence = 79,
+    agility = 661,
+    luck = 106,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "50",
+        [7] = "235",
+        [8] = "0",
+    },
+}

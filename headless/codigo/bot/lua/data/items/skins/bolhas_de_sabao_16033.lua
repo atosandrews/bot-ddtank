@@ -1,0 +1,22 @@
+return {
+    id = 16033,
+    name = "Bolhas de sabão",
+    category_id = 16,
+    attack = 35,
+    defence = 35,
+    agility = 35,
+    luck = 35,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

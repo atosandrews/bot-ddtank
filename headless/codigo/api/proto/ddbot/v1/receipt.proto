@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+import "proto/ddbot/v1/failure.proto";
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+enum ReceiptStatus {
+  RECEIPT_STATUS_UNSPECIFIED = 0;
+  RECEIPT_STATUS_SENT = 1;
+  RECEIPT_STATUS_REJECTED = 2;
+  RECEIPT_STATUS_CANCELLED = 3;
+  RECEIPT_STATUS_UNCERTAIN = 4;
+}
+
+message CommandReceipt {
+  uint64 batch_id = 1;
+  uint64 command_id = 2;
+  ReceiptStatus status = 3;
+  uint32 bytes_written = 4;
+  Failure error = 5;
+}
+

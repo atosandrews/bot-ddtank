@@ -1,0 +1,22 @@
+return {
+    id = 201673,
+    name = "Ferro",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "54",
+        [3] = "54",
+        [4] = "54",
+        [5] = "55",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

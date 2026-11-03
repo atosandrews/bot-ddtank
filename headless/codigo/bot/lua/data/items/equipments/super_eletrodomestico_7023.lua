@@ -1,0 +1,22 @@
+return {
+    id = 7023,
+    name = "Super - Eletrodoméstico",
+    category_id = 7,
+    attack = 104,
+    defence = 105,
+    agility = 104,
+    luck = 105,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "220",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 112098,
+    name = "Baú de Contagem Regressiva",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 6,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "4",
+        [3] = "480",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

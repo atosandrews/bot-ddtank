@@ -1,0 +1,22 @@
+return {
+    id = 7168,
+    name = "真·轰天",
+    category_id = 7,
+    attack = 130,
+    defence = 815,
+    agility = 100,
+    luck = 195,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "10",
+        [2] = "11",
+        [3] = "1",
+        [4] = "0",
+        [5] = "55",
+        [6] = "70",
+        [7] = "200",
+        [8] = "0",
+    },
+}

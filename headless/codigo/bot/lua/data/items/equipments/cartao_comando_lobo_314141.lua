@@ -1,0 +1,22 @@
+return {
+    id = 314141,
+    name = "Cartão Comando Lobo",
+    category_id = 26,
+    attack = 2,
+    defence = 2,
+    agility = 2,
+    luck = 2,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "-5",
+        [2] = "20",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "1",
+        [7] = "10",
+        [8] = "0",
+    },
+}

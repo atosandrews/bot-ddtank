@@ -1,0 +1,22 @@
+return {
+    id = 7174,
+    name = "真·畅通利器",
+    category_id = 7,
+    attack = 130,
+    defence = 585,
+    agility = 100,
+    luck = 425,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "36",
+        [2] = "37",
+        [3] = "1",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "200",
+        [8] = "0",
+    },
+}

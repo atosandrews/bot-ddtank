@@ -1,0 +1,22 @@
+return {
+    id = 31107,
+    name = "O chapéu",
+    category_id = 51,
+    attack = 69,
+    defence = 270,
+    agility = 69,
+    luck = 69,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "30",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

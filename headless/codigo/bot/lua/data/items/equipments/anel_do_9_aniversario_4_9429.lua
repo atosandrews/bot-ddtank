@@ -1,0 +1,22 @@
+return {
+    id = 9429,
+    name = "Anel do 9º aniversário +4",
+    category_id = 9,
+    attack = 260,
+    defence = 260,
+    agility = 260,
+    luck = 260,
+    level = 3,
+    need_level = 0,
+    quality = 6,
+    properties = {
+        [1] = "4",
+        [2] = "204800",
+        [3] = "3",
+        [4] = "9329",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

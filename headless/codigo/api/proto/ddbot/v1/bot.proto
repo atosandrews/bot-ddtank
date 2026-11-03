@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+import "proto/ddbot/v1/stream.proto";
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+service Bot {
+  rpc GameSession(stream RelayMessage) returns (stream BotMessage);
+}

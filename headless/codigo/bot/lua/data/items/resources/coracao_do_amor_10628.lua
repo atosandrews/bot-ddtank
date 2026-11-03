@@ -1,0 +1,22 @@
+return {
+    id = 10628,
+    name = "Coração do amor ",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "138",
+        [2] = "0",
+        [3] = "5",
+        [4] = "150",
+        [5] = "600",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

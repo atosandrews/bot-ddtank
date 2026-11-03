@@ -1,0 +1,22 @@
+return {
+    id = 7025,
+    name = "Arco",
+    category_id = 7,
+    attack = 20,
+    defence = 20,
+    agility = 20,
+    luck = 20,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "50",
+        [2] = "51",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "50",
+        [7] = "242",
+        [8] = "0",
+    },
+}

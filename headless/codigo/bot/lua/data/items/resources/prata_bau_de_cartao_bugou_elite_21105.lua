@@ -1,0 +1,22 @@
+return {
+    id = 21105,
+    name = "Prata  - baú de cartão bugou elite",
+    category_id = 66,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 15,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "2500",
+        [3] = "500",
+        [4] = "2",
+        [5] = "314105",
+        [6] = "1",
+        [7] = "2",
+        [8] = "0",
+    },
+}

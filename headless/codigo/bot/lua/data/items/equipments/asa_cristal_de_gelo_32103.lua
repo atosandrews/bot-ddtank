@@ -1,0 +1,22 @@
+return {
+    id = 32103,
+    name = " asa Cristal de gelo",
+    category_id = 52,
+    attack = 250,
+    defence = 190,
+    agility = 190,
+    luck = 580,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

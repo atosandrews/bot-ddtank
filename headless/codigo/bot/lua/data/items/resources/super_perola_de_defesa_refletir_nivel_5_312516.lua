@@ -1,0 +1,22 @@
+return {
+    id = 312516,
+    name = "Super Pérola de Defesa - Refletir nível 5",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 10,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "2",
+        [4] = "1800",
+        [5] = "5",
+        [6] = "0",
+        [7] = "3",
+        [8] = "0",
+    },
+}

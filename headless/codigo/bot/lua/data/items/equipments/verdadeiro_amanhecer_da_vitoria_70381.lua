@@ -1,0 +1,22 @@
+return {
+    id = 70381,
+    name = "Verdadeiro -Amanhecer da Vitória",
+    category_id = 7,
+    attack = 216,
+    defence = 156,
+    agility = 36,
+    luck = 48,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "200",
+        [8] = "0",
+    },
+}

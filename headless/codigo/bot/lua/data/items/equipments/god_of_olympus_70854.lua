@@ -1,0 +1,22 @@
+return {
+    id = 70854,
+    name = "God of Olympus",
+    category_id = 7,
+    attack = 350,
+    defence = 250,
+    agility = 150,
+    luck = 150,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "246",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 201439,
+    name = "Pcte Natal Nv.3",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "-9",
+        [3] = "201442",
+        [4] = "1",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

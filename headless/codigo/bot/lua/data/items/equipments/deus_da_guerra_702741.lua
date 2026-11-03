@@ -1,0 +1,22 @@
+return {
+    id = 702741,
+    name = "Deus da Guerra",
+    category_id = 7,
+    attack = 390,
+    defence = 90,
+    agility = 345,
+    luck = 345,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "66",
+        [2] = "67",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

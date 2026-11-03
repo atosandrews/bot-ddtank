@@ -1,0 +1,22 @@
+return {
+    id = 122022,
+    name = "相亲相爱两兄弟宝箱",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

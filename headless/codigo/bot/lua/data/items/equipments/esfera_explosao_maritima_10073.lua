@@ -1,0 +1,22 @@
+return {
+    id = 10073,
+    name = "Esfera Explosão Marítima",
+    category_id = 64,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "0",
+        [8] = "0",
+    },
+}

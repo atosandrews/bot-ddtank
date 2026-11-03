@@ -1,0 +1,22 @@
+return {
+    id = 7003,
+    name = "AK-48",
+    category_id = 7,
+    attack = 100,
+    defence = 48,
+    agility = 18,
+    luck = 15,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "22",
+        [2] = "23",
+        [3] = "1",
+        [4] = "0",
+        [5] = "35",
+        [6] = "60",
+        [7] = "185",
+        [8] = "0",
+    },
+}

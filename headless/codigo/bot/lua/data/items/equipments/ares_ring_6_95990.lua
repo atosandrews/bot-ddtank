@@ -1,0 +1,22 @@
+return {
+    id = 95990,
+    name = "Ares Ring +6",
+    category_id = 9,
+    attack = 341,
+    defence = 341,
+    agility = 341,
+    luck = 341,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "73482240",
+        [3] = "3",
+        [4] = "9599",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

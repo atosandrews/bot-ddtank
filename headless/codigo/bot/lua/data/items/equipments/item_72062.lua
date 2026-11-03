@@ -1,0 +1,22 @@
+return {
+    id = 72062,
+    name = "极·垃圾",
+    category_id = 7,
+    attack = 151,
+    defence = 151,
+    agility = 229,
+    luck = 151,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "235",
+        [8] = "0",
+    },
+}

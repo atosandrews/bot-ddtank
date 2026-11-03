@@ -1,0 +1,22 @@
+return {
+    id = 71431,
+    name = "Ares Hammer",
+    category_id = 7,
+    attack = 395,
+    defence = 287,
+    agility = 268,
+    luck = 195,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "262",
+        [8] = "0",
+    },
+}

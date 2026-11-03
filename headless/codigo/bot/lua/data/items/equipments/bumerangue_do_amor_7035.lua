@@ -1,0 +1,22 @@
+return {
+    id = 7035,
+    name = "Bumerangue do Amor",
+    category_id = 7,
+    attack = 145,
+    defence = 25,
+    agility = 145,
+    luck = 145,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

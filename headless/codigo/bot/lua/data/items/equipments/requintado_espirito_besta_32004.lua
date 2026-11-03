@@ -1,0 +1,22 @@
+return {
+    id = 32004,
+    name = "Requintado Espírito besta",
+    category_id = 52,
+    attack = 35,
+    defence = 110,
+    agility = 35,
+    luck = 35,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "25",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

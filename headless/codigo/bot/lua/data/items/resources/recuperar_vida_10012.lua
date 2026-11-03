@@ -1,0 +1,22 @@
+return {
+    id = 10012,
+    name = "Recuperar vida",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "500",
+        [4] = "150",
+        [5] = "600",
+        [6] = "0",
+        [7] = "180",
+        [8] = "0",
+    },
+}

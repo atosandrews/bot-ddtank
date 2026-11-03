@@ -1,0 +1,22 @@
+return {
+    id = 7097,
+    name = "Fogos de Artifício",
+    category_id = 7,
+    attack = 175,
+    defence = 175,
+    agility = 175,
+    luck = 175,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "243",
+        [8] = "0",
+    },
+}

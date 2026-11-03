@@ -1,0 +1,22 @@
+return {
+    id = 8516,
+    name = "Athena pulseira +5",
+    category_id = 8,
+    attack = 80,
+    defence = 80,
+    agility = 80,
+    luck = 80,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "71680",
+        [3] = "3",
+        [4] = "8416",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

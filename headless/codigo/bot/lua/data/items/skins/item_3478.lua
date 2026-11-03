@@ -1,0 +1,22 @@
+return {
+    id = 3478,
+    name = "海美人",
+    category_id = 3,
+    attack = 85,
+    defence = 85,
+    agility = 85,
+    luck = 85,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

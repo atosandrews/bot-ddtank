@@ -1,0 +1,22 @@
+return {
+    id = 70670,
+    name = "Foice Mágico Caído",
+    category_id = 7,
+    attack = 175,
+    defence = 155,
+    agility = 155,
+    luck = 35,
+    level = 3,
+    need_level = 1,
+    quality = 7,
+    properties = {
+        [1] = "48",
+        [2] = "49",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "247",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7233,
+    name = "Lendário - Cetro de Gelo ",
+    category_id = 7,
+    attack = 435,
+    defence = 107,
+    agility = 375,
+    luck = 375,
+    level = 3,
+    need_level = 1,
+    quality = 7,
+    properties = {
+        [1] = "40",
+        [2] = "41",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "370",
+        [8] = "0",
+    },
+}

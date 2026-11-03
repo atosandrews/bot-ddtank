@@ -1,0 +1,22 @@
+return {
+    id = 95951,
+    name = "Eurydice Ring +7",
+    category_id = 9,
+    attack = 115,
+    defence = 115,
+    agility = 115,
+    luck = 115,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "7",
+        [2] = "143360",
+        [3] = "2",
+        [4] = "95950",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

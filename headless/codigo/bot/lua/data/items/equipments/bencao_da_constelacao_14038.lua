@@ -1,0 +1,22 @@
+return {
+    id = 14038,
+    name = "Bênção da constelação",
+    category_id = 14,
+    attack = 5,
+    defence = 5,
+    agility = 30,
+    luck = 5,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "73",
+        [2] = "7",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 90000036,
+    name = "<赞>寒影明璃",
+    category_id = 7,
+    attack = 1000,
+    defence = 158,
+    agility = 274,
+    luck = 122,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "300",
+        [8] = "0",
+    },
+}

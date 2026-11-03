@@ -1,0 +1,22 @@
+return {
+    id = 10019,
+    name = "Aumenta o ataque em 5%",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "13",
+        [2] = "5",
+        [3] = "0",
+        [4] = "20",
+        [5] = "10",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

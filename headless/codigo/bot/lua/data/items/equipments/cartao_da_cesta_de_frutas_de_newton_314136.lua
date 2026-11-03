@@ -1,0 +1,22 @@
+return {
+    id = 314136,
+    name = "Cartão da Cesta de Frutas de Newton",
+    category_id = 26,
+    attack = 3,
+    defence = 3,
+    agility = 4,
+    luck = 4,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "-7",
+        [2] = "25",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "9",
+        [8] = "0",
+    },
+}

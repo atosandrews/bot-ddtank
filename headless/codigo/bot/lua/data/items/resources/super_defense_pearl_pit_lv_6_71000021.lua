@@ -1,0 +1,22 @@
+return {
+    id = 71000021,
+    name = "Super Defense Pearl - Pit Lv 6",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 8,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "10",
+        [4] = "0",
+        [5] = "40",
+        [6] = "0",
+        [7] = "3",
+        [8] = "0",
+    },
+}

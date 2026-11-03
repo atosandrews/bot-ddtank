@@ -1,0 +1,22 @@
+return {
+    id = 8012,
+    name = "Munhequeira de agilidade",
+    category_id = 8,
+    attack = 2,
+    defence = 2,
+    agility = 5,
+    luck = 2,
+    level = 2,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

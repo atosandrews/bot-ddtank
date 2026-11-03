@@ -1,0 +1,22 @@
+return {
+    id = 71291,
+    name = "Verdadeiro - Canhão Abóbora",
+    category_id = 7,
+    attack = 246,
+    defence = 48,
+    agility = 246,
+    luck = 48,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "255",
+        [8] = "0",
+    },
+}

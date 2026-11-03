@@ -1,0 +1,22 @@
+return {
+    id = 7104,
+    name = "Canhão Arco-Íris",
+    category_id = 7,
+    attack = 24,
+    defence = 150,
+    agility = 18,
+    luck = 36,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "11",
+        [3] = "1",
+        [4] = "0",
+        [5] = "55",
+        [6] = "70",
+        [7] = "200",
+        [8] = "0",
+    },
+}

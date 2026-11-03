@@ -1,0 +1,22 @@
+return {
+    id = 70293,
+    name = "☆·Flying Car",
+    category_id = 7,
+    attack = 105,
+    defence = 310,
+    agility = 105,
+    luck = 180,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "80",
+        [2] = "81",
+        [3] = "0",
+        [4] = "4",
+        [5] = "50",
+        [6] = "70",
+        [7] = "230",
+        [8] = "0",
+    },
+}

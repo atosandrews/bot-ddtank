@@ -1,0 +1,22 @@
+return {
+    id = 70904,
+    name = "极·爱心回力标",
+    category_id = 7,
+    attack = 388,
+    defence = 75,
+    agility = 388,
+    luck = 388,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "285",
+        [8] = "0",
+    },
+}

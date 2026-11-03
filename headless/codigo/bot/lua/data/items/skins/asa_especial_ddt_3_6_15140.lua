@@ -1,0 +1,22 @@
+return {
+    id = 15140,
+    name = "Asa Especial DDT 3.6",
+    category_id = 15,
+    attack = 95,
+    defence = 95,
+    agility = 95,
+    luck = 95,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

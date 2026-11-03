@@ -1,0 +1,22 @@
+return {
+    id = 14033,
+    name = "Esplendor do Solar",
+    category_id = 14,
+    attack = 250,
+    defence = 250,
+    agility = 250,
+    luck = 250,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "78",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

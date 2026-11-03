@@ -1,0 +1,22 @@
+return {
+    id = 170041,
+    name = "☆ Barok Shield",
+    category_id = 17,
+    attack = 80,
+    defence = 80,
+    agility = 80,
+    luck = 80,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "31",
+        [4] = "110",
+        [5] = "2",
+        [6] = "3",
+        [7] = "120",
+        [8] = "1500",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 1700221,
+    name = "Angelical - Dom de Anjo",
+    category_id = 17,
+    attack = 100,
+    defence = 100,
+    agility = 100,
+    luck = 100,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "64",
+        [2] = "64",
+        [3] = "32",
+        [4] = "110",
+        [5] = "0",
+        [6] = "2",
+        [7] = "750",
+        [8] = "500",
+    },
+}

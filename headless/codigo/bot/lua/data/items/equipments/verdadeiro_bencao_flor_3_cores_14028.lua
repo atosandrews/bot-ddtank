@@ -1,0 +1,22 @@
+return {
+    id = 14028,
+    name = "Verdadeiro·Benção flor 3 cores ",
+    category_id = 14,
+    attack = 20,
+    defence = 20,
+    agility = 20,
+    luck = 20,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "62",
+        [2] = "6",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

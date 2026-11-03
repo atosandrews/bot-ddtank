@@ -1,0 +1,22 @@
+return {
+    id = 70651,
+    name = "Super - Ritmo Brasileiro",
+    category_id = 7,
+    attack = 681,
+    defence = 300,
+    agility = 175,
+    luck = 175,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "16",
+        [2] = "17",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "250",
+        [8] = "0",
+    },
+}

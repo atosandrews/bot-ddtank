@@ -1,0 +1,22 @@
+return {
+    id = 594512,
+    name = "Supreme Armor",
+    category_id = 5,
+    attack = 500,
+    defence = 500,
+    agility = 500,
+    luck = 500,
+    level = 3,
+    need_level = 0,
+    quality = 6,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "120",
+        [8] = "123",
+    },
+}

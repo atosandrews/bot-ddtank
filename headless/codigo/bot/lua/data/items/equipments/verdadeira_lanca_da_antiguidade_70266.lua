@@ -1,0 +1,22 @@
+return {
+    id = 70266,
+    name = "Verdadeira - Lança da Antiguidade",
+    category_id = 27,
+    attack = 226,
+    defence = 226,
+    agility = 226,
+    luck = 39,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "48",
+        [2] = "49",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "243",
+        [8] = "0",
+    },
+}

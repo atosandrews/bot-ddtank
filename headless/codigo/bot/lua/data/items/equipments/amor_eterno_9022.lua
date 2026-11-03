@@ -1,0 +1,22 @@
+return {
+    id = 9022,
+    name = "Amor Eterno",
+    category_id = 9,
+    attack = 20,
+    defence = 10,
+    agility = 10,
+    luck = 10,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "9022",
+        [8] = "1",
+    },
+}

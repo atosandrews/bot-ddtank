@@ -1,0 +1,22 @@
+return {
+    id = 70391,
+    name = "Super - Amanhecer da Vitória",
+    category_id = 7,
+    attack = 237,
+    defence = 171,
+    agility = 39,
+    luck = 52,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "220",
+        [8] = "0",
+    },
+}

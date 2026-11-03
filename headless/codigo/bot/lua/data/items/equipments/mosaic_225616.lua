@@ -1,0 +1,22 @@
+return {
+    id = 225616,
+    name = "Mosaic",
+    category_id = 2,
+    attack = 100,
+    defence = 100,
+    agility = 100,
+    luck = 100,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

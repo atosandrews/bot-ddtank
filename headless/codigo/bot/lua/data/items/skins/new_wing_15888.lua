@@ -1,0 +1,22 @@
+return {
+    id = 15888,
+    name = "New Wing",
+    category_id = 15,
+    attack = 5,
+    defence = 5,
+    agility = 5,
+    luck = 5,
+    level = 3,
+    need_level = 0,
+    quality = 1,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

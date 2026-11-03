@@ -1,0 +1,22 @@
+return {
+    id = 7009,
+    name = "Verdadeiro - Trovão",
+    category_id = 7,
+    attack = 30,
+    defence = 40,
+    agility = 60,
+    luck = 250,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "14",
+        [2] = "15",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "200",
+        [8] = "0",
+    },
+}

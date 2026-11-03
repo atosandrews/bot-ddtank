@@ -1,0 +1,22 @@
+return {
+    id = 70301,
+    name = "Carro Voador",
+    category_id = 7,
+    attack = 124,
+    defence = 126,
+    agility = 124,
+    luck = 126,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "80",
+        [2] = "81",
+        [3] = "0",
+        [4] = "4",
+        [5] = "50",
+        [6] = "70",
+        [7] = "230",
+        [8] = "0",
+    },
+}

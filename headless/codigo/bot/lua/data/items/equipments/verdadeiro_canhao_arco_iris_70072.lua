@@ -1,0 +1,22 @@
+return {
+    id = 70072,
+    name = "Verdadeiro - Canhão Arco-Íris",
+    category_id = 7,
+    attack = 62,
+    defence = 390,
+    agility = 46,
+    luck = 93,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "11",
+        [3] = "1",
+        [4] = "0",
+        [5] = "55",
+        [6] = "70",
+        [7] = "200",
+        [8] = "0",
+    },
+}

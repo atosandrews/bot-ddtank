@@ -1,0 +1,22 @@
+return {
+    id = 7095,
+    name = "Epic Excalibur",
+    category_id = 7,
+    attack = 410,
+    defence = 248,
+    agility = 410,
+    luck = 410,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "70",
+        [7] = "310",
+        [8] = "0",
+    },
+}

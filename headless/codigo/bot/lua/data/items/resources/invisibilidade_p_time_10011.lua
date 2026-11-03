@@ -1,0 +1,22 @@
+return {
+    id = 10011,
+    name = "Invisibilidade p/time",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "3",
+        [2] = "1",
+        [3] = "2",
+        [4] = "150",
+        [5] = "400",
+        [6] = "0",
+        [7] = "180",
+        [8] = "0",
+    },
+}

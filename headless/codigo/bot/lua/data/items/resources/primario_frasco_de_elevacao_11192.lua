@@ -1,0 +1,22 @@
+return {
+    id = 11192,
+    name = "Primário - Frasco de Elevação",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 30,
+    quality = 4,
+    properties = {
+        [1] = "120",
+        [2] = "2000000",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

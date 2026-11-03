@@ -1,0 +1,22 @@
+return {
+    id = 85182,
+    name = "Pulseira de 9º aniversário +8",
+    category_id = 8,
+    attack = 520,
+    defence = 520,
+    agility = 520,
+    luck = 520,
+    level = 3,
+    need_level = 0,
+    quality = 6,
+    properties = {
+        [1] = "8",
+        [2] = "52428800",
+        [3] = "3",
+        [4] = "85181",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

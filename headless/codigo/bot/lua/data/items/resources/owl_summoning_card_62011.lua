@@ -1,0 +1,22 @@
+return {
+    id = 62011,
+    name = "Owl Summoning Card",
+    category_id = 62,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

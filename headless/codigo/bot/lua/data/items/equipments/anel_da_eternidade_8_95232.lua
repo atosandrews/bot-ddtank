@@ -1,0 +1,22 @@
+return {
+    id = 95232,
+    name = "Anel da Eternidade+8",
+    category_id = 9,
+    attack = 220,
+    defence = 220,
+    agility = 220,
+    luck = 220,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "8",
+        [2] = "1120000",
+        [3] = "2",
+        [4] = "95231",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

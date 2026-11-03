@@ -1,0 +1,22 @@
+return {
+    id = 201674,
+    name = "Esmeralda",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "86",
+        [3] = "86",
+        [4] = "86",
+        [5] = "87",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

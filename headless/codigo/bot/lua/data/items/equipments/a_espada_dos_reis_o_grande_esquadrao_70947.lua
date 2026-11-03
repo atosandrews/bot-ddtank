@@ -1,0 +1,22 @@
+return {
+    id = 70947,
+    name = "A Espada dos Reis · o Grande Esquadrão",
+    category_id = 27,
+    attack = 64,
+    defence = 330,
+    agility = 330,
+    luck = 330,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "280",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 10204,
+    name = "Recuperação grupo nv4",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 4,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "51",
+        [2] = "240",
+        [3] = "7",
+        [4] = "170",
+        [5] = "800",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

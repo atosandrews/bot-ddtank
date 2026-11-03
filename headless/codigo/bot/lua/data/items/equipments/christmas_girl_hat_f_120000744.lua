@@ -1,0 +1,22 @@
+return {
+    id = 120000744,
+    name = "Christmas Girl Hat  (F) ",
+    category_id = 1,
+    attack = 25,
+    defence = 25,
+    agility = 25,
+    luck = 25,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "12",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7105,
+    name = "Vento de Deus",
+    category_id = 7,
+    attack = 36,
+    defence = 18,
+    agility = 150,
+    luck = 24,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "12",
+        [2] = "13",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "50",
+        [7] = "190",
+        [8] = "0",
+    },
+}

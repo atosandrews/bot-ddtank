@@ -1,0 +1,22 @@
+return {
+    id = 70278,
+    name = "God of War",
+    category_id = 7,
+    attack = 348,
+    defence = 348,
+    agility = 348,
+    luck = 106,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "66",
+        [2] = "67",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "255",
+        [8] = "0",
+    },
+}

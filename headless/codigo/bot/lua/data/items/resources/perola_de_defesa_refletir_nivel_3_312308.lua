@@ -1,0 +1,22 @@
+return {
+    id = 312308,
+    name = "Pérola de Defesa - Refletir nível 3",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "20",
+        [4] = "400",
+        [5] = "5",
+        [6] = "1",
+        [7] = "4",
+        [8] = "0",
+    },
+}

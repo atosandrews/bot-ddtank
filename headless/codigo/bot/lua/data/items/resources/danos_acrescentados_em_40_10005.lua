@@ -1,0 +1,22 @@
+return {
+    id = 10005,
+    name = "Danos acrescentados em 40%",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "13",
+        [2] = "40",
+        [3] = "0",
+        [4] = "80",
+        [5] = "340",
+        [6] = "0",
+        [7] = "270",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 201677,
+    name = "Safira",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "9",
+        [2] = "230",
+        [3] = "230",
+        [4] = "230",
+        [5] = "231",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 314134,
+    name = "Cartão do Bugou Juíz",
+    category_id = 26,
+    attack = 3,
+    defence = 3,
+    agility = 3,
+    luck = 3,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "1",
+        [7] = "8",
+        [8] = "1",
+    },
+}

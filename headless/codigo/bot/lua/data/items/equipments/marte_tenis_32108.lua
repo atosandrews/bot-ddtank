@@ -1,0 +1,22 @@
+return {
+    id = 32108,
+    name = "Marte Tênis",
+    category_id = 52,
+    attack = 69,
+    defence = 69,
+    agility = 69,
+    luck = 270,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "60",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

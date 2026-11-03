@@ -1,0 +1,22 @@
+return {
+    id = 90000020,
+    name = "<赞>翔·天使之赐",
+    category_id = 17,
+    attack = 150,
+    defence = 150,
+    agility = 150,
+    luck = 150,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "98",
+        [2] = "98",
+        [3] = "32",
+        [4] = "110",
+        [5] = "0",
+        [6] = "2",
+        [7] = "700",
+        [8] = "500",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 314155,
+    name = "Cartões Sabe do Conde",
+    category_id = 26,
+    attack = 6,
+    defence = 4,
+    agility = 5,
+    luck = 4,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "13",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 50106,
+    name = "Medalha do Marechal",
+    category_id = 40,
+    attack = 45,
+    defence = 40,
+    agility = 45,
+    luck = 40,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "60",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

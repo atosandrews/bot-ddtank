@@ -1,0 +1,22 @@
+return {
+    id = 90000039,
+    name = "超时空行动-魔焰",
+    category_id = 7,
+    attack = 500,
+    defence = 137,
+    agility = 79,
+    luck = 61,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "272",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 314161,
+    name = "Cartões de Gelo",
+    category_id = 26,
+    attack = 6,
+    defence = 6,
+    agility = 3,
+    luck = 6,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "14",
+        [8] = "0",
+    },
+}

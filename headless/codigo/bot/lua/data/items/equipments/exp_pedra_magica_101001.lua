@@ -1,0 +1,22 @@
+return {
+    id = 101001,
+    name = "Exp.Pedra Mágica",
+    category_id = 61,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 6,
+    properties = {
+        [1] = "81",
+        [2] = "4",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

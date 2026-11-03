@@ -1,0 +1,22 @@
+return {
+    id = 71154,
+    name = "Item temporário ",
+    category_id = 7,
+    attack = 262,
+    defence = 263,
+    agility = 262,
+    luck = 263,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "252",
+        [8] = "0",
+    },
+}

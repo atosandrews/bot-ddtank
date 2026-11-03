@@ -1,0 +1,22 @@
+return {
+    id = 70945,
+    name = "A Espada dos Reis · A Esquadra Extraordinária",
+    category_id = 27,
+    attack = 286,
+    defence = 594,
+    agility = 166,
+    luck = 143,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "275",
+        [8] = "0",
+    },
+}

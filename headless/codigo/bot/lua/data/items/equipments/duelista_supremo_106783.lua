@@ -1,0 +1,22 @@
+return {
+    id = 106783,
+    name = "Duelista Supremo",
+    category_id = 40,
+    attack = 20,
+    defence = 20,
+    agility = 30,
+    luck = 10,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "7",
+        [2] = "70",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

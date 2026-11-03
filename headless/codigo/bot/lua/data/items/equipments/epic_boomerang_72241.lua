@@ -1,0 +1,22 @@
+return {
+    id = 72241,
+    name = "☆☆ Epic - Boomerang",
+    category_id = 7,
+    attack = 410,
+    defence = 250,
+    agility = 410,
+    luck = 410,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "300",
+        [8] = "0",
+    },
+}

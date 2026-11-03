@@ -1,0 +1,22 @@
+return {
+    id = 72033,
+    name = "Bloody Keris",
+    category_id = 7,
+    attack = 438,
+    defence = 198,
+    agility = 438,
+    luck = 438,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

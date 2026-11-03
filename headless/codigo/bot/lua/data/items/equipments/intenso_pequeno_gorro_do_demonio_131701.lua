@@ -1,0 +1,22 @@
+return {
+    id = 131701,
+    name = "Intenso - Pequeno Gorro do Demônio",
+    category_id = 1,
+    attack = 50,
+    defence = 50,
+    agility = 50,
+    luck = 50,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "12",
+    },
+}

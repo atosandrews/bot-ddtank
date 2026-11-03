@@ -1,0 +1,22 @@
+return {
+    id = 10466,
+    name = "Evita buraco",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "9",
+        [2] = "0",
+        [3] = "1",
+        [4] = "50",
+        [5] = "550",
+        [6] = "0",
+        [7] = "180",
+        [8] = "1",
+    },
+}

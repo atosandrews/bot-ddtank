@@ -1,0 +1,22 @@
+return {
+    id = 10205,
+    name = "Recuperação grupo nv5",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "51",
+        [2] = "280",
+        [3] = "8",
+        [4] = "170",
+        [5] = "800",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

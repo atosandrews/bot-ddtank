@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+import "proto/ddbot/v1/receipt.proto";
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message OpenSession {
+  uint32 api_version = 1;
+  string codec_revision = 2;
+  string relay_instance_id = 3;
+  string game_session_id = 4;
+  string relay_id = 5;
+  uint64 local_stream = 6;
+}
+
+message ResumeSession {
+  OpenSession identity = 1;
+  string bot_session_id = 2;
+  uint64 generation = 3;
+  uint64 event_checkpoint = 4;
+  uint64 command_high_water = 5;
+  repeated CommandReceipt receipts = 6;
+}
+
+message SessionOpened {
+  string bot_session_id = 1;
+  uint64 generation = 2;
+  uint64 applied_sequence = 3;
+  uint32 api_version = 4;
+  string codec_revision = 5;
+  uint64 script_generation = 6;
+}
+
+message Gap {
+  string reason = 1;
+}
+
+message Close {
+  string reason = 1;
+}
+
+message Heartbeat {
+  uint64 applied_sequence = 1;
+}

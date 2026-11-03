@@ -1,0 +1,22 @@
+return {
+    id = 71221,
+    name = "Santo - Eletrodoméstico",
+    category_id = 7,
+    attack = 137,
+    defence = 139,
+    agility = 137,
+    luck = 139,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "235",
+        [8] = "0",
+    },
+}

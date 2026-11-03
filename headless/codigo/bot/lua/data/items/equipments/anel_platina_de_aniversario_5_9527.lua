@@ -1,0 +1,22 @@
+return {
+    id = 9527,
+    name = "Anel Platina de Aniversário+5",
+    category_id = 9,
+    attack = 128,
+    defence = 96,
+    agility = 128,
+    luck = 96,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "71680",
+        [3] = "3",
+        [4] = "9427",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

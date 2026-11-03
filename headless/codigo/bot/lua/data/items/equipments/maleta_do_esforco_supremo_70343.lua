@@ -1,0 +1,22 @@
+return {
+    id = 70343,
+    name = "Maleta do Esforço Supremo",
+    category_id = 7,
+    attack = 140,
+    defence = 320,
+    agility = 100,
+    luck = 100,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "2",
+        [5] = "20",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

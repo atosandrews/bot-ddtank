@@ -1,0 +1,22 @@
+return {
+    id = 12000095,
+    name = "丛林猎手·冠",
+    category_id = 1,
+    attack = 90,
+    defence = 95,
+    agility = 90,
+    luck = 95,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "12",
+    },
+}

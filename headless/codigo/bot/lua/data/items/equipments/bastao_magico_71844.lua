@@ -1,0 +1,22 @@
+return {
+    id = 71844,
+    name = "Bastão Mágico",
+    category_id = 7,
+    attack = 130,
+    defence = 290,
+    agility = 290,
+    luck = 290,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

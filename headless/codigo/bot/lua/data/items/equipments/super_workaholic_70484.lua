@@ -1,0 +1,22 @@
+return {
+    id = 70484,
+    name = "Super - Workaholic ",
+    category_id = 7,
+    attack = 238,
+    defence = 240,
+    agility = 238,
+    luck = 240,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "230",
+        [8] = "0",
+    },
+}

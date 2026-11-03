@@ -1,0 +1,22 @@
+return {
+    id = 10002,
+    name = "Ataque de 1 vez complementar",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "14",
+        [2] = "1",
+        [3] = "0",
+        [4] = "110",
+        [5] = "500",
+        [6] = "0",
+        [7] = "750",
+        [8] = "0",
+    },
+}

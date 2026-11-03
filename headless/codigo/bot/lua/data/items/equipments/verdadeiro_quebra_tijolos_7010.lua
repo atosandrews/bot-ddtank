@@ -1,0 +1,22 @@
+return {
+    id = 7010,
+    name = "Verdadeiro - Quebra Tijolos",
+    category_id = 7,
+    attack = 180,
+    defence = 130,
+    agility = 30,
+    luck = 40,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "200",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 71284,
+    name = "Super - Pirulito Mágica",
+    category_id = 7,
+    attack = 360,
+    defence = 132,
+    agility = 522,
+    luck = 291,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "262",
+        [8] = "0",
+    },
+}

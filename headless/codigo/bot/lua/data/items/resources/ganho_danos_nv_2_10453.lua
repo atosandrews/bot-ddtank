@@ -1,0 +1,22 @@
+return {
+    id = 10453,
+    name = "Ganho Danos Nv.2",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "13",
+        [2] = "150",
+        [3] = "0",
+        [4] = "120",
+        [5] = "550",
+        [6] = "0",
+        [7] = "750",
+        [8] = "1",
+    },
+}

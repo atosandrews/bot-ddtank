@@ -1,0 +1,22 @@
+return {
+    id = 312401,
+    name = "Pérola de Defesa - Defesa nível 4",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 7,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "2",
+        [4] = "1000",
+        [5] = "5",
+        [6] = "1",
+        [7] = "3",
+        [8] = "0",
+    },
+}

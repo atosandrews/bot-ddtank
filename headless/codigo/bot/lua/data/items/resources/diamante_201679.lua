@@ -1,0 +1,22 @@
+return {
+    id = 201679,
+    name = "Diamante",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "11",
+        [2] = "366",
+        [3] = "366",
+        [4] = "366",
+        [5] = "367",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

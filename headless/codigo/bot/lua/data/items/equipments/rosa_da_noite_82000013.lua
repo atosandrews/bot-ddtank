@@ -1,0 +1,22 @@
+return {
+    id = 82000013,
+    name = "Rosa da noite",
+    category_id = 5,
+    attack = 55,
+    defence = 55,
+    agility = 55,
+    luck = 55,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "123",
+    },
+}

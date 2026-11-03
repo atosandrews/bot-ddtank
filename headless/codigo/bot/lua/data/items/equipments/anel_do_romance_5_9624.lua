@@ -1,0 +1,22 @@
+return {
+    id = 9624,
+    name = "Anel do romance+5",
+    category_id = 29,
+    attack = 63,
+    defence = 63,
+    agility = 63,
+    luck = 63,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

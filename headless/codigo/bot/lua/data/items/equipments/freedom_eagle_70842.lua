@@ -1,0 +1,22 @@
+return {
+    id = 70842,
+    name = "Freedom Eagle",
+    category_id = 7,
+    attack = 106,
+    defence = 248,
+    agility = 248,
+    luck = 248,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "246",
+        [8] = "0",
+    },
+}

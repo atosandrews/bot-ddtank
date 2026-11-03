@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message CardTake {
+  int32 index = 1;
+}
+
+message CardTakeBoss {
+  int32 index = 1;
+}
+
+message CardTakeExtra {
+  int32 index = 1;
+}
+
+message CardFinish {
+}
+
+message CardFinishBoss {
+}
+

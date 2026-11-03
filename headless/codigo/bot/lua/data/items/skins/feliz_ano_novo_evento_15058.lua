@@ -1,0 +1,22 @@
+return {
+    id = 15058,
+    name = "Feliz Ano Novo! (Evento)",
+    category_id = 15,
+    attack = 10,
+    defence = 10,
+    agility = 10,
+    luck = 10,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "1",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

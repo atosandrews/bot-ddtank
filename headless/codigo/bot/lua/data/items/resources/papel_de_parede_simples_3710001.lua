@@ -1,0 +1,22 @@
+return {
+    id = 3710001,
+    name = "Papel de parede simples",
+    category_id = 37,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "0",
+        [2] = "10",
+        [3] = "1",
+        [4] = "1",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 31104,
+    name = "Massa de cachecol",
+    category_id = 51,
+    attack = 110,
+    defence = 480,
+    agility = 110,
+    luck = 160,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "20",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

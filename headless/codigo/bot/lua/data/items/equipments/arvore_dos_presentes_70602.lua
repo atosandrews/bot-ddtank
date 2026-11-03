@@ -1,0 +1,22 @@
+return {
+    id = 70602,
+    name = " Árvore dos Presentes",
+    category_id = 7,
+    attack = 260,
+    defence = 120,
+    agility = 260,
+    luck = 260,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "250",
+        [8] = "0",
+    },
+}

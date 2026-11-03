@@ -1,0 +1,22 @@
+return {
+    id = 314150,
+    name = "Cartão de alma",
+    category_id = 26,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "1",
+        [7] = "0",
+        [8] = "0",
+    },
+}

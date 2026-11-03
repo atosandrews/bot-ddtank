@@ -1,0 +1,22 @@
+return {
+    id = 70142,
+    name = "Verdadeiro - Eletrodoméstico",
+    category_id = 7,
+    attack = 148,
+    defence = 148,
+    agility = 148,
+    luck = 148,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "200",
+        [8] = "0",
+    },
+}

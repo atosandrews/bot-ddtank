@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message SceneLogin {
+  int32 scene_id = 1;
+}
+
+message SceneState {
+  int32 state = 1;
+}

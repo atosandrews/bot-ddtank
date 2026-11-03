@@ -1,0 +1,22 @@
+return {
+    id = 20161,
+    name = "Caixa de Cartões de Gelo",
+    category_id = 18,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 15,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "2",
+        [5] = "314161",
+        [6] = "0",
+        [7] = "14",
+        [8] = "0",
+    },
+}

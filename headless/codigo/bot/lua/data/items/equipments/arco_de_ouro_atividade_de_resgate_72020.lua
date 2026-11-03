@@ -1,0 +1,22 @@
+return {
+    id = 72020,
+    name = "Arco de ouro (Atividade de Resgate)",
+    category_id = 7,
+    attack = 115,
+    defence = 25,
+    agility = 18,
+    luck = 10,
+    level = 2,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "42",
+        [2] = "43",
+        [3] = "1",
+        [4] = "0",
+        [5] = "0",
+        [6] = "90",
+        [7] = "180",
+        [8] = "0",
+    },
+}

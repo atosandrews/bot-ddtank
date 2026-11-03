@@ -1,0 +1,22 @@
+return {
+    id = 313329,
+    name = "Esfera mágica",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 6,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "3",
+        [3] = "0",
+        [4] = "36",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "15",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7167,
+    name = "真·烈火",
+    category_id = 7,
+    attack = 815,
+    defence = 195,
+    agility = 130,
+    luck = 100,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "16",
+        [2] = "17",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "205",
+        [8] = "0",
+    },
+}

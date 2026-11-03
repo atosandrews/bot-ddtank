@@ -1,0 +1,22 @@
+return {
+    id = 1212131285,
+    name = "Armadura normal 777",
+    category_id = 52,
+    attack = 5,
+    defence = 25,
+    agility = 5,
+    luck = 5,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

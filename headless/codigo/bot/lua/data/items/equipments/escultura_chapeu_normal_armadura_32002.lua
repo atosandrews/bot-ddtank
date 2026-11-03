@@ -1,0 +1,22 @@
+return {
+    id = 32002,
+    name = "Escultura chapéu normal Armadura",
+    category_id = 52,
+    attack = 40,
+    defence = 120,
+    agility = 40,
+    luck = 40,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "10",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

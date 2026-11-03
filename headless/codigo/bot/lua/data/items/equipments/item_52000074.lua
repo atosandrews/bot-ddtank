@@ -1,0 +1,22 @@
+return {
+    id = 52000074,
+    name = "欢欣鼓舞",
+    category_id = 5,
+    attack = 5,
+    defence = 5,
+    agility = 5,
+    luck = 5,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "123",
+    },
+}

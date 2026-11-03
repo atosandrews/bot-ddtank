@@ -1,0 +1,22 @@
+return {
+    id = 3640,
+    name = "莓果奶昔",
+    category_id = 3,
+    attack = 110,
+    defence = 110,
+    agility = 110,
+    luck = 110,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

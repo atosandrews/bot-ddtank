@@ -1,0 +1,22 @@
+return {
+    id = 30103,
+    name = "Lâmina do Vento amargo",
+    category_id = 50,
+    attack = 185,
+    defence = 60,
+    agility = 60,
+    luck = 60,
+    level = 60,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

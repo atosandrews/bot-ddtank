@@ -1,0 +1,22 @@
+return {
+    id = 9015,
+    name = "Anel de Defesa Simples",
+    category_id = 9,
+    attack = 2,
+    defence = 5,
+    agility = 2,
+    luck = 2,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

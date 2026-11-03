@@ -1,0 +1,22 @@
+return {
+    id = 13622,
+    name = "Asas da moça",
+    category_id = 13,
+    attack = 140,
+    defence = 140,
+    agility = 140,
+    luck = 140,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

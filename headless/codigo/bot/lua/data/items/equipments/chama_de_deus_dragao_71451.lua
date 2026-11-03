@@ -1,0 +1,22 @@
+return {
+    id = 71451,
+    name = "Chama de Deus Dragão",
+    category_id = 7,
+    attack = 610,
+    defence = 515,
+    agility = 520,
+    luck = 615,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "270",
+        [8] = "0",
+    },
+}

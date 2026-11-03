@@ -1,0 +1,22 @@
+return {
+    id = 85153,
+    name = "周年白金手链+9",
+    category_id = 8,
+    attack = 300,
+    defence = 300,
+    agility = 300,
+    luck = 300,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "3763200",
+        [3] = "3",
+        [4] = "85152",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

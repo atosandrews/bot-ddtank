@@ -1,0 +1,22 @@
+return {
+    id = 1202502,
+    name = "Vontade da Guerreira",
+    category_id = 1,
+    attack = 6,
+    defence = 6,
+    agility = 6,
+    luck = 6,
+    level = 3,
+    need_level = 0,
+    quality = 1,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "12",
+    },
+}

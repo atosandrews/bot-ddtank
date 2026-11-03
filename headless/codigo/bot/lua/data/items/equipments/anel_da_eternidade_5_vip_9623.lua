@@ -1,0 +1,22 @@
+return {
+    id = 9623,
+    name = "Anel da Eternidade+5 (VIP)",
+    category_id = 29,
+    attack = 90,
+    defence = 90,
+    agility = 90,
+    luck = 90,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

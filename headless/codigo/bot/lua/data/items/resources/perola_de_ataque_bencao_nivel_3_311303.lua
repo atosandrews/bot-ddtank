@@ -1,0 +1,22 @@
+return {
+    id = 311303,
+    name = "Pérola de ataque - Bênção nível 3",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "1",
+        [3] = "4",
+        [4] = "400",
+        [5] = "5",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

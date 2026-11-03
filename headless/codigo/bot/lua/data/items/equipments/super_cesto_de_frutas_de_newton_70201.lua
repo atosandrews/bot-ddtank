@@ -1,0 +1,22 @@
+return {
+    id = 70201,
+    name = "Super - Cesto de Frutas de Newton",
+    category_id = 7,
+    attack = 52,
+    defence = 39,
+    agility = 171,
+    luck = 237,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "40",
+        [2] = "41",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "220",
+        [8] = "0",
+    },
+}

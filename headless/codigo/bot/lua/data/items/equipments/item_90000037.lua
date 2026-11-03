@@ -1,0 +1,22 @@
+return {
+    id = 90000037,
+    name = "超时空行动-迫击炮",
+    category_id = 7,
+    attack = 278,
+    defence = 278,
+    agility = 278,
+    luck = 45,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "70",
+        [2] = "71",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "270",
+        [8] = "0",
+    },
+}

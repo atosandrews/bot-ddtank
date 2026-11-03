@@ -1,0 +1,22 @@
+return {
+    id = 312212,
+    name = "Super Pérola de Defesa - Evita Buraco nível 2",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 4,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "10",
+        [4] = "0",
+        [5] = "16",
+        [6] = "1",
+        [7] = "5",
+        [8] = "0",
+    },
+}

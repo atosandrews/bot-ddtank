@@ -1,0 +1,22 @@
+return {
+    id = 70592,
+    name = "extrema • Torta de Natal",
+    category_id = 7,
+    attack = 275,
+    defence = 125,
+    agility = 275,
+    luck = 275,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

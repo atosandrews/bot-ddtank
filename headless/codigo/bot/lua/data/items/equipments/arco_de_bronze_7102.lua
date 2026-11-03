@@ -1,0 +1,22 @@
+return {
+    id = 7102,
+    name = "Arco de bronze",
+    category_id = 7,
+    attack = 20,
+    defence = 10,
+    agility = 10,
+    luck = 2,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "18",
+        [2] = "19",
+        [3] = "1",
+        [4] = "0",
+        [5] = "35",
+        [6] = "65",
+        [7] = "165",
+        [8] = "0",
+    },
+}

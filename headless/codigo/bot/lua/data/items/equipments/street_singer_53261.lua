@@ -1,0 +1,22 @@
+return {
+    id = 53261,
+    name = "Street Singer ",
+    category_id = 5,
+    attack = 35,
+    defence = 35,
+    agility = 35,
+    luck = 35,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "123",
+    },
+}

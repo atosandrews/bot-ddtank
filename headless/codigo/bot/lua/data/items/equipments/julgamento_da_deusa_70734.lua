@@ -1,0 +1,22 @@
+return {
+    id = 70734,
+    name = "Julgamento da Deusa",
+    category_id = 7,
+    attack = 500,
+    defence = 137,
+    agility = 61,
+    luck = 79,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "232",
+        [8] = "0",
+    },
+}

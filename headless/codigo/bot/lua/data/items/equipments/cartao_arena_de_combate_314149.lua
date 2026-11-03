@@ -1,0 +1,22 @@
+return {
+    id = 314149,
+    name = "Cartão Arena de Combate",
+    category_id = 26,
+    attack = 4,
+    defence = 4,
+    agility = 4,
+    luck = 4,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "1",
+        [7] = "11",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 16098,
+    name = "A Wonderful Love",
+    category_id = 16,
+    attack = 220,
+    defence = 220,
+    agility = 220,
+    luck = 220,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 71201,
+    name = "Santo - Kit Médico",
+    category_id = 7,
+    attack = 189,
+    defence = 44,
+    agility = 261,
+    luck = 58,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "60",
+        [7] = "235",
+        [8] = "0",
+    },
+}

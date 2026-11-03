@@ -1,0 +1,22 @@
+return {
+    id = 332137,
+    name = "Semente de quebra-cabeça intermediária",
+    category_id = 32,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "3",
+        [3] = "240",
+        [4] = "334137",
+        [5] = "31",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

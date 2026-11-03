@@ -1,0 +1,22 @@
+return {
+    id = 70151,
+    name = "Super - Fogo Intenso",
+    category_id = 7,
+    attack = 330,
+    defence = 79,
+    agility = 52,
+    luck = 39,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "16",
+        [2] = "17",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "225",
+        [8] = "0",
+    },
+}

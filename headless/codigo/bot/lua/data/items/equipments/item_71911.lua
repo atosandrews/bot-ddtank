@@ -1,0 +1,22 @@
+return {
+    id = 71911,
+    name = "真·电玩之王",
+    category_id = 7,
+    attack = 258,
+    defence = 126,
+    agility = 198,
+    luck = 42,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "247",
+        [8] = "0",
+    },
+}

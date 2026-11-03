@@ -1,0 +1,22 @@
+return {
+    id = 170061,
+    name = "Guardian`s Book",
+    category_id = 17,
+    attack = 100,
+    defence = 100,
+    agility = 100,
+    luck = 100,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "300",
+        [3] = "31",
+        [4] = "200",
+        [5] = "2",
+        [6] = "3",
+        [7] = "85",
+        [8] = "500",
+    },
+}

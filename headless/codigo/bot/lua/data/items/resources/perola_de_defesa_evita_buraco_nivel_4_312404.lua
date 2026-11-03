@@ -1,0 +1,22 @@
+return {
+    id = 312404,
+    name = "Pérola de Defesa - Evita Buraco nível 4",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 7,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "10",
+        [4] = "0",
+        [5] = "25",
+        [6] = "1",
+        [7] = "3",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 1005307,
+    name = "Dragon Knight I",
+    category_id = 5,
+    attack = 25,
+    defence = 25,
+    agility = 25,
+    luck = 25,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "123",
+    },
+}

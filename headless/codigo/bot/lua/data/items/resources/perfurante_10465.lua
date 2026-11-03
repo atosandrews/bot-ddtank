@@ -1,0 +1,22 @@
+return {
+    id = 10465,
+    name = "Perfurante",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "8",
+        [2] = "0",
+        [3] = "0",
+        [4] = "90",
+        [5] = "500",
+        [6] = "0",
+        [7] = "999",
+        [8] = "1",
+    },
+}

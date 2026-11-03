@@ -1,0 +1,22 @@
+return {
+    id = 32006,
+    name = "Requintado Armadura cabeça de Boi",
+    category_id = 52,
+    attack = 55,
+    defence = 105,
+    agility = 55,
+    luck = 55,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

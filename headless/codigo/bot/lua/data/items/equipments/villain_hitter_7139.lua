@@ -1,0 +1,22 @@
+return {
+    id = 7139,
+    name = "Villain Hitter",
+    category_id = 7,
+    attack = 201,
+    defence = 282,
+    agility = 165,
+    luck = 92,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "255",
+        [8] = "0",
+    },
+}

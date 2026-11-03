@@ -1,0 +1,22 @@
+return {
+    id = 7022,
+    name = "Super - Ventosa Desbloqueadora",
+    category_id = 7,
+    attack = 44,
+    defence = 198,
+    agility = 33,
+    luck = 143,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "36",
+        [2] = "37",
+        [3] = "1",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "220",
+        [8] = "0",
+    },
+}

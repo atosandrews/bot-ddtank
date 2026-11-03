@@ -1,0 +1,22 @@
+return {
+    id = 1120099,
+    name = "Pacote Exp. Nv.12",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 12,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "9",
+        [3] = "0",
+        [4] = "0",
+        [5] = "2",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

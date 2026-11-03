@@ -1,0 +1,22 @@
+return {
+    id = 10405,
+    name = "Raiva nv5",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "53",
+        [2] = "130",
+        [3] = "20",
+        [4] = "90",
+        [5] = "500",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

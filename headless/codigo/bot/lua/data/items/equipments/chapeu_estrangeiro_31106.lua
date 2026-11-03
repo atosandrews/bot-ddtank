@@ -1,0 +1,22 @@
+return {
+    id = 31106,
+    name = "Chapéu estrangeiro",
+    category_id = 51,
+    attack = 130,
+    defence = 500,
+    agility = 130,
+    luck = 180,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 6140853,
+    name = "Celestial Defense Pearl - Pit",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "10",
+        [4] = "0",
+        [5] = "54",
+        [6] = "4",
+        [7] = "5",
+        [8] = "0",
+    },
+}

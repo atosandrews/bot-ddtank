@@ -1,0 +1,22 @@
+return {
+    id = 201676,
+    name = "Gemas amarelas",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "8",
+        [2] = "174",
+        [3] = "174",
+        [4] = "174",
+        [5] = "175",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

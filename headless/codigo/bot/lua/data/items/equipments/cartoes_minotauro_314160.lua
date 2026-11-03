@@ -1,0 +1,22 @@
+return {
+    id = 314160,
+    name = "Cartões Minotauro",
+    category_id = 26,
+    attack = 3,
+    defence = 6,
+    agility = 6,
+    luck = 6,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "14",
+        [8] = "1",
+    },
+}

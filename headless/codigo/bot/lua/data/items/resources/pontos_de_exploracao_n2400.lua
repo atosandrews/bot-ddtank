@@ -1,0 +1,22 @@
+return {
+    id = -2400,
+    name = "Pontos de Exploração",
+    category_id = 71,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "10",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

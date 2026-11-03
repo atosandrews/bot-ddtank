@@ -1,0 +1,22 @@
+return {
+    id = 14031,
+    name = "Brilho da Lua",
+    category_id = 14,
+    attack = 120,
+    defence = 120,
+    agility = 120,
+    luck = 120,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "68",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

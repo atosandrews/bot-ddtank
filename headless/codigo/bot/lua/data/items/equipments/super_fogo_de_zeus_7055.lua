@@ -1,0 +1,22 @@
+return {
+    id = 7055,
+    name = "Super - Fogo de Zeus",
+    category_id = 7,
+    attack = 280,
+    defence = 71,
+    agility = 49,
+    luck = 38,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "235",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 90000038,
+    name = "超时空行动-雷切",
+    category_id = 7,
+    attack = 137,
+    defence = 61,
+    agility = 500,
+    luck = 79,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "60",
+        [7] = "271",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 1212131275,
+    name = "Super - Rei Ranqueado",
+    category_id = 7,
+    attack = 175,
+    defence = 45,
+    agility = 175,
+    luck = 175,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "16",
+        [2] = "17",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "230",
+        [8] = "0",
+    },
+}

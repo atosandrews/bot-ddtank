@@ -1,0 +1,22 @@
+return {
+    id = 713010,
+    name = "Halloween - Canhão Abóbora",
+    category_id = 7,
+    attack = 205,
+    defence = 40,
+    agility = 205,
+    luck = 40,
+    level = 3,
+    need_level = 1,
+    quality = 7,
+    properties = {
+        [1] = "40",
+        [2] = "41",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "255",
+        [8] = "0",
+    },
+}

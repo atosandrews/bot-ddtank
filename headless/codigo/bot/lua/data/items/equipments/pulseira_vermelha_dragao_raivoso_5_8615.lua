@@ -1,0 +1,22 @@
+return {
+    id = 8615,
+    name = "Pulseira vermelha Dragão Raivoso+5",
+    category_id = 8,
+    attack = 165,
+    defence = 165,
+    agility = 165,
+    luck = 165,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

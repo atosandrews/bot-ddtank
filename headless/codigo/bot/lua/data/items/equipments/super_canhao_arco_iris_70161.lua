@@ -1,0 +1,22 @@
+return {
+    id = 70161,
+    name = "Super- Canhão Arco-Íris",
+    category_id = 7,
+    attack = 52,
+    defence = 330,
+    agility = 39,
+    luck = 79,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "10",
+        [2] = "11",
+        [3] = "1",
+        [4] = "0",
+        [5] = "55",
+        [6] = "70",
+        [7] = "220",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7164,
+    name = "极·牛头怪",
+    category_id = 7,
+    attack = 510,
+    defence = 681,
+    agility = 681,
+    luck = 681,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "290",
+        [8] = "0",
+    },
+}

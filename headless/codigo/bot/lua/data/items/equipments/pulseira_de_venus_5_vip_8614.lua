@@ -1,0 +1,22 @@
+return {
+    id = 8614,
+    name = "Pulseira de Vênus+5 (VIP)",
+    category_id = 8,
+    attack = 60,
+    defence = 60,
+    agility = 60,
+    luck = 60,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

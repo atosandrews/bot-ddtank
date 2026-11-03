@@ -1,0 +1,22 @@
+return {
+    id = 312108133,
+    name = "Exquisite Defense Pearl - Reflect",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "20",
+        [4] = "5000",
+        [5] = "28",
+        [6] = "4",
+        [7] = "5",
+        [8] = "0",
+    },
+}

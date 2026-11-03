@@ -1,0 +1,22 @@
+return {
+    id = 11011,
+    name = "Pedra de Dragão Verde nível 3",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "30",
+        [3] = "3",
+        [4] = "30",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

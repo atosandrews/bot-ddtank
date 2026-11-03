@@ -1,0 +1,22 @@
+return {
+    id = 35190701,
+    name = "Angry Fawn（5）",
+    category_id = 35,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "190701",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

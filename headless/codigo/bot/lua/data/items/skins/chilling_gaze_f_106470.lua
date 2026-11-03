@@ -1,0 +1,22 @@
+return {
+    id = 106470,
+    name = "Chilling Gaze F",
+    category_id = 6,
+    attack = 170,
+    defence = 170,
+    agility = 170,
+    luck = 170,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "123",
+    },
+}

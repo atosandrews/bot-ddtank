@@ -1,0 +1,22 @@
+return {
+    id = 72192,
+    name = "☆☆Muramasa",
+    category_id = 7,
+    attack = 308,
+    defence = 176,
+    agility = 353,
+    luck = 217,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "60",
+        [7] = "247",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 14037,
+    name = "Cadeia True Dansen",
+    category_id = 14,
+    attack = 315,
+    defence = 315,
+    agility = 315,
+    luck = 315,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "175",
+        [2] = "6",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

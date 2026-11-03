@@ -1,0 +1,22 @@
+return {
+    id = 70000020,
+    name = "Pérola de Defesa - Recuperação Nível 6",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 8,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "26",
+        [4] = "4500",
+        [5] = "5",
+        [6] = "0",
+        [7] = "3",
+        [8] = "0",
+    },
+}

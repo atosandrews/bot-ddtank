@@ -1,0 +1,22 @@
+return {
+    id = 90000029,
+    name = "<赞>陆军帽",
+    category_id = 1,
+    attack = 238,
+    defence = 238,
+    agility = 238,
+    luck = 238,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "120",
+        [8] = "12",
+    },
+}

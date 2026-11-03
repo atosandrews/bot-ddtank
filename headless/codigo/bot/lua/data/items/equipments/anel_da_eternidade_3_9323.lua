@@ -1,0 +1,22 @@
+return {
+    id = 9323,
+    name = "Anel da Eternidade+3",
+    category_id = 9,
+    attack = 41,
+    defence = 41,
+    agility = 41,
+    luck = 41,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

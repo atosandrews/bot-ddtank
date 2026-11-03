@@ -1,0 +1,22 @@
+return {
+    id = 4720381,
+    name = "Mythical Defense Pearl - Absorb",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "15",
+        [4] = "10000",
+        [5] = "40",
+        [6] = "4",
+        [7] = "5",
+        [8] = "0",
+    },
+}

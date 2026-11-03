@@ -1,0 +1,22 @@
+return {
+    id = 50105,
+    name = "Medalha do General",
+    category_id = 40,
+    attack = 40,
+    defence = 35,
+    agility = 40,
+    luck = 35,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "50",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

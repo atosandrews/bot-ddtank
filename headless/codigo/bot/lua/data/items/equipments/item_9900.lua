@@ -1,0 +1,22 @@
+return {
+    id = 9900,
+    name = "金兰佩",
+    category_id = 9,
+    attack = 15,
+    defence = 8,
+    agility = 8,
+    luck = 8,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "1",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

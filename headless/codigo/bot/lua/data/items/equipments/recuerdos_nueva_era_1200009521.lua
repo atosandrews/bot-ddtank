@@ -1,0 +1,22 @@
+return {
+    id = 1200009521,
+    name = "Recuerdos Nueva Era",
+    category_id = 1,
+    attack = 170,
+    defence = 170,
+    agility = 170,
+    luck = 170,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "12",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7173,
+    name = "真·医用工具箱",
+    category_id = 7,
+    attack = 425,
+    defence = 100,
+    agility = 585,
+    luck = 130,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "34",
+        [2] = "35",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "60",
+        [7] = "200",
+        [8] = "0",
+    },
+}

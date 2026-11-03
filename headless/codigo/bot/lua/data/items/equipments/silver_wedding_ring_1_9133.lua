@@ -1,0 +1,22 @@
+return {
+    id = 9133,
+    name = "Silver Wedding Ring +1",
+    category_id = 9,
+    attack = 107,
+    defence = 107,
+    agility = 107,
+    luck = 107,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "9022",
+        [8] = "1",
+    },
+}

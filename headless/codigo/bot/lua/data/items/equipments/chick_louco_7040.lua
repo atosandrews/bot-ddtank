@@ -1,0 +1,22 @@
+return {
+    id = 7040,
+    name = "Chick Louco",
+    category_id = 7,
+    attack = 145,
+    defence = 145,
+    agility = 25,
+    luck = 145,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

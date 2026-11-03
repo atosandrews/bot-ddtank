@@ -1,0 +1,22 @@
+return {
+    id = 72902,
+    name = "Rei dos Games",
+    category_id = 7,
+    attack = 436,
+    defence = 110,
+    agility = 76,
+    luck = 59,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "235",
+        [8] = "0",
+    },
+}

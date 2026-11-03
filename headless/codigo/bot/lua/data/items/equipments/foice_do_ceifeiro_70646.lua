@@ -1,0 +1,22 @@
+return {
+    id = 70646,
+    name = "Foice do Ceifeiro",
+    category_id = 27,
+    attack = 258,
+    defence = 258,
+    agility = 258,
+    luck = 258,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

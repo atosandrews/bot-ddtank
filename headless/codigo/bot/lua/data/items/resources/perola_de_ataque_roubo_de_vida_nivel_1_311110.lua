@@ -1,0 +1,22 @@
+return {
+    id = 311110,
+    name = "Pérola de ataque - Roubo de vida nível 1",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "31",
+        [2] = "1",
+        [3] = "16",
+        [4] = "10",
+        [5] = "5",
+        [6] = "4",
+        [7] = "5",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 8745963,
+    name = "Divine Attack Pearl - Pierce",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 9,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "1",
+        [3] = "12",
+        [4] = "90",
+        [5] = "8",
+        [6] = "1",
+        [7] = "3",
+        [8] = "0",
+    },
+}

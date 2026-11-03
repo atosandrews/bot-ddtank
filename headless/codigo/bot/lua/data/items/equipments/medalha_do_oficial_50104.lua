@@ -1,0 +1,22 @@
+return {
+    id = 50104,
+    name = "Medalha do Oficial",
+    category_id = 40,
+    attack = 30,
+    defence = 30,
+    agility = 30,
+    luck = 30,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "4",
+        [2] = "40",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

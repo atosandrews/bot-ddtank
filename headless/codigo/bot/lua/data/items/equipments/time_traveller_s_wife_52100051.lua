@@ -1,0 +1,22 @@
+return {
+    id = 52100051,
+    name = "Time Traveller's Wife",
+    category_id = 5,
+    attack = 215,
+    defence = 215,
+    agility = 215,
+    luck = 215,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "123",
+    },
+}

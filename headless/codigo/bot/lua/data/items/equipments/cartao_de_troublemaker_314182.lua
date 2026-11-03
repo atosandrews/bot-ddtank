@@ -1,0 +1,22 @@
+return {
+    id = 314182,
+    name = "Cartão de Troublemaker",
+    category_id = 26,
+    attack = 4,
+    defence = 2,
+    agility = 3,
+    luck = 7,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "18",
+        [8] = "0",
+    },
+}

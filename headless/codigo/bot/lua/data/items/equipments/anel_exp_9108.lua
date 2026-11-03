@@ -1,0 +1,22 @@
+return {
+    id = 9108,
+    name = "Anel EXP",
+    category_id = 9,
+    attack = 45,
+    defence = 45,
+    agility = 45,
+    luck = 45,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "10",
+        [3] = "1",
+        [4] = "0",
+        [5] = "1",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

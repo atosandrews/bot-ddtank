@@ -1,0 +1,22 @@
+return {
+    id = 70574,
+    name = "Verdadeira - Espada do Conde",
+    category_id = 7,
+    attack = 382,
+    defence = 76,
+    agility = 338,
+    luck = 338,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "232",
+        [8] = "0",
+    },
+}

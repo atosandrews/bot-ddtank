@@ -1,0 +1,22 @@
+return {
+    id = 7002,
+    name = "Arco Duro",
+    category_id = 7,
+    attack = 100,
+    defence = 24,
+    agility = 16,
+    luck = 10,
+    level = 1,
+    need_level = 1,
+    quality = 1,
+    properties = {
+        [1] = "18",
+        [2] = "19",
+        [3] = "1",
+        [4] = "0",
+        [5] = "35",
+        [6] = "65",
+        [7] = "175",
+        [8] = "0",
+    },
+}

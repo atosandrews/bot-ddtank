@@ -1,0 +1,22 @@
+return {
+    id = 71981,
+    name = "私服外挂者司马",
+    category_id = 7,
+    attack = 250,
+    defence = 250,
+    agility = 250,
+    luck = 250,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "380",
+        [8] = "0",
+    },
+}

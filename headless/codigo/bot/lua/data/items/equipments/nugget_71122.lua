@@ -1,0 +1,22 @@
+return {
+    id = 71122,
+    name = "☆☆☆ Nugget ",
+    category_id = 7,
+    attack = 336,
+    defence = 92,
+    agility = 336,
+    luck = 336,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "270",
+        [8] = "0",
+    },
+}

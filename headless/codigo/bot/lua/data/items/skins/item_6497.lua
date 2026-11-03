@@ -1,0 +1,22 @@
+return {
+    id = 6497,
+    name = "碧蓝幻想",
+    category_id = 6,
+    attack = 60,
+    defence = 60,
+    agility = 60,
+    luck = 60,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "123",
+    },
+}

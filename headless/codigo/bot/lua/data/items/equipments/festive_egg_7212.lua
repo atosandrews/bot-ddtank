@@ -1,0 +1,22 @@
+return {
+    id = 7212,
+    name = "☆Festive Egg",
+    category_id = 7,
+    attack = 131,
+    defence = 131,
+    agility = 131,
+    luck = 131,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "251",
+        [8] = "0",
+    },
+}

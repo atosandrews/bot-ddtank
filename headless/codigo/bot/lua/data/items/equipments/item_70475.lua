@@ -1,0 +1,22 @@
+return {
+    id = 70475,
+    name = "极•魔力水枪",
+    category_id = 27,
+    attack = 61,
+    defence = 79,
+    agility = 137,
+    luck = 500,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "230",
+        [8] = "0",
+    },
+}

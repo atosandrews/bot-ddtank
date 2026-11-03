@@ -1,0 +1,140 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+service SessionObservation {
+  rpc GetSessionObservation(GetSessionObservationRequest) returns (GetSessionObservationResponse);
+}
+
+enum ObservationConnectionState {
+  OBSERVATION_CONNECTION_STATE_UNSPECIFIED = 0;
+  OBSERVATION_CONNECTION_STATE_ATTACHED = 1;
+  OBSERVATION_CONNECTION_STATE_DETACHED = 2;
+}
+
+enum ScriptLifecycle {
+  SCRIPT_LIFECYCLE_UNSPECIFIED = 0;
+  SCRIPT_LIFECYCLE_STOPPED = 1;
+  SCRIPT_LIFECYCLE_LOADED = 2;
+}
+
+enum StrategyStatus {
+  STRATEGY_STATUS_UNSPECIFIED = 0;
+  STRATEGY_STATUS_RUNNING = 1;
+  STRATEGY_STATUS_WAITING = 2;
+  STRATEGY_STATUS_PAUSED = 3;
+  STRATEGY_STATUS_COMPLETED = 4;
+}
+
+enum ObservedFightPhase {
+  OBSERVED_FIGHT_PHASE_UNSPECIFIED = 0;
+  OBSERVED_FIGHT_PHASE_CREATED = 1;
+  OBSERVED_FIGHT_PHASE_LOADING = 2;
+  OBSERVED_FIGHT_PHASE_ACTIVE = 3;
+  OBSERVED_FIGHT_PHASE_MISSION_ENDED = 4;
+  OBSERVED_FIGHT_PHASE_ENDED = 5;
+}
+
+enum CaptchaRecognitionStatus {
+  CAPTCHA_RECOGNITION_STATUS_UNSPECIFIED = 0;
+  CAPTCHA_RECOGNITION_STATUS_DISABLED = 1;
+  CAPTCHA_RECOGNITION_STATUS_IDLE = 2;
+  CAPTCHA_RECOGNITION_STATUS_PENDING = 3;
+  CAPTCHA_RECOGNITION_STATUS_RECOGNIZED = 4;
+  CAPTCHA_RECOGNITION_STATUS_UNRECOGNIZED = 5;
+}
+
+message GetSessionObservationRequest {
+  string bot_session_id = 1;
+}
+
+message GetSessionObservationResponse {
+  string bot_session_id = 1;
+  int64 observed_at_unix_milli = 2;
+  uint64 applied_sequence = 3;
+  uint64 state_revision = 4;
+  uint64 binding_generation = 5;
+  ObservationConnectionState connection_state = 6;
+  bool initialized = 7;
+  bool valid = 8;
+  bool can_send = 9;
+  optional int32 player_id = 10;
+  ScriptObservation script = 11;
+  RoomObservation room = 12;
+  FightObservation fight = 13;
+  CaptchaObservation captcha = 14;
+  ControlObservation control = 15;
+}
+
+message ScriptObservation {
+  ScriptLifecycle lifecycle = 1;
+  uint64 generation = 2;
+  StrategyReport report = 3;
+}
+
+message StrategyReport {
+  StrategyStatus status = 1;
+  string phase = 2;
+  string reason = 3;
+  int64 changed_at_unix_milli = 4;
+}
+
+message RoomObservation {
+  optional int32 id = 1;
+  optional int32 instance_id = 2;
+  optional int32 difficulty = 3;
+  optional bool started = 4;
+  uint64 start_cancelled_revision = 5;
+}
+
+message FightObservation {
+  ObservedFightPhase phase = 1;
+  uint64 generation = 2;
+  uint64 turn_revision = 3;
+  optional int32 map_id = 4;
+  optional int32 mission_id = 5;
+  TurnObservation turn = 6;
+  repeated ActorObservation actors = 7;
+  RewardObservation rewards = 8;
+}
+
+message TurnObservation {
+  int32 actor_id = 1;
+  int32 number = 2;
+}
+
+message ActorObservation {
+  int32 id = 1;
+  optional int32 player_id = 2;
+  optional int32 team = 3;
+  optional int32 hp = 4;
+  optional int32 pending_hp = 5;
+  optional bool alive = 6;
+}
+
+message RewardObservation {
+  bool known = 1;
+  uint64 revision = 2;
+  bool completion_requested = 3;
+  bool closed = 4;
+  bool has_next_mission = 5;
+  bool can_enter_final = 6;
+  uint32 awards_observed = 7;
+  uint32 selections_pending = 8;
+}
+
+message CaptchaObservation {
+  bool known = 1;
+  bool required = 2;
+  uint64 revision = 3;
+  CaptchaRecognitionStatus recognition = 4;
+}
+
+message ControlObservation {
+  uint32 pending_commands = 1;
+  uint32 request_entries = 2;
+  uint32 request_capacity = 3;
+  uint64 result_cache_bytes = 4;
+}

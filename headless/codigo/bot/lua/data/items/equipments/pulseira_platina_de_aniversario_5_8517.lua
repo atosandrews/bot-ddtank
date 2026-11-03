@@ -1,0 +1,22 @@
+return {
+    id = 8517,
+    name = "Pulseira Platina de Aniversário+5",
+    category_id = 8,
+    attack = 887,
+    defence = 887,
+    agility = 887,
+    luck = 887,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "71680",
+        [3] = "3",
+        [4] = "8417",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

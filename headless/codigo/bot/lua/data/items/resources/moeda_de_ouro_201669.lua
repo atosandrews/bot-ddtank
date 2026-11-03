@@ -1,0 +1,22 @@
+return {
+    id = 201669,
+    name = "Moeda de ouro",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "1",
+        [3] = "1",
+        [4] = "1",
+        [5] = "2",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

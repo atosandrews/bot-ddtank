@@ -1,0 +1,22 @@
+return {
+    id = 70824,
+    name = "Santo-Bastão da cobra Maya",
+    category_id = 7,
+    attack = 327,
+    defence = 66,
+    agility = 322,
+    luck = 327,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "48",
+        [2] = "49",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "252",
+        [8] = "0",
+    },
+}

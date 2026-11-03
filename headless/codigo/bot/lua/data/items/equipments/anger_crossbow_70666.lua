@@ -1,0 +1,22 @@
+return {
+    id = 70666,
+    name = "☆☆·Anger Crossbow",
+    category_id = 27,
+    attack = 419,
+    defence = 86,
+    agility = 419,
+    luck = 419,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "300",
+        [8] = "0",
+    },
+}

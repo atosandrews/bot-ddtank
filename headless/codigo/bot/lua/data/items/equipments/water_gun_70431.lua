@@ -1,0 +1,22 @@
+return {
+    id = 70431,
+    name = "☆☆Water Gun",
+    category_id = 7,
+    attack = 124,
+    defence = 126,
+    agility = 124,
+    luck = 126,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "220",
+        [8] = "0",
+    },
+}

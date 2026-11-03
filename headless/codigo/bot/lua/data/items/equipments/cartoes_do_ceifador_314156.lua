@@ -1,0 +1,22 @@
+return {
+    id = 314156,
+    name = "Cartões do Ceifador",
+    category_id = 26,
+    attack = 4,
+    defence = 6,
+    agility = 4,
+    luck = 5,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "13",
+        [8] = "0",
+    },
+}

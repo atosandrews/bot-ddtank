@@ -1,0 +1,22 @@
+return {
+    id = 17061,
+    name = "Benção da Deusa",
+    category_id = 17,
+    attack = 30,
+    defence = 30,
+    agility = 30,
+    luck = 30,
+    level = 3,
+    need_level = 1,
+    quality = 1,
+    properties = {
+        [1] = "0",
+        [2] = "300",
+        [3] = "31",
+        [4] = "200",
+        [5] = "2",
+        [6] = "3",
+        [7] = "80",
+        [8] = "500",
+    },
+}

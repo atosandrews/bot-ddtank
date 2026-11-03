@@ -1,0 +1,22 @@
+return {
+    id = 7046,
+    name = "Super - Carro Apsaras",
+    category_id = 7,
+    attack = 149,
+    defence = 280,
+    agility = 38,
+    luck = 71,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "55",
+        [6] = "70",
+        [7] = "230",
+        [8] = "0",
+    },
+}

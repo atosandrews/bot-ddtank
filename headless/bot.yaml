@@ -1,0 +1,16 @@
+# Bot local: o relay conecta aqui por gRPC sem TLS, dentro do mesmo contêiner.
+# Captcha: o OCR do bot-ddtank (src/verificacao_ocr.py, dois modelos ddddocr e variantes de
+# imagem com votação) roda em ocr_worker.py; o SDK local ../ddddocr é montado em /ddddocr.
+listen: 127.0.0.1:7443
+lua_dir: /tmp/lua
+tenants:
+  - id: local
+    api_key_env: DDBOT_API_KEY
+max_sessions: 16
+sessions_per_tenant: 8
+sessions_per_relay: 8
+reconnect_grace: 120s
+lua_timeout: 15s
+captcha:
+  enabled: true
+  worker: [python3, -I, /secret/ocr_worker.py]

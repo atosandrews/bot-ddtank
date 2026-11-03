@@ -1,0 +1,22 @@
+return {
+    id = 70181,
+    name = "Super - Trovão",
+    category_id = 7,
+    attack = 39,
+    defence = 52,
+    agility = 79,
+    luck = 330,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "14",
+        [2] = "15",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "220",
+        [8] = "0",
+    },
+}

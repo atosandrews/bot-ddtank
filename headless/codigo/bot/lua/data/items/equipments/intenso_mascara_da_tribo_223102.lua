@@ -1,0 +1,22 @@
+return {
+    id = 223102,
+    name = "Intenso - Máscara da Tribo",
+    category_id = 2,
+    attack = 30,
+    defence = 30,
+    agility = 30,
+    luck = 30,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

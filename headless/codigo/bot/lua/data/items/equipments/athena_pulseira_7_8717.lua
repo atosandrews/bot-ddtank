@@ -1,0 +1,22 @@
+return {
+    id = 8717,
+    name = "Athena Pulseira +7",
+    category_id = 8,
+    attack = 157,
+    defence = 157,
+    agility = 157,
+    luck = 157,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "7",
+        [2] = "21299200",
+        [3] = "3",
+        [4] = "8617",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

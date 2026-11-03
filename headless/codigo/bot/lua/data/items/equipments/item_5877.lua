@@ -1,0 +1,22 @@
+return {
+    id = 5877,
+    name = "毛领披风",
+    category_id = 5,
+    attack = 80,
+    defence = 75,
+    agility = 75,
+    luck = 80,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "123",
+    },
+}

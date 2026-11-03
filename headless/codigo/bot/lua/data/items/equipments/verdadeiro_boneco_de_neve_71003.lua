@@ -1,0 +1,22 @@
+return {
+    id = 71003,
+    name = "Verdadeiro - Boneco de Neve",
+    category_id = 7,
+    attack = 225,
+    defence = 225,
+    agility = 225,
+    luck = 225,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "246",
+        [8] = "0",
+    },
+}

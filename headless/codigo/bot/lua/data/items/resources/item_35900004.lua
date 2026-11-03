@@ -1,0 +1,22 @@
+return {
+    id = 35900004,
+    name = "阿修",
+    category_id = 35,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "250403",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

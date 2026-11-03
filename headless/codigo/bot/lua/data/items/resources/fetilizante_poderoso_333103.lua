@@ -1,0 +1,22 @@
+return {
+    id = 333103,
+    name = "Fetilizante poderoso",
+    category_id = 33,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "120",
+        [2] = "1",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

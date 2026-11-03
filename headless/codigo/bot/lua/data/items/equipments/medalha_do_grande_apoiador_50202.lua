@@ -1,0 +1,22 @@
+return {
+    id = 50202,
+    name = "Medalha do Grande Apoiador",
+    category_id = 40,
+    attack = 105,
+    defence = 100,
+    agility = 105,
+    luck = 100,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "9",
+        [2] = "80",
+        [3] = "35",
+        [4] = "35",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

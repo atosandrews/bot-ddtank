@@ -1,0 +1,22 @@
+return {
+    id = 71051,
+    name = "Kamikaze",
+    category_id = 7,
+    attack = 36,
+    defence = 18,
+    agility = 150,
+    luck = 24,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "12",
+        [2] = "13",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "50",
+        [7] = "190",
+        [8] = "0",
+    },
+}

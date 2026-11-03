@@ -1,0 +1,22 @@
+return {
+    id = 17017,
+    name = "Verdadeiro - Dom Infernal",
+    category_id = 17,
+    attack = 70,
+    defence = 70,
+    agility = 70,
+    luck = 70,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "298",
+        [2] = "1000",
+        [3] = "32",
+        [4] = "110",
+        [5] = "0",
+        [6] = "2",
+        [7] = "850",
+        [8] = "500",
+    },
+}

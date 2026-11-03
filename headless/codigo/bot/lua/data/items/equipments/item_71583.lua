@@ -1,0 +1,22 @@
+return {
+    id = 71583,
+    name = "极·王者之剑·卓越战队",
+    category_id = 7,
+    attack = 685,
+    defence = 750,
+    agility = 685,
+    luck = 610,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "267",
+        [8] = "0",
+    },
+}

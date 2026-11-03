@@ -1,0 +1,22 @@
+return {
+    id = 7011,
+    name = "Verdadeiro - Cesto de frutas de Newton",
+    category_id = 7,
+    attack = 40,
+    defence = 30,
+    agility = 130,
+    luck = 180,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "40",
+        [2] = "41",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "200",
+        [8] = "0",
+    },
+}

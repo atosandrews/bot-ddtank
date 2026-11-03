@@ -1,0 +1,22 @@
+return {
+    id = 72091,
+    name = "☆☆ Briefcase",
+    category_id = 7,
+    attack = 206,
+    defence = 209,
+    agility = 206,
+    luck = 209,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "249",
+        [8] = "0",
+    },
+}

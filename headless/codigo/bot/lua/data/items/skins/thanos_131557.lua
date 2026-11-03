@@ -1,0 +1,22 @@
+return {
+    id = 131557,
+    name = "Thanos",
+    category_id = 13,
+    attack = 17,
+    defence = 17,
+    agility = 17,
+    luck = 17,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

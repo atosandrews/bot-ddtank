@@ -1,0 +1,22 @@
+return {
+    id = 95262,
+    name = "Anel Antigo +8",
+    category_id = 9,
+    attack = 294,
+    defence = 220,
+    agility = 220,
+    luck = 294,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "8",
+        [2] = "1881600",
+        [3] = "3",
+        [4] = "95261",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 70963,
+    name = "Verdadeira - Fogos de Artifício",
+    category_id = 7,
+    attack = 305,
+    defence = 135,
+    agility = 305,
+    luck = 305,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "260",
+        [8] = "0",
+    },
+}

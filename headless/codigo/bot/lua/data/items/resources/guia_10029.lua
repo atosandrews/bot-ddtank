@@ -1,0 +1,22 @@
+return {
+    id = 10029,
+    name = "Guia",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "12",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "180",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 70566,
+    name = "真•逆天神炮",
+    category_id = 27,
+    attack = 226,
+    defence = 226,
+    agility = 226,
+    luck = 39,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "70",
+        [2] = "71",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

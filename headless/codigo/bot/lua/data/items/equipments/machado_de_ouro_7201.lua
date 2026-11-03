@@ -1,0 +1,22 @@
+return {
+    id = 7201,
+    name = "Machado de ouro",
+    category_id = 7,
+    attack = 18,
+    defence = 110,
+    agility = 13,
+    luck = 26,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "28",
+        [2] = "29",
+        [3] = "0",
+        [4] = "0",
+        [5] = "35",
+        [6] = "65",
+        [7] = "180",
+        [8] = "0",
+    },
+}

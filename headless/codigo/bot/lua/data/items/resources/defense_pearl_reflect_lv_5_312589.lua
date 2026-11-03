@@ -1,0 +1,22 @@
+return {
+    id = 312589,
+    name = "Defense Pearl - Reflect Lv 5",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 10,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "20",
+        [4] = "1500",
+        [5] = "9",
+        [6] = "0",
+        [7] = "3",
+        [8] = "0",
+    },
+}

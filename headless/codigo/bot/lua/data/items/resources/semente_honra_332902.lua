@@ -1,0 +1,22 @@
+return {
+    id = 332902,
+    name = "Semente Honra",
+    category_id = 32,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "5",
+        [3] = "480",
+        [4] = "201265",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

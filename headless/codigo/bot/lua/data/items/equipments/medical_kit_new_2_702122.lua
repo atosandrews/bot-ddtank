@@ -1,0 +1,22 @@
+return {
+    id = 702122,
+    name = "☆☆ Medical Kit (New 2)",
+    category_id = 7,
+    attack = 253,
+    defence = 55,
+    agility = 338,
+    luck = 72,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "34",
+        [2] = "35",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "60",
+        [7] = "220",
+        [8] = "0",
+    },
+}

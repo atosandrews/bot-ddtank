@@ -1,0 +1,22 @@
+return {
+    id = 11109,
+    name = "Nó do Primeiro Amor",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "1",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

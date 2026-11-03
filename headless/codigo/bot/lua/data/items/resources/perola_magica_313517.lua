@@ -1,0 +1,22 @@
+return {
+    id = 313517,
+    name = "Pérola Mágica",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 10,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "3",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "50",
+        [8] = "0",
+    },
+}

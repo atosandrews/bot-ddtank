@@ -1,0 +1,22 @@
+return {
+    id = 31105,
+    name = "Capacete da fenix de inferno",
+    category_id = 51,
+    attack = 150,
+    defence = 520,
+    agility = 150,
+    luck = 200,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "25",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

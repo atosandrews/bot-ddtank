@@ -1,0 +1,22 @@
+return {
+    id = 17014,
+    name = "啵咕盾牌",
+    category_id = 17,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "1",
+        [3] = "31",
+        [4] = "200",
+        [5] = "2",
+        [6] = "3",
+        [7] = "150",
+        [8] = "500",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 72002,
+    name = "星之魔法杖",
+    category_id = 7,
+    attack = 280,
+    defence = 49,
+    agility = 71,
+    luck = 38,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

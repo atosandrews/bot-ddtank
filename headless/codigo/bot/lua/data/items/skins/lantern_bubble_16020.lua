@@ -1,0 +1,22 @@
+return {
+    id = 16020,
+    name = "Lantern Bubble",
+    category_id = 16,
+    attack = 30,
+    defence = 30,
+    agility = 30,
+    luck = 30,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "1",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

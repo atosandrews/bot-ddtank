@@ -1,0 +1,22 @@
+return {
+    id = 106777,
+    name = "Pulseira da separação",
+    category_id = 8,
+    attack = 30,
+    defence = 30,
+    agility = 30,
+    luck = 30,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 70016,
+    name = "Arco de ouro",
+    category_id = 7,
+    attack = 10,
+    defence = 10,
+    agility = 10,
+    luck = 10,
+    level = 1,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "20",
+        [2] = "21",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "175",
+        [8] = "0",
+    },
+}

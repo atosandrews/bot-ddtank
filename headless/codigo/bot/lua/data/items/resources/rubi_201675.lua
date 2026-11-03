@@ -1,0 +1,22 @@
+return {
+    id = 201675,
+    name = "Rubi",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "7",
+        [2] = "126",
+        [3] = "126",
+        [4] = "126",
+        [5] = "127",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

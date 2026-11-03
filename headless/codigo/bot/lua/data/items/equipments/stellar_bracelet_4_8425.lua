@@ -1,0 +1,22 @@
+return {
+    id = 8425,
+    name = "Stellar Bracelet+4",
+    category_id = 8,
+    attack = 105,
+    defence = 105,
+    agility = 105,
+    luck = 105,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "17920",
+        [3] = "3",
+        [4] = "8315",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

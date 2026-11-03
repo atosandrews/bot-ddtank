@@ -1,0 +1,22 @@
+return {
+    id = 7211,
+    name = "Ares Golden Halberd",
+    category_id = 7,
+    attack = 988,
+    defence = 1050,
+    agility = 988,
+    luck = 1050,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "48",
+        [2] = "49",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "70",
+        [7] = "300",
+        [8] = "0",
+    },
+}

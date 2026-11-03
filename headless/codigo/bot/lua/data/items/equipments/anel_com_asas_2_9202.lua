@@ -1,0 +1,22 @@
+return {
+    id = 9202,
+    name = "Anel com Asas+2",
+    category_id = 9,
+    attack = 9,
+    defence = 9,
+    agility = 19,
+    luck = 9,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

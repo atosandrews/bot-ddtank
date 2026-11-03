@@ -1,0 +1,22 @@
+return {
+    id = 9625,
+    name = "Colar vermelha Dragão Raivoso+5",
+    category_id = 9,
+    attack = 155,
+    defence = 155,
+    agility = 155,
+    luck = 155,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

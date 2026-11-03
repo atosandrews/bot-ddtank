@@ -1,0 +1,22 @@
+return {
+    id = 50107,
+    name = "Medalha do Grande Marechal",
+    category_id = 40,
+    attack = 65,
+    defence = 60,
+    agility = 65,
+    luck = 60,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "7",
+        [2] = "70",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

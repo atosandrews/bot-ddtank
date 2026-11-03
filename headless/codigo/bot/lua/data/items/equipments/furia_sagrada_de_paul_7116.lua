@@ -1,0 +1,22 @@
+return {
+    id = 7116,
+    name = "Fúria Sagrada de Paul",
+    category_id = 7,
+    attack = 340,
+    defence = 240,
+    agility = 60,
+    luck = 60,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

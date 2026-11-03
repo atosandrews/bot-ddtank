@@ -1,0 +1,22 @@
+return {
+    id = 71423,
+    name = "极·无双",
+    category_id = 7,
+    attack = 372,
+    defence = 134,
+    agility = 372,
+    luck = 372,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "280",
+        [8] = "0",
+    },
+}

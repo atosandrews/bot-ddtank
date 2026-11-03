@@ -1,0 +1,22 @@
+return {
+    id = 91300,
+    name = "Anel da Prosperidade +1",
+    category_id = 9,
+    attack = 15,
+    defence = 15,
+    agility = 15,
+    luck = 15,
+    level = 3,
+    need_level = 0,
+    quality = 6,
+    properties = {
+        [1] = "0",
+        [2] = "250",
+        [3] = "2",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

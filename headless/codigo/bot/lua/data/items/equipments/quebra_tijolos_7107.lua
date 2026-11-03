@@ -1,0 +1,22 @@
+return {
+    id = 7107,
+    name = "Quebra Tijolos",
+    category_id = 7,
+    attack = 108,
+    defence = 78,
+    agility = 18,
+    luck = 24,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "200",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 72133,
+    name = "Sweet Ice Cream",
+    category_id = 7,
+    attack = 250,
+    defence = 250,
+    agility = 250,
+    luck = 250,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

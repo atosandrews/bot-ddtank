@@ -1,0 +1,22 @@
+return {
+    id = 17016,
+    name = "Escudo da Lua Cheia",
+    category_id = 17,
+    attack = 50,
+    defence = 50,
+    agility = 50,
+    luck = 50,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "1000",
+        [3] = "31",
+        [4] = "200",
+        [5] = "2",
+        [6] = "3",
+        [7] = "100",
+        [8] = "500",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7179,
+    name = "Fogos de artifício de ano novo",
+    category_id = 7,
+    attack = 219,
+    defence = 69,
+    agility = 173,
+    luck = 69,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "257",
+        [8] = "0",
+    },
+}

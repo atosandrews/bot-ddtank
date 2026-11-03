@@ -1,0 +1,22 @@
+return {
+    id = 70471,
+    name = "Super - Pistola d'água Mágica",
+    category_id = 7,
+    attack = 336,
+    defence = 85,
+    agility = 45,
+    luck = 58,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "1",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "230",
+        [8] = "0",
+    },
+}

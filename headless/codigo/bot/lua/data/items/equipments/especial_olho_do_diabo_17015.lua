@@ -1,0 +1,22 @@
+return {
+    id = 17015,
+    name = "Especial · Olho do Diabo",
+    category_id = 17,
+    attack = 40,
+    defence = 50,
+    agility = 50,
+    luck = 40,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "189",
+        [2] = "1000",
+        [3] = "130",
+        [4] = "110",
+        [5] = "0",
+        [6] = "2",
+        [7] = "20",
+        [8] = "200",
+    },
+}

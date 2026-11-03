@@ -1,0 +1,22 @@
+return {
+    id = 15143,
+    name = "飞天小猪",
+    category_id = 15,
+    attack = 220,
+    defence = 220,
+    agility = 220,
+    luck = 220,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

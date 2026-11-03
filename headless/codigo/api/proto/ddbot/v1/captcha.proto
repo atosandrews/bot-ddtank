@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message CaptchaAnswer {
+  uint64 revision = 1;
+  string text = 2;
+}

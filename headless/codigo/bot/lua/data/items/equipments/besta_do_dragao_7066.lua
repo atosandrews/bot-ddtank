@@ -1,0 +1,22 @@
+return {
+    id = 7066,
+    name = "Besta do Dragão 🐉",
+    category_id = 7,
+    attack = 202,
+    defence = 46,
+    agility = 202,
+    luck = 202,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "300",
+        [8] = "0",
+    },
+}

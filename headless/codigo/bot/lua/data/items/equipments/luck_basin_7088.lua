@@ -1,0 +1,22 @@
+return {
+    id = 7088,
+    name = "☆☆ Luck Basin",
+    category_id = 7,
+    attack = 348,
+    defence = 106,
+    agility = 348,
+    luck = 348,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "285",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 8100,
+    name = "Cursed Time",
+    category_id = 8,
+    attack = 70,
+    defence = 70,
+    agility = 70,
+    luck = 80,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "3584",
+        [3] = "1",
+        [4] = "8502",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

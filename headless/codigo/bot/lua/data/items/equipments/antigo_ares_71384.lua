@@ -1,0 +1,22 @@
+return {
+    id = 71384,
+    name = "Antigo Ares",
+    category_id = 7,
+    attack = 372,
+    defence = 372,
+    agility = 372,
+    luck = 134,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "280",
+        [8] = "0",
+    },
+}

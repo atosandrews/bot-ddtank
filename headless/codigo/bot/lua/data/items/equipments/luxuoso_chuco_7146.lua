@@ -1,0 +1,22 @@
+return {
+    id = 7146,
+    name = "Luxuoso• chuço",
+    category_id = 7,
+    attack = 260,
+    defence = 120,
+    agility = 260,
+    luck = 260,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "252",
+        [8] = "0",
+    },
+}

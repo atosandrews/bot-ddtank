@@ -1,0 +1,22 @@
+return {
+    id = 7254,
+    name = "Cracker Barrel",
+    category_id = 7,
+    attack = 410,
+    defence = 320,
+    agility = 375,
+    luck = 410,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "270",
+        [8] = "0",
+    },
+}

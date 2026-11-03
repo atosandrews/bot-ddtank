@@ -1,0 +1,22 @@
+return {
+    id = 70062,
+    name = "Verdadeiro - Fogo Intenso",
+    category_id = 7,
+    attack = 390,
+    defence = 93,
+    agility = 62,
+    luck = 46,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "16",
+        [2] = "17",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "205",
+        [8] = "0",
+    },
+}

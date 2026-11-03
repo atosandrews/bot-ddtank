@@ -1,0 +1,22 @@
+return {
+    id = 7188,
+    name = "Místico Iti Malia",
+    category_id = 7,
+    attack = 340,
+    defence = 60,
+    agility = 60,
+    luck = 240,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "240",
+        [8] = "0",
+    },
+}

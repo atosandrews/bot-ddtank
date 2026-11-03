@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+service SessionMetrics {
+  rpc GetSessionMetrics(GetSessionMetricsRequest) returns (GetSessionMetricsResponse);
+}
+
+enum MetricsConnectionState {
+  METRICS_CONNECTION_STATE_UNSPECIFIED = 0;
+  METRICS_CONNECTION_STATE_ATTACHED = 1;
+  METRICS_CONNECTION_STATE_DETACHED = 2;
+}
+
+message GetSessionMetricsRequest {
+  string bot_session_id = 1;
+}
+
+enum InstanceMetricsGrouping {
+  INSTANCE_METRICS_GROUPING_UNSPECIFIED = 0;
+  INSTANCE_METRICS_GROUPING_KNOWN = 1;
+  INSTANCE_METRICS_GROUPING_UNKNOWN_IDENTITY = 2;
+  INSTANCE_METRICS_GROUPING_CAPACITY_OVERFLOW = 3;
+}
+
+message GetSessionMetricsResponse {
+  string bot_session_id = 1;
+  MetricsConnectionState connection_state = 2;
+  int64 started_at_unix_milli = 3;
+  int64 observed_at_unix_milli = 4;
+  uint64 observed_sequence = 5;
+  uint64 server_packets = 6;
+  uint64 client_packets = 7;
+  uint64 incomplete_packets = 8;
+  CombatMetrics totals = 9;
+  repeated InstanceMetrics instances = 10;
+}
+
+message InstanceMetrics {
+  InstanceMetricsGrouping grouping = 1;
+  int32 room_type = 2;
+  int32 instance_id = 3;
+  int32 difficulty = 4;
+  CombatMetrics totals = 5;
+}
+
+message CombatMetrics {
+  ActivityMetrics fights = 1;
+  ActivityMetrics missions = 2;
+  uint64 player_turns = 3;
+  uint64 player_shots_resolved = 4;
+  uint64 player_props_confirmed = 5;
+  uint64 mission_experience = 6;
+  uint64 fight_experience = 7;
+  uint64 awards_received = 8;
+  uint64 reward_items_received = 9;
+  repeated RewardMetrics rewards = 10;
+  uint64 ungrouped_awards = 11;
+  uint64 ungrouped_reward_items = 12;
+  uint64 unreadable_fight_results = 13;
+}
+
+message ActivityMetrics {
+  uint64 started = 1;
+  uint64 completed = 2;
+  uint64 won = 3;
+  uint64 lost = 4;
+  uint64 unknown_outcomes = 5;
+  uint64 abandoned = 6;
+  int64 completed_duration_milli = 7;
+  bool active = 8;
+  int64 active_duration_milli = 9;
+}
+
+message RewardMetrics {
+  int32 template_id = 1;
+  uint64 quantity = 2;
+  uint64 awards = 3;
+}

@@ -1,0 +1,22 @@
+return {
+    id = 7110,
+    name = "Ventosa Desbloqueadora",
+    category_id = 7,
+    attack = 24,
+    defence = 108,
+    agility = 18,
+    luck = 78,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "36",
+        [2] = "37",
+        [3] = "1",
+        [4] = "0",
+        [5] = "20",
+        [6] = "45",
+        [7] = "200",
+        [8] = "0",
+    },
+}

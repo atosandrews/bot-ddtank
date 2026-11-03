@@ -1,0 +1,22 @@
+return {
+    id = 314164,
+    name = "Cartão Melhorar Diariamente",
+    category_id = 26,
+    attack = 4,
+    defence = 3,
+    agility = 2,
+    luck = 7,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "15",
+        [8] = "1",
+    },
+}

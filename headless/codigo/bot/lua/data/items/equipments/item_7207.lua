@@ -1,0 +1,22 @@
+return {
+    id = 7207,
+    name = "真·垃圾",
+    category_id = 7,
+    attack = 102,
+    defence = 102,
+    agility = 154,
+    luck = 102,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

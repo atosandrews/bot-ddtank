@@ -1,0 +1,22 @@
+return {
+    id = 72693,
+    name = "☆☆·Easter Egg",
+    category_id = 7,
+    attack = 350,
+    defence = 350,
+    agility = 350,
+    luck = 350,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "255",
+        [8] = "0",
+    },
+}

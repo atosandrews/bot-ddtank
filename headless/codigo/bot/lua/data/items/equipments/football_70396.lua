@@ -1,0 +1,22 @@
+return {
+    id = 70396,
+    name = "football",
+    category_id = 27,
+    attack = 10,
+    defence = 10,
+    agility = 10,
+    luck = 10,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "180",
+        [7] = "10",
+        [8] = "0",
+    },
+}

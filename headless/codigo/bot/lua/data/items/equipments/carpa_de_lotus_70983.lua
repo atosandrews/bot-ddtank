@@ -1,0 +1,22 @@
+return {
+    id = 70983,
+    name = "Carpa de lótus",
+    category_id = 7,
+    attack = 290,
+    defence = 290,
+    agility = 290,
+    luck = 130,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "246",
+        [8] = "0",
+    },
+}

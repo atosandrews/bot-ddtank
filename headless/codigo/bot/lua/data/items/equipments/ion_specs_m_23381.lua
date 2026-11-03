@@ -1,0 +1,22 @@
+return {
+    id = 23381,
+    name = "Ion Specs (M)",
+    category_id = 2,
+    attack = 575,
+    defence = 575,
+    agility = 575,
+    luck = 575,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

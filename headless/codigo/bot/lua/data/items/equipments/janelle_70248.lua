@@ -1,0 +1,22 @@
+return {
+    id = 70248,
+    name = "Janelle",
+    category_id = 27,
+    attack = 316,
+    defence = 54,
+    agility = 316,
+    luck = 316,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "267",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 20103,
+    name = "Baú de Cartão da Rainha do Formigueiro",
+    category_id = 18,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 20,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "2",
+        [5] = "314103",
+        [6] = "1",
+        [7] = "1",
+        [8] = "1",
+    },
+}

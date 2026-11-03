@@ -1,0 +1,22 @@
+return {
+    id = 70946,
+    name = "A Espada dos Reis · A Equipa Mais Forte",
+    category_id = 27,
+    attack = 297,
+    defence = 617,
+    agility = 173,
+    luck = 149,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "285",
+        [8] = "0",
+    },
+}

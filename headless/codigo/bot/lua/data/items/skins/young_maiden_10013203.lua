@@ -1,0 +1,22 @@
+return {
+    id = 10013203,
+    name = "Young Maiden",
+    category_id = 13,
+    attack = 5,
+    defence = 5,
+    agility = 5,
+    luck = 5,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

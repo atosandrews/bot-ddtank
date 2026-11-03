@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message FriendAdd {
+  string name = 1;
+  int32 relation = 2;
+  bool flag1 = 3;
+  bool flag2 = 4;
+}

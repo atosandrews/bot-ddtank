@@ -1,0 +1,22 @@
+return {
+    id = 46009,
+    name = "Cartão de cigarra",
+    category_id = 24,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "618",
+        [2] = "1",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

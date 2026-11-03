@@ -1,0 +1,22 @@
+return {
+    id = 9017,
+    name = "Anel da Sorte Simples",
+    category_id = 9,
+    attack = 2,
+    defence = 2,
+    agility = 2,
+    luck = 5,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

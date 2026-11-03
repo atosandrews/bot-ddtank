@@ -1,0 +1,22 @@
+return {
+    id = 72222,
+    name = "☆☆ Epic - Crazy Chick",
+    category_id = 7,
+    attack = 450,
+    defence = 450,
+    agility = 280,
+    luck = 450,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "300",
+        [8] = "0",
+    },
+}

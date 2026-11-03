@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+enum FailureCode {
+  FAILURE_CODE_UNSPECIFIED = 0;
+  FAILURE_CODE_SCRIPT_FAILED = 1;
+  FAILURE_CODE_STALE_BINDING = 2;
+  FAILURE_CODE_STALE_STATE = 3;
+  FAILURE_CODE_PACKET_BOUNDARY_UNAVAILABLE = 4;
+  FAILURE_CODE_COMMAND_ALREADY_SEEN = 5;
+  FAILURE_CODE_INVALID_COMMAND = 6;
+  FAILURE_CODE_SCRIPT_OR_BINDING_CHANGED = 7;
+  FAILURE_CODE_WRITE_FAILED = 8;
+  FAILURE_CODE_OUTCOME_EXPIRED = 9;
+}
+
+message Failure {
+  FailureCode code = 1;
+  string message = 2;
+}

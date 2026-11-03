@@ -1,0 +1,23 @@
+# Configuração do modo headless do ddrelay: ddrelay login -config headless.yaml
+# Os quatro personagens ficam na mesma conta, então usam o mesmo arquivo de sessão.
+# Os personagens entram pelo relay local (127.0.0.1:11401), que repassa ao servidor S1 52.223.30.208:1401.
+# website_id: destino do clique em cada cartão de /classic/playgame (navegador headless, 31/10/2026).
+# id: ID devolvido pelo Login.ashx para cada website_id (ddrelay login, 31/10/2026).
+session_file: sessao.json
+characters:
+  - name: fakeddt1
+    website_id: 111575
+    id: 109945
+    upstream: 127.0.0.1:11401
+  - name: eliseu
+    website_id: 14369
+    id: 13719
+    upstream: 127.0.0.1:11401
+  - name: Guestf95c4
+    website_id: 82347
+    id: 80711
+    upstream: 127.0.0.1:11401
+  - name: xNoob_Troublex
+    website_id: 82364
+    id: 80728
+    upstream: 127.0.0.1:11401

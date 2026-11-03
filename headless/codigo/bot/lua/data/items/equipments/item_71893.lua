@@ -1,0 +1,22 @@
+return {
+    id = 71893,
+    name = "史诗-喵喵喵",
+    category_id = 7,
+    attack = 391,
+    defence = 95,
+    agility = 391,
+    luck = 95,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 10626,
+    name = "Furtividade",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "3",
+        [2] = "0",
+        [3] = "3",
+        [4] = "50",
+        [5] = "200",
+        [6] = "0",
+        [7] = "90",
+        [8] = "0",
+    },
+}

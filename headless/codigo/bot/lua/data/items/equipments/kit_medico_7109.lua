@@ -1,0 +1,22 @@
+return {
+    id = 7109,
+    name = "Kit médico",
+    category_id = 7,
+    attack = 78,
+    defence = 18,
+    agility = 108,
+    luck = 24,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "34",
+        [2] = "35",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "45",
+        [7] = "195",
+        [8] = "0",
+    },
+}

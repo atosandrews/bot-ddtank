@@ -1,0 +1,22 @@
+return {
+    id = 95941,
+    name = "Autumn Ring +7",
+    category_id = 9,
+    attack = 205,
+    defence = 205,
+    agility = 205,
+    luck = 205,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "7",
+        [2] = "752640",
+        [3] = "3",
+        [4] = "95940",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

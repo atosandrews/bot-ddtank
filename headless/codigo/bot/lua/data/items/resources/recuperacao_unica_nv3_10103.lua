@@ -1,0 +1,22 @@
+return {
+    id = 10103,
+    name = "Recuperação única nv3",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "50",
+        [2] = "300",
+        [3] = "11",
+        [4] = "150",
+        [5] = "600",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

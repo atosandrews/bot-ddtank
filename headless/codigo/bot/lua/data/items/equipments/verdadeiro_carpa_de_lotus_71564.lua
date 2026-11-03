@@ -1,0 +1,22 @@
+return {
+    id = 71564,
+    name = "Verdadeiro•Carpa de lótus",
+    category_id = 7,
+    attack = 593,
+    defence = 116,
+    agility = 302,
+    luck = 58,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "240",
+        [8] = "0",
+    },
+}

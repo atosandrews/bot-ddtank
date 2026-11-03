@@ -1,0 +1,22 @@
+return {
+    id = 17001,
+    name = "Dom de anjo",
+    category_id = 17,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "64",
+        [2] = "64",
+        [3] = "32",
+        [4] = "110",
+        [5] = "0",
+        [6] = "2",
+        [7] = "500",
+        [8] = "500",
+    },
+}

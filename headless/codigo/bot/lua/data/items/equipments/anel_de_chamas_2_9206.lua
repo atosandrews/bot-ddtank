@@ -1,0 +1,22 @@
+return {
+    id = 9206,
+    name = "Anel de Chamas+2",
+    category_id = 9,
+    attack = 19,
+    defence = 9,
+    agility = 9,
+    luck = 9,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

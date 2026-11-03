@@ -1,0 +1,22 @@
+return {
+    id = 46001,
+    name = "Cartão de 5 Anos de História",
+    category_id = 24,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "616",
+        [2] = "9999",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

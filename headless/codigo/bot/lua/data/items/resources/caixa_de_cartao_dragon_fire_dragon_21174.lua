@@ -1,0 +1,22 @@
+return {
+    id = 21174,
+    name = "Caixa de cartão Dragon.Fire Dragon",
+    category_id = 66,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 15,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "2500",
+        [3] = "500",
+        [4] = "2",
+        [5] = "314174",
+        [6] = "0",
+        [7] = "17",
+        [8] = "1",
+    },
+}

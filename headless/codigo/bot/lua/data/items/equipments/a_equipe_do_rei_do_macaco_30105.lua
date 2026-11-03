@@ -1,0 +1,22 @@
+return {
+    id = 30105,
+    name = "A equipe do rei do macaco",
+    category_id = 50,
+    attack = 520,
+    defence = 150,
+    agility = 200,
+    luck = 150,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "25",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

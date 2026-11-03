@@ -1,0 +1,22 @@
+return {
+    id = 314166,
+    name = "Cartões Ressureição do Ovo",
+    category_id = 26,
+    attack = 2,
+    defence = 3,
+    agility = 4,
+    luck = 7,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "24",
+        [3] = "5",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "15",
+        [8] = "0",
+    },
+}

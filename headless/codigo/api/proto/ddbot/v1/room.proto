@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message RoomCreate {
+  int32 room_type = 1;
+  int32 time_type = 2;
+  string name_value = 3;
+  string password = 4;
+}
+
+message RoomJoin {
+  bool login_flag = 1;
+  int32 room_type = 2;
+  int32 room_id = 3;
+  int32 argument = 4;
+  string password = 5;
+}
+
+message RoomLeave {
+}
+
+message RoomReady {
+  int32 state = 1;
+}
+
+message RoomSetup {
+  int32 map_id = 1;
+  int32 room_type = 2;
+  string password = 3;
+  string name_value = 4;
+  int32 time_type = 5;
+  int32 difficulty = 6;
+  int32 level_limits = 7;
+  bool flag1 = 8;
+  bool flag2 = 9;
+}
+
+message RoomStart {
+}
+
+message RoomInvite {
+  int32 player_id = 1;
+}

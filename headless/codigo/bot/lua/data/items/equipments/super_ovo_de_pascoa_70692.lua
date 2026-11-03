@@ -1,0 +1,22 @@
+return {
+    id = 70692,
+    name = "Super - Ovo de Páscoa",
+    category_id = 7,
+    attack = 142,
+    defence = 326,
+    agility = 326,
+    luck = 326,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "65",
+        [7] = "290",
+        [8] = "0",
+    },
+}

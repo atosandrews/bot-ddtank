@@ -1,0 +1,22 @@
+return {
+    id = 8603,
+    name = "Pulseira de Agilidade+6",
+    category_id = 8,
+    attack = 36,
+    defence = 36,
+    agility = 74,
+    luck = 36,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "3584",
+        [3] = "1",
+        [4] = "8503",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

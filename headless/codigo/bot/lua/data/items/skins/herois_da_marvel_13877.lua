@@ -1,0 +1,22 @@
+return {
+    id = 13877,
+    name = "Heróis da Marvel",
+    category_id = 13,
+    attack = 15,
+    defence = 10,
+    agility = 15,
+    luck = 10,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 3201,
+    name = "Estilo Recruta",
+    category_id = 3,
+    attack = 1,
+    defence = 1,
+    agility = 1,
+    luck = 1,
+    level = 1,
+    need_level = 0,
+    quality = 1,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "12",
+    },
+}

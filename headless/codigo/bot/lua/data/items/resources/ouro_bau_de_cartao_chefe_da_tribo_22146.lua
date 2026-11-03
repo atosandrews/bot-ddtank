@@ -1,0 +1,22 @@
+return {
+    id = 22146,
+    name = "Ouro  - baú de cartão chefe da tribo",
+    category_id = 66,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 15,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "2000",
+        [3] = "5000",
+        [4] = "2",
+        [5] = "314146",
+        [6] = "1",
+        [7] = "11",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 703241,
+    name = "Special - Bazooka",
+    category_id = 7,
+    attack = 1050,
+    defence = 1050,
+    agility = 1050,
+    luck = 1050,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "70",
+        [2] = "71",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "280",
+        [8] = "0",
+    },
+}

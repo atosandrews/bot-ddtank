@@ -1,0 +1,22 @@
+return {
+    id = 70636,
+    name = "Bastão da cobra Maya",
+    category_id = 27,
+    attack = 322,
+    defence = 322,
+    agility = 322,
+    luck = 66,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "247",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 71271,
+    name = "Verdadeiro  - Pirulito Mágico",
+    category_id = 7,
+    attack = 224,
+    defence = 224,
+    agility = 224,
+    luck = 78,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "243",
+        [8] = "0",
+    },
+}

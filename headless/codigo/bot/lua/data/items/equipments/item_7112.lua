@@ -1,0 +1,22 @@
+return {
+    id = 7112,
+    name = "神风",
+    category_id = 7,
+    attack = 312,
+    defence = 64,
+    agility = 312,
+    luck = 312,
+    level = 2,
+    need_level = 0,
+    quality = 5,
+    properties = {
+        [1] = "12",
+        [2] = "13",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "270",
+        [8] = "0",
+    },
+}

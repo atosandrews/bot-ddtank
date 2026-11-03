@@ -1,0 +1,22 @@
+return {
+    id = 8204359,
+    name = "Divine Defense Pearl - Recovery",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "26",
+        [4] = "5500",
+        [5] = "37",
+        [6] = "3",
+        [7] = "5",
+        [8] = "0",
+    },
+}

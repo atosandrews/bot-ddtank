@@ -1,0 +1,22 @@
+return {
+    id = 70802,
+    name = "Super-longo de bambu",
+    category_id = 7,
+    attack = 372,
+    defence = 372,
+    agility = 372,
+    luck = 134,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "285",
+        [8] = "0",
+    },
+}

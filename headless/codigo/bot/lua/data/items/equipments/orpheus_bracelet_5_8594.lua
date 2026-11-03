@@ -1,0 +1,22 @@
+return {
+    id = 8594,
+    name = "Orpheus Bracelet +5",
+    category_id = 8,
+    attack = 95,
+    defence = 95,
+    agility = 95,
+    luck = 95,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

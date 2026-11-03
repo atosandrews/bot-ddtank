@@ -1,0 +1,22 @@
+return {
+    id = 72041,
+    name = "极·七彩泡泡",
+    category_id = 7,
+    attack = 293,
+    defence = 59,
+    agility = 127,
+    luck = 45,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "235",
+        [8] = "0",
+    },
+}

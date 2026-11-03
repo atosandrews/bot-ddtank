@@ -1,0 +1,22 @@
+return {
+    id = 6175001,
+    name = "Olhar Furioso",
+    category_id = 6,
+    attack = 6,
+    defence = 6,
+    agility = 6,
+    luck = 6,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "123",
+    },
+}

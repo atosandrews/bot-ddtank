@@ -1,0 +1,22 @@
+return {
+    id = 90000028,
+    name = "<赞>极·龙尾竹",
+    category_id = 7,
+    attack = 775,
+    defence = 150,
+    agility = 775,
+    luck = 775,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "325",
+        [8] = "0",
+    },
+}

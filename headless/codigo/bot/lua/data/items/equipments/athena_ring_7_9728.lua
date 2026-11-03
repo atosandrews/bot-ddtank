@@ -1,0 +1,22 @@
+return {
+    id = 9728,
+    name = "Athena Ring +7",
+    category_id = 9,
+    attack = 185,
+    defence = 185,
+    agility = 185,
+    luck = 185,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "7",
+        [2] = "21299200",
+        [3] = "3",
+        [4] = "9628",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

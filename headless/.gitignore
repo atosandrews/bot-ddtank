@@ -1,0 +1,17 @@
+# Cookie da conta: nunca versionar.
+sessao.json
+sessao*.json
+codigo/run/sessao_atual.json
+# Gerados pelo uso.
+farm.json
+painel.html
+painel.png
+relatorio-*.txt
+relatorios/
+codigo/run/lua.tar
+codigo/run/captchas/
+codigo/run/amostras/
+codigo/run/linha_do_tempo*.txt
+codigo/run/captcha_jogo_*.png
+# Modelo de 54 MB do Recognizer embutido; o bot usa o OCR do bot-ddtank (ocr_worker.py).
+codigo/bot/models/captcha/model.onnx

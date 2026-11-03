@@ -1,0 +1,22 @@
+return {
+    id = 119601,
+    name = "Intenso - Chifre de Minotauro",
+    category_id = 1,
+    attack = 40,
+    defence = 40,
+    agility = 40,
+    luck = 40,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "60",
+        [8] = "12",
+    },
+}

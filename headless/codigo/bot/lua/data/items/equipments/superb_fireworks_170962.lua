@@ -1,0 +1,22 @@
+return {
+    id = 170962,
+    name = "Superb · Fireworks",
+    category_id = 7,
+    attack = 312,
+    defence = 156,
+    agility = 265,
+    luck = 78,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "249",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 6101,
+    name = "Para novatos",
+    category_id = 6,
+    attack = 1,
+    defence = 1,
+    agility = 1,
+    luck = 1,
+    level = 0,
+    need_level = 0,
+    quality = 1,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "123",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 170023,
+    name = "☆☆☆ Angelic Arm",
+    category_id = 17,
+    attack = 60,
+    defence = 60,
+    agility = 60,
+    luck = 60,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "64",
+        [2] = "64",
+        [3] = "32",
+        [4] = "110",
+        [5] = "0",
+        [6] = "2",
+        [7] = "700",
+        [8] = "500",
+    },
+}

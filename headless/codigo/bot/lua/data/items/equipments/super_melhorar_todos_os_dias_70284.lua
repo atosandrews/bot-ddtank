@@ -1,0 +1,22 @@
+return {
+    id = 70284,
+    name = "Super - Melhorar todos os dias!",
+    category_id = 7,
+    attack = 432,
+    defence = 312,
+    agility = 72,
+    luck = 96,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "70",
+        [2] = "71",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

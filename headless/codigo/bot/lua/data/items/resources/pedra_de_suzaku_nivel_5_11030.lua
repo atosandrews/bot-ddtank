@@ -1,0 +1,22 @@
+return {
+    id = 11030,
+    name = "Pedra de Suzaku nível 5",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "1",
+        [2] = "5",
+        [3] = "1",
+        [4] = "50",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

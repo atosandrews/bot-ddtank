@@ -1,0 +1,22 @@
+return {
+    id = 95264,
+    name = "周年白金之戒+10",
+    category_id = 9,
+    attack = 577,
+    defence = 431,
+    agility = 431,
+    luck = 577,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "5644800",
+        [3] = "3",
+        [4] = "95263",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

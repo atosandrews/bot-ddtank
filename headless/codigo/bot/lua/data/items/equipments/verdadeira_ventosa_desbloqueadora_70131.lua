@@ -1,0 +1,22 @@
+return {
+    id = 70131,
+    name = "Verdadeira - Ventosa desbloqueadora",
+    category_id = 7,
+    attack = 48,
+    defence = 216,
+    agility = 36,
+    luck = 156,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "36",
+        [2] = "37",
+        [3] = "1",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "200",
+        [8] = "0",
+    },
+}

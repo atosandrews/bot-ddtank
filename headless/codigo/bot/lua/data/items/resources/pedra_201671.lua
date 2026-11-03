@@ -1,0 +1,22 @@
+return {
+    id = 201671,
+    name = "Pedra",
+    category_id = 81,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "3",
+        [2] = "14",
+        [3] = "14",
+        [4] = "14",
+        [5] = "15",
+        [6] = "99999",
+        [7] = "0",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 71964,
+    name = "Fantasma de Vidro",
+    category_id = 7,
+    attack = 529,
+    defence = 90,
+    agility = 636,
+    luck = 135,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "290",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 70171,
+    name = "Super - Vento de Deus",
+    category_id = 7,
+    attack = 79,
+    defence = 39,
+    agility = 330,
+    luck = 52,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "12",
+        [2] = "13",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "50",
+        [7] = "220",
+        [8] = "0",
+    },
+}

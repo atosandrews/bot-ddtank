@@ -1,0 +1,22 @@
+return {
+    id = 17003,
+    name = "Escudo de Bugou",
+    category_id = 17,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "31",
+        [4] = "110",
+        [5] = "2",
+        [6] = "3",
+        [7] = "50",
+        [8] = "1500",
+    },
+}

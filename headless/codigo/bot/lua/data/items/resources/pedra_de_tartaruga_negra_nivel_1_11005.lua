@@ -1,0 +1,22 @@
+return {
+    id = 11005,
+    name = "Pedra de Tartaruga Negra nível 1",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 1,
+    quality = 1,
+    properties = {
+        [1] = "1",
+        [2] = "100",
+        [3] = "2",
+        [4] = "10",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

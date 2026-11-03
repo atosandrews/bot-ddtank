@@ -1,0 +1,22 @@
+return {
+    id = 20114,
+    name = "Baú de Cartão do Lobo Demôniaco",
+    category_id = 18,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 20,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "2",
+        [5] = "314114",
+        [6] = "1",
+        [7] = "4",
+        [8] = "0",
+    },
+}

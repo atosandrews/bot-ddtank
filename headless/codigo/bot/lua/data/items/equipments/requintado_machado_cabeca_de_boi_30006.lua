@@ -1,0 +1,22 @@
+return {
+    id = 30006,
+    name = "Requintado machado Cabeça de Boi",
+    category_id = 50,
+    attack = 150,
+    defence = 55,
+    agility = 55,
+    luck = 55,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

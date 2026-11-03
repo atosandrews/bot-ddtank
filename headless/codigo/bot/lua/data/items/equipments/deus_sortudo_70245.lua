@@ -1,0 +1,22 @@
+return {
+    id = 70245,
+    name = "Deus sortudo",
+    category_id = 7,
+    attack = 510,
+    defence = 420,
+    agility = 475,
+    luck = 510,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "275",
+        [8] = "0",
+    },
+}

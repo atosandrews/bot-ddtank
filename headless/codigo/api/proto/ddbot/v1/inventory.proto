@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message CollectTemporaryRewards {
+}
+
+message UnlockBag {
+  string password = 1;
+}
+
+message OrganizeInventory {
+  int32 bag_type = 1;
+  repeated int32 places = 2;
+}

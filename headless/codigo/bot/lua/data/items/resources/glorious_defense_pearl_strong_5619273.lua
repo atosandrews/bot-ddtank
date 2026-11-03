@@ -1,0 +1,22 @@
+return {
+    id = 5619273,
+    name = "Glorious Defense Pearl - Strong",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "31",
+        [2] = "2",
+        [3] = "2",
+        [4] = "4300",
+        [5] = "43",
+        [6] = "4",
+        [7] = "5",
+        [8] = "0",
+    },
+}

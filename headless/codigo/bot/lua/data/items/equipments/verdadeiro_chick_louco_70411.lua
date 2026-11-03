@@ -1,0 +1,22 @@
+return {
+    id = 70411,
+    name = "Verdadeiro - Chick Louco",
+    category_id = 7,
+    attack = 174,
+    defence = 174,
+    agility = 30,
+    luck = 174,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "1",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

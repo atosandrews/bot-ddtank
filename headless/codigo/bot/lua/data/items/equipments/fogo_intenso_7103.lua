@@ -1,0 +1,22 @@
+return {
+    id = 7103,
+    name = "Fogo Intenso",
+    category_id = 7,
+    attack = 150,
+    defence = 36,
+    agility = 24,
+    luck = 18,
+    level = 2,
+    need_level = 5,
+    quality = 4,
+    properties = {
+        [1] = "16",
+        [2] = "17",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "50",
+        [7] = "205",
+        [8] = "0",
+    },
+}

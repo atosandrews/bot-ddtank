@@ -1,0 +1,22 @@
+return {
+    id = 9528,
+    name = "10周年之戒+5",
+    category_id = 9,
+    attack = 887,
+    defence = 887,
+    agility = 887,
+    luck = 887,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "5",
+        [2] = "71680",
+        [3] = "3",
+        [4] = "9428",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 283947,
+    name = "Divine Attack Pearl - Steal",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "31",
+        [2] = "1",
+        [3] = "17",
+        [4] = "0",
+        [5] = "3",
+        [6] = "4",
+        [7] = "5",
+        [8] = "0",
+    },
+}

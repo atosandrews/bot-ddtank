@@ -1,0 +1,22 @@
+return {
+    id = 10302,
+    name = "Perfurante nv2",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "52",
+        [2] = "100",
+        [3] = "0",
+        [4] = "90",
+        [5] = "500",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

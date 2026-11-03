@@ -1,0 +1,14 @@
+bot:
+  address: 127.0.0.1:7443
+  api_key_env: DDBOT_API_KEY
+  tls: false
+relay:
+  id: desktop
+  listen: 127.0.0.1:11401
+  transparent: true
+  manage_redirect: true
+  ports: [1401, 1503, 1505, 1407]
+  max_sessions: 8
+recording:
+  auto: true
+  directory: captures

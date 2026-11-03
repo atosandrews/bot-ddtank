@@ -1,0 +1,22 @@
+return {
+    id = 10502,
+    name = "Reviver nv2",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "54",
+        [2] = "26",
+        [3] = "0",
+        [4] = "145",
+        [5] = "750",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

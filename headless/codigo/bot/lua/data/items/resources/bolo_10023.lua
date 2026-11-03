@@ -1,0 +1,22 @@
+return {
+    id = 10023,
+    name = "Bolo",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "1",
+        [2] = "1",
+        [3] = "200",
+        [4] = "10",
+        [5] = "10",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

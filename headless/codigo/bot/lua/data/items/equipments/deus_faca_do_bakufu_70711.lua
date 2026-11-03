@@ -1,0 +1,22 @@
+return {
+    id = 70711,
+    name = "Deus - Faca do Bakufu",
+    category_id = 7,
+    attack = 765,
+    defence = 525,
+    agility = 765,
+    luck = 525,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "2",
+        [5] = "20",
+        [6] = "50",
+        [7] = "265",
+        [8] = "0",
+    },
+}

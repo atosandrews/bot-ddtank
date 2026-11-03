@@ -1,0 +1,22 @@
+return {
+    id = 16057,
+    name = "Bolha do 10º aniversário do DDT",
+    category_id = 16,
+    attack = 150,
+    defence = 150,
+    agility = 150,
+    luck = 150,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

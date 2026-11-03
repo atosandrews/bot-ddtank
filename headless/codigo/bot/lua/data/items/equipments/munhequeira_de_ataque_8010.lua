@@ -1,0 +1,22 @@
+return {
+    id = 8010,
+    name = "Munhequeira de ataque",
+    category_id = 8,
+    attack = 5,
+    defence = 2,
+    agility = 2,
+    luck = 2,
+    level = 2,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

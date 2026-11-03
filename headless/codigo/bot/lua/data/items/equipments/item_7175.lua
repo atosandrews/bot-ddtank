@@ -1,0 +1,22 @@
+return {
+    id = 7175,
+    name = "真·黑白家电",
+    category_id = 7,
+    attack = 310,
+    defence = 310,
+    agility = 310,
+    luck = 310,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "50",
+        [6] = "70",
+        [7] = "200",
+        [8] = "0",
+    },
+}

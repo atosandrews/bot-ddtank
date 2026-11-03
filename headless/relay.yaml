@@ -1,0 +1,18 @@
+# Relay sem redirecionamento: os personagens headless conectam aqui,
+# e o relay repassa ao servidor S1 e ao bot.
+bot:
+  address: 127.0.0.1:7443
+  api_key_env: DDBOT_API_KEY
+  tls: false
+relay:
+  id: docker
+  listen: 127.0.0.1:11401
+  upstream: 52.223.30.208:1401
+  transparent: false
+  manage_redirect: false
+  script: /tmp/cfg/formigueiro-grupo.lua
+  max_sessions: 8
+control:
+  socket: /tmp/ddctl/ddrelay.sock
+recording:
+  auto: false

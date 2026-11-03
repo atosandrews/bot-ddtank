@@ -1,0 +1,22 @@
+return {
+    id = 13202502,
+    name = "Goku SSJIV",
+    category_id = 13,
+    attack = 300,
+    defence = 300,
+    agility = 300,
+    luck = 300,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

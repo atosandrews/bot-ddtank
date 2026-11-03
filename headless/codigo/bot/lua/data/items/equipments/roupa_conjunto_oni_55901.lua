@@ -1,0 +1,22 @@
+return {
+    id = 55901,
+    name = "Roupa Conjunto Oni",
+    category_id = 5,
+    attack = 200,
+    defence = 200,
+    agility = 200,
+    luck = 200,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "80",
+        [8] = "123",
+    },
+}

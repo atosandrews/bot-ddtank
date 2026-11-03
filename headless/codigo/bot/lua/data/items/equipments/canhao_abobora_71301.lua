@@ -1,0 +1,22 @@
+return {
+    id = 71301,
+    name = "Canhão Abóbora",
+    category_id = 7,
+    attack = 160,
+    defence = 60,
+    agility = 160,
+    luck = 60,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "38",
+        [2] = "39",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "230",
+        [8] = "0",
+    },
+}

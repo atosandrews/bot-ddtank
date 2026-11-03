@@ -1,0 +1,22 @@
+return {
+    id = 50201,
+    name = "Distintivo de Almirante",
+    category_id = 40,
+    attack = 80,
+    defence = 80,
+    agility = 80,
+    luck = 80,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "8",
+        [2] = "60",
+        [3] = "20",
+        [4] = "20",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

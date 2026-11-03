@@ -1,0 +1,22 @@
+return {
+    id = 17011,
+    name = "Futebol de Ouro",
+    category_id = 17,
+    attack = 30,
+    defence = 30,
+    agility = 30,
+    luck = 30,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "120",
+        [2] = "100",
+        [3] = "32",
+        [4] = "200",
+        [5] = "0",
+        [6] = "2",
+        [7] = "750",
+        [8] = "500",
+    },
+}

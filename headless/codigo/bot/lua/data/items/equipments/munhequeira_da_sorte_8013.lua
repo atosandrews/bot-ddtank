@@ -1,0 +1,22 @@
+return {
+    id = 8013,
+    name = "Munhequeira da sorte",
+    category_id = 8,
+    attack = 2,
+    defence = 2,
+    agility = 2,
+    luck = 5,
+    level = 2,
+    need_level = 0,
+    quality = 2,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

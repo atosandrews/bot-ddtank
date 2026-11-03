@@ -1,0 +1,22 @@
+return {
+    id = 13164,
+    name = "Lobo Apaixonado",
+    category_id = 13,
+    attack = 8,
+    defence = 8,
+    agility = 8,
+    luck = 8,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

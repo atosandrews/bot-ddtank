@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package ddbot.v1;
+
+import "proto/ddbot/v1/value.proto";
+import "proto/ddbot/v1/failure.proto";
+
+option go_package = "ddbot/api/gen/go/ddbot/v1;ddbotv1";
+
+message Evaluate {
+  string request_id = 1;
+  string source = 2;
+}
+
+message LoadScript {
+  string request_id = 1;
+  string source = 2;
+  bytes sha256 = 3;
+}
+
+message StopScript {
+  string request_id = 1;
+}
+
+message ScriptResult {
+  string request_id = 1;
+  Value value = 2;
+  Failure error = 3;
+  repeated uint64 action_ids = 4;
+  uint64 script_generation = 5;
+}
+
+message Log {
+  string message = 1;
+}

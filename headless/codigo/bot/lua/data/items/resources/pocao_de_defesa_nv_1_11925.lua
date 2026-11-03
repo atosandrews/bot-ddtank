@@ -1,0 +1,22 @@
+return {
+    id = 11925,
+    name = "Poção de Defesa Nv.1",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "74",
+        [2] = "50",
+        [3] = "0",
+        [4] = "0",
+        [5] = "60",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

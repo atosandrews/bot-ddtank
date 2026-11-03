@@ -1,0 +1,22 @@
+return {
+    id = 21139,
+    name = "Prata - baú de cartão aparelhos dom. preto e branc",
+    category_id = 66,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 0,
+    need_level = 15,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "2500",
+        [3] = "500",
+        [4] = "2",
+        [5] = "314139",
+        [6] = "0",
+        [7] = "9",
+        [8] = "1",
+    },
+}

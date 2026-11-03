@@ -1,0 +1,15 @@
+listen: 127.0.0.1:7443
+lua_dir: lua
+tenants:
+  - id: local
+    api_key_env: DDBOT_API_KEY
+max_sessions: 64
+sessions_per_tenant: 16
+sessions_per_relay: 8
+reconnect_grace: 120s
+lua_timeout: 1s
+captcha:
+  enabled: true
+  model: models/captcha/model.onnx
+  charset: models/captcha/charset.json
+  minimum_confidence: 0.75

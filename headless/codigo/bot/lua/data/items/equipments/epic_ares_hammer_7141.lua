@@ -1,0 +1,22 @@
+return {
+    id = 7141,
+    name = "Epic Ares Hammer",
+    category_id = 7,
+    attack = 981,
+    defence = 981,
+    agility = 881,
+    luck = 981,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "295",
+        [8] = "0",
+    },
+}

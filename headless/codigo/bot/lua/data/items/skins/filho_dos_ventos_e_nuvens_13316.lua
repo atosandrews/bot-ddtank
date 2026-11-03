@@ -1,0 +1,22 @@
+return {
+    id = 13316,
+    name = "Filho dos Ventos e Nuvens",
+    category_id = 13,
+    attack = 7,
+    defence = 7,
+    agility = 7,
+    luck = 7,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

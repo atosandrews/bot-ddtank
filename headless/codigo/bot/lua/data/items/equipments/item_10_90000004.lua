@@ -1,0 +1,22 @@
+return {
+    id = 90000004,
+    name = "<赞>白金手链+10",
+    category_id = 8,
+    attack = 1088,
+    defence = 1088,
+    agility = 1088,
+    luck = 1088,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "10",
+        [2] = "5644800",
+        [3] = "3",
+        [4] = "85153",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

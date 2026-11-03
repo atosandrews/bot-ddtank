@@ -1,0 +1,22 @@
+return {
+    id = 16058,
+    name = "Cat Fairy\013\010",
+    category_id = 16,
+    attack = 175,
+    defence = 175,
+    agility = 175,
+    luck = 175,
+    level = 25,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

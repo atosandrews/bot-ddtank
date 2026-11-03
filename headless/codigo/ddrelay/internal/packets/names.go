@@ -1,0 +1,101 @@
+package packets
+
+import "ddbot/relay/internal/capture"
+
+var packetNames = map[int16]string{
+	1:    "LOGIN",
+	3:    "SYS_MESSAGE",
+	4:    "PING",
+	5:    "SYS_DATE",
+	6:    "NETWORK",
+	10:   "SYS_NOTICE",
+	13:   "DAILY_AWARD",
+	15:   "USER_ANSWER",
+	16:   "SCENE_LOGIN",
+	18:   "SCENE_ADD_USER/GET_PLAYER_CARD",
+	19:   "SCENE_CHAT",
+	21:   "SCENE_REMOVE_USER",
+	34:   "USER_RANK",
+	38:   "UPDATE_PRIVATE_INFO",
+	49:   "CHANGE_PLACE_GOODS",
+	64:   "GRID_GOODS/OPTION_UPDATE",
+	67:   "UPDATE_PLAYER_INFO",
+	68:   "PET",
+	70:   "GAME_INVITE",
+	71:   "S_BUGLE",
+	72:   "B_BUGLE",
+	74:   "ITEM_EQUIP",
+	75:   "EDICTUM_GET_SERVION",
+	91:   "GAME_CMD",
+	92:   "VIP_RENEWAL",
+	94:   "GAME_ROOM",
+	95:   "NECKLACE_STRENGTH",
+	107:  "INVITE_FRIEND",
+	108:  "GAME_TAKE_TEMP",
+	124:  "CHANGE_PLACE_GOODS_ALL",
+	128:  "ROOM_SAVE_OBJECT/CONSORTIA_RESPONSE/LEFT_GUN_ROULETTE_SOCKET",
+	129:  "CONSORTIA_CMD",
+	145:  "ACTIVITY_SYSTEM",
+	155:  "EVERYDAY_ACTIVEPOINT",
+	159:  "WONDERFUL_ACTIVITY",
+	160:  "IM_CMD",
+	161:  "USER_LUCKYNUM",
+	167:  "CHURCH_MOVIE_OVER",
+	168:  "GOODS_COUNT",
+	176:  "QUEST_ADD",
+	178:  "QUEST_UPDATE",
+	179:  "QUEST_FINISH",
+	181:  "QUEST_CHECK",
+	185:  "BUFF_UPDATE",
+	186:  "BUFF_OBTAIN",
+	200:  "CHECK_CODE",
+	209:  "FIGHT_SPIRIT",
+	213:  "FEEDBACK_REPLY/USE_LOG",
+	218:  "USER_GET_GIFTS",
+	227:  "ENTHRALL_LIGHT",
+	228:  "ACHIEVEMENT_INIT",
+	229:  "ACHIEVEMENT_UPDATE",
+	231:  "ACHIEVEMENTDATA_INIT",
+	236:  "MARRYINFO_ADD",
+	239:  "AMARRYINFO_REFRESH/GOTO_CARD_LOTTERY",
+	251:  "SCENE_STATE/LOTTERY_AWARD",
+	258:  "NOVICEACTIVITY",
+	259:  "FIRSTRECHARGE",
+	266:  "PAY_CENTER_MESSAGE",
+	277:  "RESCUE",
+	331:  "CONSUME_RANK",
+	333:  "PLAYER_DRESS",
+	342:  "LIMITED_CHARGE_ACTIVE",
+	343:  "SEPARATE_ACTIVITY",
+	352:  "RECHARGE_RANK",
+	402:  "AVATAR_COLLECTION",
+	405:  "WONDERFUL_ACTIVITY_INIT",
+	443:  "DAILY_CHECKIN_AWARD",
+	448:  "BATTLE_PASS",
+	700:  "RANKED_INIT",
+	1800: "BULK_SCENE_ADD_USER",
+}
+
+func packetName(direction capture.Direction, code int16) string {
+	if direction == capture.ClientToServer && code == 75 {
+		return "PROP_DELETE"
+	}
+
+	if direction == capture.ClientToServer && code == 82 {
+		return "GAME_MISSION_START"
+	}
+
+	if direction == capture.ServerToClient && code == 18 {
+		return "SCENE_ADD_USER"
+	}
+
+	if direction == capture.ClientToServer && code == 213 {
+		return "USE_LOG"
+	}
+
+	if name, ok := packetNames[code]; ok {
+		return name
+	}
+
+	return "UNKNOWN"
+}

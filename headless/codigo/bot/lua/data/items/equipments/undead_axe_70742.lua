@@ -1,0 +1,22 @@
+return {
+    id = 70742,
+    name = "☆ Undead Axe",
+    category_id = 7,
+    attack = 39,
+    defence = 226,
+    agility = 226,
+    luck = 226,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "66",
+        [2] = "67",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 10467,
+    name = "Passar",
+    category_id = 10,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 2,
+    need_level = 1,
+    quality = 2,
+    properties = {
+        [1] = "90",
+        [2] = "0",
+        [3] = "0",
+        [4] = "50",
+        [5] = "200",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

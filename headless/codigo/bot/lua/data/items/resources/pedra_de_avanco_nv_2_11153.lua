@@ -1,0 +1,22 @@
+return {
+    id = 11153,
+    name = "Pedra de Avanço Nv.2",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 5,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "45",
+        [2] = "50",
+        [3] = "2",
+        [4] = "0",
+        [5] = "1",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

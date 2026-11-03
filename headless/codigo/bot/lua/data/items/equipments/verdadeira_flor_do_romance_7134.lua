@@ -1,0 +1,22 @@
+return {
+    id = 7134,
+    name = "Verdadeira - Flor do Romance",
+    category_id = 7,
+    attack = 259,
+    defence = 125,
+    agility = 259,
+    luck = 97,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "32",
+        [2] = "33",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "60",
+        [7] = "255",
+        [8] = "0",
+    },
+}

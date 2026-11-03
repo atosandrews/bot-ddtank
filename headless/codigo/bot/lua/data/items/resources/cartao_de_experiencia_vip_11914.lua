@@ -1,0 +1,22 @@
+return {
+    id = 11914,
+    name = "Cartão de experiência VIP",
+    category_id = 11,
+    attack = 0,
+    defence = 0,
+    agility = 0,
+    luck = 0,
+    level = 1,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "25",
+        [2] = "1",
+        [3] = "6",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

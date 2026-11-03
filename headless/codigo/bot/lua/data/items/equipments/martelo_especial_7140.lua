@@ -1,0 +1,22 @@
+return {
+    id = 7140,
+    name = "Martelo Especial",
+    category_id = 7,
+    attack = 200,
+    defence = 80,
+    agility = 80,
+    luck = 100,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "20",
+        [6] = "65",
+        [7] = "242",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 9004,
+    name = "Anel Ágata",
+    category_id = 9,
+    attack = 3,
+    defence = 3,
+    agility = 3,
+    luck = 3,
+    level = 2,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

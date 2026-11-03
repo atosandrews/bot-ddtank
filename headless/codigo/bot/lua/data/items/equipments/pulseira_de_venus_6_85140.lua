@@ -1,0 +1,22 @@
+return {
+    id = 85140,
+    name = "Pulseira de Vênus +6",
+    category_id = 8,
+    attack = 74,
+    defence = 74,
+    agility = 74,
+    luck = 74,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "585045",
+        [3] = "2",
+        [4] = "8514",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

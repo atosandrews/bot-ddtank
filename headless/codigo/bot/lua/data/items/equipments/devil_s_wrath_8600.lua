@@ -1,0 +1,22 @@
+return {
+    id = 8600,
+    name = "Devil's Wrath",
+    category_id = 8,
+    attack = 100,
+    defence = 90,
+    agility = 90,
+    luck = 90,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "6",
+        [2] = "3584",
+        [3] = "1",
+        [4] = "8504",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

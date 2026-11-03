@@ -1,0 +1,22 @@
+return {
+    id = 8215,
+    name = "Bracelete Furioso Dragonfire +2 ",
+    category_id = 8,
+    attack = 75,
+    defence = 75,
+    agility = 75,
+    luck = 75,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "2",
+        [2] = "1120",
+        [3] = "3",
+        [4] = "8115",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

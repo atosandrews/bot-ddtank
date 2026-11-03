@@ -1,0 +1,22 @@
+return {
+    id = 95252,
+    name = "Anel da Fortuna+8",
+    category_id = 9,
+    attack = 175,
+    defence = 175,
+    agility = 175,
+    luck = 175,
+    level = 3,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "8",
+        [2] = "448000",
+        [3] = "2",
+        [4] = "95251",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}

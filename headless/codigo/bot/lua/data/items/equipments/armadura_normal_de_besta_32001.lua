@@ -1,0 +1,22 @@
+return {
+    id = 32001,
+    name = "Armadura normal de besta",
+    category_id = 52,
+    attack = 30,
+    defence = 100,
+    agility = 30,
+    luck = 30,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 70766,
+    name = "Supe-Poste inclinado",
+    category_id = 27,
+    attack = 73,
+    defence = 355,
+    agility = 355,
+    luck = 355,
+    level = 3,
+    need_level = 1,
+    quality = 4,
+    properties = {
+        [1] = "46",
+        [2] = "47",
+        [3] = "0",
+        [4] = "0",
+        [5] = "15",
+        [6] = "65",
+        [7] = "275",
+        [8] = "0",
+    },
+}

@@ -1,0 +1,22 @@
+return {
+    id = 71481,
+    name = "Super - Ventilador Bugou",
+    category_id = 7,
+    attack = 320,
+    defence = 55,
+    agility = 55,
+    luck = 220,
+    level = 3,
+    need_level = 1,
+    quality = 5,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "25",
+        [6] = "60",
+        [7] = "235",
+        [8] = "0",
+    },
+}

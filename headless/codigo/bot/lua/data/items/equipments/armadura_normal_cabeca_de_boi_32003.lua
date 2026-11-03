@@ -1,0 +1,22 @@
+return {
+    id = 32003,
+    name = "Armadura normal cabeça de Boi",
+    category_id = 52,
+    attack = 50,
+    defence = 140,
+    agility = 50,
+    luck = 50,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "20",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+    },
+}

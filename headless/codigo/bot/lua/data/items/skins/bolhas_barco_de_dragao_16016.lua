@@ -1,0 +1,22 @@
+return {
+    id = 16016,
+    name = "Bolhas Barco de Dragão",
+    category_id = 16,
+    attack = 40,
+    defence = 40,
+    agility = 40,
+    luck = 40,
+    level = 0,
+    need_level = 0,
+    quality = 4,
+    properties = {
+        [1] = "0",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "0",
+        [6] = "0",
+        [7] = "0",
+        [8] = "1",
+    },
+}
