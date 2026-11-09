@@ -1,0 +1,17 @@
+# Copie para convidadas.yaml e preencha com as 3 convidadas (personagens do mesmo login do farm).
+# website_id: número no fim do link do cartão em ddclassico.com/classic/playgame/<número>.
+# id: ID no jogo; se não souber, deixe 1: o primeiro login falha dizendo o ID certo.
+session_file: sessao_farm.json
+characters:
+  - name: Convidada1
+    website_id: 0
+    id: 1
+    upstream: 127.0.0.1:11401
+  - name: Convidada2
+    website_id: 0
+    id: 1
+    upstream: 127.0.0.1:11401
+  - name: Convidada3
+    website_id: 0
+    id: 1
+    upstream: 127.0.0.1:11401

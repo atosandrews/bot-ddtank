@@ -840,7 +840,7 @@ function M.new(options)
     end
 
     local function attack(fight_state)
-        state.search_deadline = now() + 0.035
+        state.search_deadline = now() + 0.09  -- 90 ms de cada tick de 100 ms (era 35 ms; 05/11/2026)
         local self = fight.self()
         if not self then
             state.reason = "Waiting for the local fight actor"

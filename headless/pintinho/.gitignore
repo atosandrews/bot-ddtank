@@ -1,0 +1,12 @@
+# Dados da conta: nunca versionar (o repositório é público).
+sessao*.json
+headless-bot.yaml
+convidadas.yaml
+farm*.json
+relatorio-*.txt
+derrotas.jsonl
+recuperacoes.jsonl
+estagio3.log
+painel.html
+*.antes-*
+__pycache__/
