@@ -1,0 +1,21 @@
+# Olimpíadas Boom no Fly.io (Chicago, como os outros dois). Sem portas públicas.
+app = "ddbot-olimpiadas"
+primary_region = "ord"
+swap_size_mb = 512
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  CAPTCHA_BANCO = "/data/captchas"
+
+[mounts]
+  source = "dados_olimpiadas"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-2x"
+  memory = "512mb"
+
+[[restart]]
+  policy = "always"

@@ -17,6 +17,14 @@ type Session struct {
 	nextID   uint64
 	pending  []action.Request
 	results  []action.Result
+	// view: cópia do estado para leituras dos scripts Lua, refeita só quando a revisão muda.
+	// 09/11/2026: cada fight.state() fazia 3 cópias profundas (inventário, atores...), 10x por
+	// segundo por personagem; no Fly isso passava da CPU garantida e o bot travava.
+	view         *Snapshot
+	viewRevision uint64
+	// viewVersion: muda a cada cópia nova de view (inclusive após invalidar), para quem guarda
+	// algo derivado da view saber quando refazer (10/11/2026: tabelas Lua de fight.state()).
+	viewVersion uint64
 }
 
 func NewSession(stream uint64, writable bool) *Session {
@@ -30,6 +38,25 @@ func NewSession(stream uint64, writable bool) *Session {
 
 func (s *Session) Snapshot() Snapshot { return s.state.Clone() }
 
+// View devolve o estado para LEITURA: a mesma cópia enquanto a revisão não muda. Quem precisa
+// alterar o estado usa Snapshot() e Commit(); o resultado de View nunca deve ser modificado.
+func (s *Session) View() Snapshot {
+	if s.view == nil || s.viewRevision != s.state.Revision {
+		copia := s.state.Clone()
+		s.view, s.viewRevision = &copia, s.state.Revision
+		s.viewVersion++
+	}
+
+	return *s.view
+}
+
+// ViewVersion identifica a view atual: igual enquanto View() devolve a mesma cópia.
+func (s *Session) ViewVersion() uint64 {
+	s.View()
+
+	return s.viewVersion
+}
+
 func (s *Session) Commit(next Snapshot) error {
 	if next.Stream != s.state.Stream || next.Revision != s.state.Revision {
 		return &SessionError{Reason: "stale or foreign update"}
@@ -37,6 +64,7 @@ func (s *Session) Commit(next Snapshot) error {
 
 	next.Revision++
 	s.state = next.Clone()
+	s.view = nil
 
 	return nil
 }
@@ -202,6 +230,7 @@ func (s *Session) Action(id uint64) (action.Result, error) {
 
 func (s *Session) Invalidate(reason string) {
 	s.state.Valid = false
+	s.view = nil
 	s.state.Fight.Cards.Closed = true
 	s.state.Fight.Turn = nil
 	s.state.Fight.Wind.Expire()

@@ -11,10 +11,18 @@ local function fail(code, message)
     error({code = code, message = message}, 0)
 end
 
+-- 09/11/2026: Collector:observe() roda a cada tick (10x/s por personagem) e converter a mochila
+-- inteira para Lua era ~1/4 da CPU do bot. A mochila só muda quando inventory_revision muda, então
+-- o último resultado é reaproveitado enquanto ela não mudar (as tabelas são só lidas).
+local cache_id, cache_revision, cache_permanent, cache_temporary
+
 local function inventory()
     local current = player.state()
     if current.inventory_uncertain or not current.inventory_revision then
         fail("reward_inventory_unknown", "Reward collection requires the updated Bot and reliable inventory state")
+    end
+    if cache_permanent and cache_id == current.id and cache_revision == current.inventory_revision then
+        return cache_permanent, cache_temporary
     end
 
     local permanent, temporary = {}, {}
@@ -32,6 +40,7 @@ local function inventory()
         end
     end
 
+    cache_id, cache_revision, cache_permanent, cache_temporary = current.id, current.inventory_revision, permanent, temporary
     return permanent, temporary
 end
 

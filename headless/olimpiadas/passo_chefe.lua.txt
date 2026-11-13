@@ -1,0 +1,66 @@
+        -- Chefes (regra do usuário, 12/11): colada no chefe ela se explode junto. "É só afastar um pouco e bater na
+        -- cabeça (em cima do boss) ou afastar para as costas." Perto (menos de "radius" px): anda para longe até
+        -- "max_walk" px guardando "keep_energy" para os itens e mira na cabeça (tiro alto descendo por cima).
+        local step = config.close_step[tostring(fight_state.map_id)]
+        state.close_head = false
+        -- 13/11: com a Mesa dos Juízes viva, não anda (o passo gastou o turno da Mesa numa derrota): atira nela.
+        if step and step.skip_when then
+            for _, actor in ipairs(fight_state.actors) do
+                local hp = actor.pending_hp
+                if hp == nil then hp = actor.hp end
+                if name_rank(actor.name, {step.skip_when}) and actor.alive ~= false and hp and hp > 0 then step = nil; break end
+            end
+        end
+        if step then
+            local boss
+            for _, actor in ipairs(fight_state.actors) do
+                local hp = actor.pending_hp
+                if hp == nil then hp = actor.hp end
+                if name_rank(actor.name, {step.target}) and actor.alive ~= false and hp and hp > 0 then
+                    boss = actor.destination or actor.position
+                end
+            end
+            if boss and math.abs(boss.x - self.position.x) < step.radius then
+                state.close_head = true
+                if state.step_key ~= key then
+                    local side = 1
+                    if boss.x > self.position.x then side = -1 end
+                    local distance = step.max_walk
+                    if type(self.energy) == "number" then
+                        distance = math.min(step.max_walk, math.floor((self.energy - step.keep_energy) / 2))
+                    end
+                    local nx = self.position.x + side * distance
+                    local hit = terrain.trace({map_id = fight_state.map_id, x = nx, y = math.max(0, self.position.y - 120),
+                        to_x = nx, to_y = self.position.y + 300})
+                    state.step_key = key
+                    state.step_sent = nil
+                    if distance >= 10 and hit.hit and fight_state.turn and fight_state.turn.number then
+                        local ny = math.floor(hit.y)
+                        send(fight.move_start, {moving = true, move_type = 0, x = nx, y = ny, direction = side,
+                            is_living = true, turn_number = fight_state.turn.number})
+                        state.walk_action = state.last_action  -- 13/11: recusado (stale_state) pausava o bot; agora repete
+                        state.step_sent = {x = nx, y = ny, from = self.position.x, at = now(),
+                            energy = self.energy and (self.energy - 2 * distance)}
+                        state.close_note = string.format("turn %d: %d px from boss, stepping to x=%d",
+                            state.my_turns[tostring(fight_state.map_id)] or 0, math.abs(boss.x - self.position.x), nx)
+                        state.reason = "Stepping away from the boss"
+                        return
+                    end
+                    state.close_note = string.format("turn %d: %d px from boss, no room to step",
+                        state.my_turns[tostring(fight_state.map_id)] or 0, math.abs(boss.x - self.position.x))
+                end
+                if state.step_sent then
+                    -- o servidor não devolve a posição a quem andou: espera o passo e mira do destino
+                    if now() - state.step_sent.at < step.settle then
+                        state.reason = "Waiting for the step to finish"
+                        return
+                    end
+                    local real = self
+                    local dest = {x = state.step_sent.x, y = state.step_sent.y}
+                    local energy = state.step_sent.energy
+                    self = setmetatable({position = dest, destination = false, energy = energy},
+                        {__index = function(_, k) return real[k] end})
+                end
+            end
+        end
+

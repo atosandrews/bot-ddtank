@@ -1,0 +1,8 @@
+# Copie para lider.yaml. website_id: número no fim do link do cartão (ddclassico.com/classic/playgame/<número>).
+# id: ID no jogo; deixe 1 e o primeiro login falha dizendo o ID certo.
+session_file: sessao_lider.json
+characters:
+  - name: NomeDaLider
+    website_id: 0
+    id: 1
+    upstream: 127.0.0.1:11401

@@ -7,7 +7,7 @@ import (
 )
 
 func (r *Runtime) cardState() map[string]any {
-	state := r.session.Snapshot().Fight
+	state := r.session.View().Fight
 	cards := state.Cards
 	players := make([]map[string]any, 0, len(cards.Players))
 	ids := make([]int32, 0, len(cards.Players))

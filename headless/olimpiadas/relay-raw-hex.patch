@@ -1,0 +1,13 @@
+--- "a/ddrelay/internal/packets/fight_server.go"	2026-10-31 20:45:20.923080500 -0300
++++ "b/ddrelay/internal/packets/fight_server.go"	2026-11-12 20:41:04.966631800 -0300
+@@ -143,6 +143,10 @@
+ 	case 252:
+ 		fightInts(r, f, "psychic", "living_id")
+ 	default:
++		// Olimpíadas (12/11): subcomando desconhecido leva os bytes crus e o parâmetro do cabeçalho,
++		// para o script ler objetos que o decodificador ainda não conhece (balões do estágio 1).
++		f["param1"] = h.Parameter1
++		f["raw_hex"] = fmt.Sprintf("%x", r.data[r.offset:])
+ 		return ErrUnsupported
+ 	}
+ 	return r.err

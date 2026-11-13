@@ -151,6 +151,7 @@ function M.new(options)
             flown = {},
             walked = {},
             my_turns = {},
+            shot_log = {},
         }
     end
 
@@ -1051,13 +1052,26 @@ function M.new(options)
 
         local key = fight_state.generation .. ":" .. fight_state.turn_revision
         if config.attack_policy == "leader" and not party:is_leader() then
-            if state.passed_turn ~= key then
-                send(fight.pass, {argument = 0})
-                state.passed_turn = key
+            -- 11/11 (aprovado pelo usuário): derrotas por tempo no estágio 1 com um inimigo grudado na principal,
+            -- que fica sem tiro limpo, enquanto convidadas vivas só passavam a vez. Num estágio com "stuck_turns",
+            -- a partir desse número de turnos da convidada no estágio ela atira também, com a mira normal.
+            local map = tostring(fight_state.map_id)
+            if state.follower_turn_key ~= key then
+                state.follower_turn_key = key
+                state.follower_turns = state.follower_turns or {}
+                state.follower_turns[map] = (state.follower_turns[map] or 0) + 1
             end
-            state.attack_mode = "party_pass"
-            state.reason = "Waiting for the server to end the follower turn"
-            return
+            local limit = config.stuck_turns[map]
+            if not (limit and state.follower_turns[map] >= limit) then
+                if state.passed_turn ~= key then
+                    send(fight.pass, {argument = 0})
+                    state.passed_turn = key
+                end
+                state.attack_mode = "party_pass"
+                state.reason = "Waiting for the server to end the follower turn"
+                return
+            end
+            state.follower_note = string.format("stage %s: follower attacking from turn %d", map, state.follower_turns[map])
         end
 
         if state.turn_key ~= key then
@@ -1300,6 +1314,24 @@ function M.new(options)
             return
         end
 
+        -- 10/11 (aprovado pelo usuário): derrotas por tempo no estágio 1 com um inimigo grudado nela. O tiro de
+        -- perto escolhia sempre o grudado e errava turno após turno, então girar a ordem não mudava nada. Preso
+        -- (shift ímpar: turnos 20, 22, 24...), mira só nos inimigos fora do raio do tiro de perto; nos turnos
+        -- pares continua o tiro de perto. Sem inimigo longe, segue como antes.
+        local close = config.close_kill[tostring(fight_state.map_id)]
+        local skip_close = false
+        if close and shift % 2 == 1 then
+            local far = {}
+            for _, candidate in ipairs(candidates) do
+                local dx, dy = candidate.position.x - self.position.x, candidate.position.y - self.position.y
+                if dx * dx + dy * dy >= close.radius * close.radius then far[#far + 1] = candidate end
+            end
+            if #far > 0 then
+                candidates, skip_close = far, true
+                state.stuck_note = (state.stuck_note or "") .. "; aiming at far target"
+            end
+        end
+
         local profiles = {false}
         local full_from = config.full_maps[tostring(fight_state.map_id)]
         local full = full_from and (state.my_turns[tostring(fight_state.map_id)] or 0) >= full_from
@@ -1315,14 +1347,14 @@ function M.new(options)
             state.my_turns[tostring(fight_state.map_id)] or 0, tostring(full_trident)) end
 
         local target, solution
-        local close = config.close_kill[tostring(fight_state.map_id)]
-        if close and self.hp and self.max_hp and self.hp >= self.max_hp * close.min_hp then
+        local close_used = false
+        if close and not skip_close and self.hp and self.max_hp and self.hp >= self.max_hp * close.min_hp then
             for _, candidate in ipairs(candidates) do
                 local dx, dy = candidate.position.x - self.position.x, candidate.position.y - self.position.y
                 if dx * dx + dy * dy < close.radius * close.radius then
                     local found, result = pcall(aim, self, candidate, fight_state, nil, false, true)
                     if found and result.direct then
-                        target, solution = candidate, result
+                        target, solution, close_used = candidate, result, true
                         state.close_note = string.format("close kill %s at %d px (hp %d/%d)", tostring(candidate.id),
                             math.floor(math.sqrt(dx * dx + dy * dy)), self.hp, self.max_hp)
                         break
@@ -1396,6 +1428,27 @@ function M.new(options)
         state.shot_sent_at = now()
         cronometrar(string.format("%s tiro %.2fs itens=%d", tostring(fight_state.map_id),
             now() - state.turn_started, #(state.confirmed_props or {})))
+        -- 11/11: só diagnóstico (não muda a jogada). Derrota por tempo no estágio 1 mesmo com a mira alternada:
+        -- guarda os últimos tiros de cada estágio preso (alvo, vida/posição dos inimigos, força/ângulo), que vão
+        -- para a nota da derrota, para ver se o tiro no alvo longe sai e se acerta.
+        if config.stuck_turns[tostring(fight_state.map_id)] then
+            local inimigos = {}
+            for _, a in ipairs(fight_state.actors or {}) do
+                local hp = a.pending_hp
+                if hp == nil then hp = a.hp end
+                local p = a.destination or a.position or {}
+                if a.team and a.team ~= self.team and a.alive ~= false and hp and hp > 0 then
+                    inimigos[#inimigos + 1] = string.format("%s:%s@%s,%s", tostring(a.id), tostring(hp), tostring(p.x), tostring(p.y))
+                end
+            end
+            table.insert(state.shot_log, 1, string.format("[t%d s%d %s%s alvo=%s eu@%s,%s f=%s a=%s dir=%s tri=%s direto=%s inim=%s]",
+                state.my_turns[tostring(fight_state.map_id)] or 0, shift, state.attack_mode,
+                skip_close and "/longe" or (close_used and "/perto" or ""),
+                tostring(target.id), tostring(self.position.x), tostring(self.position.y),
+                tostring(solution.shot.force), tostring(solution.shot.angle), tostring(solution.direction),
+                tostring(solution.trident), tostring(solution.direct), table.concat(inimigos, " ")))
+            state.shot_log[13] = nil
+        end
         state.fired_turn = key
         state.target_id = target.id
         state.target_position_source = target.position_source
@@ -1438,10 +1491,10 @@ function M.new(options)
                     end
                 end
                 local pos = me.position or {}
-                table.insert(derrotas, 1, string.format("%.0fs mapa=%s vida=%s/%s viva=%s turnos=%s modo=%s voo=%s andou=%s eu@%s,%s inimigos=%s perto=%s bloqueio=%s travado=%s",
+                table.insert(derrotas, 1, string.format("%.0fs mapa=%s vida=%s/%s viva=%s turnos=%s modo=%s voo=%s andou=%s eu@%s,%s inimigos=%s perto=%s bloqueio=%s travado=%s tiros=%s",
                     now(), tostring(fight.state().map_id), tostring(me.hp), tostring(me.max_hp), tostring(me.alive),
                     table.concat(turnos, ","), tostring(state.attack_mode), tostring(state.fly_note), tostring(state.walk_note),
-                    tostring(pos.x), tostring(pos.y), table.concat(vivos, " "), tostring(state.close_note), tostring(state.blocked_note), tostring(state.stuck_note)))
+                    tostring(pos.x), tostring(pos.y), table.concat(vivos, " "), tostring(state.close_note), tostring(state.blocked_note), tostring(state.stuck_note), table.concat(state.shot_log or {}, " ")))
                 derrotas[11] = nil
             end
             state.phase = "lost"

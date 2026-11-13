@@ -1,0 +1,195 @@
+    -- ===== Balões (estágio 1) =====
+    -- Pacotes 91 que o relay da Olimpíadas entrega com os bytes crus (raw_hex): 48 = objeto novo (id, tipo, x, y,
+    -- modelo, ação), 223 = ação do objeto ("shield<valor>": valor do balão, -5..5), 53 = objeto removido.
+    local function hex_i32(h, o)
+        local v = tonumber(string.sub(h, o, o + 7), 16)
+        if not v then return nil end
+        if v >= 2147483648 then v = v - 4294967296 end
+        return v
+    end
+
+    local function hex_utf(h, o)
+        local n = tonumber(string.sub(h, o, o + 3), 16)
+        if not n then return "", o end
+        local out = {}
+        for i = 0, n - 1 do
+            local byte = tonumber(string.sub(h, o + 4 + 2 * i, o + 5 + 2 * i), 16)
+            if byte and byte > 0 then out[#out + 1] = string.char(byte) end
+        end
+        return table.concat(out), o + 4 + 2 * n
+    end
+
+    local function observe_balloons(packet)
+        if packet.code ~= 91 or packet.direction ~= "ServerToClient" or type(packet.fields) ~= "table" then return end
+        local sub = packet.fields.subcommand
+        -- placar do estágio (BARRIER_INFO): rodada e pontos
+        if sub == 104 and type(packet.fields.current_value_2) == "number" then
+            state.balloon_points = packet.fields.current_value_2
+            state.balloon_round = packet.fields.current_value_1
+            return
+        end
+        local h = packet.fields.raw_hex
+        if type(h) ~= "string" then return end
+        if sub == 48 then
+            local id, x, y = hex_i32(h, 1), hex_i32(h, 17), hex_i32(h, 25)
+            local model = hex_utf(h, 33)
+            if id and x and y and string.find(model, "six.ball", 1, true) then
+                state.balloons[id] = {x = x, y = y}
+                state.balloon_picked[id] = nil
+            end
+        elseif sub == 223 then
+            local id = hex_i32(h, 1)
+            local _, o = hex_utf(h, 9)
+            local action = hex_utf(h, o)
+            local value = tonumber(string.match(action, "shield(%-?%d+)"))
+            if id and value then state.balloon_values[id] = value end
+        elseif sub == 53 then
+            local id = hex_i32(h, 1)
+            if id then
+                state.balloons[id] = nil
+                state.balloon_values[id] = nil
+                state.balloon_picked[id] = nil
+            end
+        end
+    end
+
+    local function balloon_list()
+        local list = {}
+        for id, b in pairs(state.balloons) do
+            local value = state.balloon_values[id]
+            if value then list[#list + 1] = {id = id, x = b.x, y = b.y, value = value} end
+        end
+        table.sort(list, function(a, b) return a.id < b.id end)
+        return list
+    end
+
+    -- Trajetória sem terreno (o céu do 1165 é aberto): índices dos balões a até "radius" px do caminho.
+    local function balloon_path(model, shot, list, radius, ground_y)
+        local rad = math.rad(shot.angle)
+        local x, y = shot.x, shot.y
+        local vx, vy = trunc(shot.force * math.cos(rad)), trunc(shot.force * math.sin(rad))
+        local r2 = radius * radius
+        local hit = {}
+        local low, high = math.huge, -math.huge
+        for _, b in ipairs(list) do
+            low = math.min(low, b.y - radius)
+            high = math.max(high, b.y + radius)
+        end
+        for _ = 1, 500 do
+            vx = vx + (model.wind_force - model.drag * vx) / model.mass * model.dt
+            vy = vy + (model.gravity_force - model.drag * vy) / model.mass * model.dt
+            x, y = x + vx * model.dt, y + vy * model.dt
+            if y >= low and y <= high then
+                for i, b in ipairs(list) do
+                    if not hit[i] and (x - b.x) ^ 2 + (y - b.y) ^ 2 <= r2 then hit[i] = true end
+                end
+            end
+            if y > ground_y or x < 0 or x > model.width then break end
+        end
+        return hit
+    end
+
+    local function balloon_score(sets, list, picked, rules)
+        local seen, score, ids = {}, 0, {}
+        for _, set in ipairs(sets) do
+            for i in pairs(set) do
+                local b = list[i]
+                if not seen[i] and not picked[b.id] then
+                    seen[i] = true
+                    ids[#ids + 1] = b.id
+                    local v = b.value
+                    if v == 0 then v = rules.zero_value elseif v < 0 then v = v * rules.negative_weight end
+                    score = score + v
+                end
+            end
+        end
+        return score, ids
+    end
+
+    -- Melhor tiro nos balões: grade de ângulos (passo 2) e forças (passo 20), refinada perto dos 12 melhores;
+    -- com tridente soma os 3 caminhos (laterais: força x0,9/x1,1 e ângulo -5/+5, projétil "multi").
+    local function balloon_shot(self, fight_state, use_trident)
+        local rules = config.balloon_maps[tostring(fight_state.map_id)]
+        local list = balloon_list()
+        if #list == 0 then return nil end
+        local weapon = catalog.weapon({id = self.weapon_id})
+        local projectile = self.ball_id or weapon.common
+        local observed_wind = fight.wind()
+        local wind = config.fallback_wind
+        if observed_wind.current and type(observed_wind.value) == "number" then wind = observed_wind.value end
+        state.wind_used = wind
+        local model = trajectory.model({map_id = fight_state.map_id, projectile_id = projectile, wind = wind})
+        local multi = use_trident and trajectory.model({map_id = fight_state.map_id, projectile_id = weapon.multi, wind = wind})
+        local slope = trajectory.slope({map_id = fight_state.map_id, x = self.position.x, y = self.position.y})
+        local mean = 0
+        for _, b in ipairs(list) do mean = mean + b.x end
+        local direction = 1
+        if (mean / #list) < self.position.x then direction = -1 end
+        local cache = {}
+        local function sets_for(angle, force)
+            local key = angle .. ":" .. force
+            if cache[key] then return cache[key] end
+            local shot = trajectory.launch({x = self.position.x, y = self.position.y, direction = direction,
+                slope = slope, gun_angle = angle, force = force})
+            local sets = {balloon_path(model, shot, list, rules.radius, rules.ground_y)}
+            if multi then
+                sets[2] = balloon_path(multi, {x = shot.x, y = shot.y, force = trunc(shot.force * 0.9), angle = shot.angle - 5}, list, rules.radius, rules.ground_y)
+                sets[3] = balloon_path(multi, {x = shot.x, y = shot.y, force = trunc(shot.force * 1.1), angle = shot.angle + 5}, list, rules.radius, rules.ground_y)
+            end
+            cache[key] = {shot = shot, sets = sets}
+            return cache[key]
+        end
+        local picked = state.balloon_picked
+        local min_angle, max_angle = math.ceil(weapon.min_angle), math.floor(weapon.max_angle)
+        local top = {}
+        for angle = min_angle, max_angle, 2 do
+            for force = 300, 2000, 20 do
+                local score = balloon_score(sets_for(angle, force).sets, list, picked, rules)
+                top[#top + 1] = {score = score, angle = angle, force = force}
+            end
+        end
+        table.sort(top, function(a, b) return a.score > b.score end)
+        local best
+        for i = 1, math.min(12, #top) do
+            local t = top[i]
+            for angle = math.max(min_angle, t.angle - 1), math.min(max_angle, t.angle + 1) do
+                for force = math.max(1, t.force - 15), math.min(2000, t.force + 15), 5 do
+                    local entry = sets_for(angle, force)
+                    local score, ids = balloon_score(entry.sets, list, picked, rules)
+                    -- desempate: no meio da faixa boa (vizinhos de força com a mesma nota), contra o erro da física
+                    local margin = 0
+                    for _, d in ipairs({-10, 10}) do
+                        local f = force + d
+                        if f >= 1 and f <= 2000 and balloon_score(sets_for(angle, f).sets, list, picked, rules) >= score then
+                            margin = margin + 1
+                        end
+                    end
+                    if not best or score > best.score or (score == best.score and margin > best.margin) then
+                        best = {score = score, margin = margin, ids = ids, shot = entry.shot, angle = angle, direction = direction}
+                    end
+                end
+            end
+        end
+        return best
+    end
+
+    -- 12/11 (usuário: "no Normal o chefe não dá tanto dano; ela está batendo em si mesma"): anota cada queda de
+    -- vida dela com o turno e de quem era a vez (vez dela = dano do próprio tiro).
+    local function observe_hp()
+        local me = fight.self()
+        local current = fight.state()
+        if not me or type(me.hp) ~= "number" then return end
+        if state.hp_map ~= current.map_id then
+            state.hp_map = current.map_id
+            state.hp_seen = me.hp
+            return
+        end
+        if state.hp_seen and me.hp < state.hp_seen then
+            local turn = current.turn or {}
+            table.insert(state.hp_log, 1, string.format("%s turno=%s vez=%s%s -%d (%d)", tostring(current.map_id),
+                tostring(turn.number), tostring(turn.actor_id), turn.actor_id == me.id and "(ela)" or "",
+                state.hp_seen - me.hp, me.hp))
+            state.hp_log[31] = nil
+        end
+        state.hp_seen = me.hp
+    end

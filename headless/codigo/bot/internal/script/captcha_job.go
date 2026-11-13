@@ -30,7 +30,7 @@ func (r *Runtime) solveCaptcha(l *lua.LState) int {
 		return fail(l, &action.InvalidCommandError{Name: "captcha.solve", Reason: "expected no arguments"})
 	}
 
-	challenge := r.session.Snapshot().Captcha
+	challenge := r.session.View().Captcha
 	if !challenge.Known || !challenge.Required {
 		r.cancelCaptcha()
 

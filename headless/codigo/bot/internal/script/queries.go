@@ -54,7 +54,7 @@ func turnFields(t *fight.Turn) any {
 }
 
 func (r *Runtime) actors() []map[string]any {
-	actors := r.session.Snapshot().Fight.Actors
+	actors := r.session.View().Fight.Actors
 	ids := make([]int32, 0, len(actors))
 
 	for id := range actors {
@@ -72,7 +72,7 @@ func (r *Runtime) actors() []map[string]any {
 }
 
 func (r *Runtime) fightState() map[string]any {
-	f := r.session.Snapshot().Fight
+	f := r.session.View().Fight
 
 	return map[string]any{
 		"generation":    f.Generation,
@@ -88,7 +88,7 @@ func (r *Runtime) fightState() map[string]any {
 }
 
 func (r *Runtime) roomState() map[string]any {
-	room := r.session.Snapshot().Room
+	room := r.session.View().Room
 	ids := make([]int32, 0, len(room.Players))
 
 	for id := range room.Players {

@@ -1,4 +1,4 @@
--- Pintinho (Difícil): Srmaniaco (forte) lidera e é a única que ataca; fakeddt1, eliseu e Guestf95c4
+-- Pintinho (Difícil): Srmaniaco (forte) lidera e é a única que ataca; atos1, atos2 e atos3
 -- ficam na sala a partida inteira e passam a vez na hora.
 -- O relay carrega o script logo após o login, antes de o bot conhecer o ID do personagem;
 -- por isso o Pintinho só é criado quando player.state().id estiver disponível.
@@ -7,11 +7,11 @@
 local AQUECIMENTO = 5
 local AQUECIMENTO_LIDER = 20
 -- FORTE_ID: ID no jogo do personagem forte (preencher depois do 1º login; ver LEIA-ME.md).
-local FORTE_ID = 14065  -- Srmaniaco (ID no jogo)
+local FORTE_ID = 14065  -- Srmaniaco (cartão "Oeliseu", website_id 14715)
 local party = {
     leader_id = FORTE_ID,
     -- as 3 convidadas ficam na sala do começo ao fim e só passam a vez (pedido do usuário, 05/11)
-    members = {FORTE_ID, 109945, 13719, 80711},  -- Srmaniaco, fakeddt1, eliseu, Guestf95c4
+    members = {FORTE_ID, 116432, 116433, 117364},  -- Srmaniaco, atos1, atos2, atos3 (09/11)
 }
 
 -- Recuperação: o Pintinho pausa de vez em estados que pedem conferência manual (convite sem
@@ -30,7 +30,12 @@ local acumulado = {runs = 0, wins = 0, losses = 0, mailed = 0, undelivered = 0, 
 local recuperacoes = {}
 local parado_desde
 
+-- Só reconta quando a mochila muda (inventory_revision): ler a mochila inteira custa CPU (09/11).
+local mochila_revisao
 local function contar_mochila()
+    local revisao = player.state().inventory_revision
+    if revisao and revisao == mochila_revisao then return end
+    mochila_revisao = revisao
     local itens, equipamentos = 0, 0
     for _, item in ipairs(player.inventory()) do
         if item.bag_type == 1 then

@@ -1,0 +1,22 @@
+# Pintinho no Fly.io (Chicago, como o Formigueiro). Sem portas públicas.
+# shared-cpu-4x (09/11): no Fly o bot usa 17-21% de um núcleo; a 2x garante 12,5% e travava
+app = "ddbot-pintinho"
+primary_region = "ord"
+swap_size_mb = 512
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  CAPTCHA_BANCO = "/data/captchas"
+
+[mounts]
+  source = "dados_pintinho"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-2x"
+  memory = "512mb"
+
+[[restart]]
+  policy = "always"

@@ -12,7 +12,7 @@ import (
 
 func (r *Runtime) bind() {
 	r.module("session", map[string]lua.LGFunction{"now": r.now, "report": r.reportStatus, "info": func(l *lua.LState) int {
-		s := r.session.Snapshot()
+		s := r.session.View()
 
 		return r.push(map[string]any{
 			"stream":       s.Stream,
@@ -32,7 +32,7 @@ func (r *Runtime) bind() {
 		"inventory":       func(l *lua.LState) int { return r.push(r.inventory()) },
 		"buffs":           func(l *lua.LState) int { return r.push(r.playerBuffs()) },
 		"state": func(l *lua.LState) int {
-			player := r.session.Snapshot().Player
+			player := r.session.View().Player
 			return r.push(map[string]any{
 				"id": optional(player.ID), "inventory_uncertain": player.InventoryUncertain,
 				"inventory_revision": player.InventoryRevision, "buffs_known": player.BuffsKnown,

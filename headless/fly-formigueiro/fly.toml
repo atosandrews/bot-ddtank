@@ -1,0 +1,26 @@
+# Formigueiro no Fly.io. Sem portas públicas: a máquina só sai para o jogo.
+# 09/11: Chicago (ord), preço base; São Paulo (gru) custa 61% a mais. Teste de conexão até o
+# servidor do jogo: gru 1 ms, ord 1 ms, iad sem resposta. 512 MB + 512 MB de swap (~US$ 3,90/mês
+# com o disco); o grupo usa ~470 MB.
+# shared-cpu-2x: a 1x garante só 6,25% de CPU e o bot usa ~6% em média com picos; o saldo acabava e
+# o bot travava (94% de steal). A 2x garante 12,5% (~US$ 4,55/mês com o disco).
+app = "ddbot-formigueiro"
+primary_region = "ord"
+swap_size_mb = 512
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  CAPTCHA_BANCO = "/data/captchas"
+
+[mounts]
+  source = "dados_formigueiro"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-2x"
+  memory = "512mb"
+
+[[restart]]
+  policy = "always"

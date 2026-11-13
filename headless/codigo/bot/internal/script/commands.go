@@ -54,10 +54,10 @@ func (r *Runtime) fightBindings() map[string]lua.LGFunction {
 		"take_extra_card":   r.command(func(a *arguments) action.Command { return action.CardTakeExtra{Index: a.i32("index")} }),
 		"finish_cards":      r.noArguments(action.CardFinish{}),
 		"finish_boss_cards": r.noArguments(action.CardFinishBoss{}),
-		"state":             func(l *lua.LState) int { return r.push(r.fightState()) },
-		"actors":            func(l *lua.LState) int { return r.push(r.actors()) },
-		"turn":              func(l *lua.LState) int { return r.push(turnFields(r.session.Snapshot().Fight.Turn)) },
-		"wind":              func(l *lua.LState) int { return r.push(windFields(r.session.Snapshot().Fight.Wind)) },
+		"state":             func(l *lua.LState) int { return r.pushCached("fight.state", func() any { return r.fightState() }) },
+		"actors":            func(l *lua.LState) int { return r.pushCached("fight.actors", func() any { return r.actors() }) },
+		"turn":              func(l *lua.LState) int { return r.push(turnFields(r.session.View().Fight.Turn)) },
+		"wind":              func(l *lua.LState) int { return r.push(windFields(r.session.View().Fight.Wind)) },
 		"actor": func(l *lua.LState) int {
 			args := &arguments{table: l.NewTable(), used: make(map[string]bool)}
 			args.table.RawSetString("id", l.Get(1))
@@ -66,7 +66,7 @@ func (r *Runtime) fightBindings() map[string]lua.LGFunction {
 				return fail(l, args.err)
 			}
 
-			actor, ok := r.session.Snapshot().Fight.Actors[id]
+			actor, ok := r.session.View().Fight.Actors[id]
 			if !ok {
 				return r.push(nil)
 			}
@@ -74,7 +74,7 @@ func (r *Runtime) fightBindings() map[string]lua.LGFunction {
 			return r.push(actorFields(actor))
 		},
 		"self": func(l *lua.LState) int {
-			s := r.session.Snapshot()
+			s := r.session.View()
 			if s.Player.ID != nil {
 				for _, actor := range s.Fight.Actors {
 					if actor.PlayerID != nil && *actor.PlayerID == *s.Player.ID {

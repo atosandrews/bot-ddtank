@@ -24,7 +24,7 @@ func (r *Runtime) friendBindings() map[string]lua.LGFunction {
 }
 
 func (r *Runtime) friendState() map[string]any {
-	state := r.session.Snapshot().Social
+	state := r.session.View().Social
 	ids := make([]int32, 0, len(state.Friends))
 
 	for id := range state.Friends {
@@ -60,7 +60,7 @@ func (r *Runtime) friendState() map[string]any {
 func (r *Runtime) invitations() []map[string]any {
 	rows := make([]map[string]any, 0)
 
-	for _, i := range r.session.Snapshot().Social.Invitations {
+	for _, i := range r.session.View().Social.Invitations {
 		rows = append(rows, map[string]any{
 			"player_id":      i.PlayerID,
 			"room_id":        i.RoomID,

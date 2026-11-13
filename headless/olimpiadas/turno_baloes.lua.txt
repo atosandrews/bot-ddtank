@@ -1,0 +1,59 @@
+        if config.balloon_maps[tostring(fight_state.map_id)] then
+            -- Balões (pedido do usuário, 12/11): tridente + 2 em todas as contas; o POW não serve aqui.
+            state.pow = state.pow or "balloons"
+            state.trident_allowed = true
+            local list = balloon_list()
+            if #list == 0 then
+                state.reason = "Waiting for the balloons of this round"
+                return
+            end
+            -- 13/11: a mira leva ~0,5 s; calculada depois dos itens, o servidor recusava o tiro (estado mudou) e o motor
+            -- refazia a conta até 4 vezes (tiro com 3 s). Agora calcula uma vez no começo do turno (com tridente, que é o
+            -- plano) e reaproveita no envio e nas repetições.
+            if #list < 12 and now() - (state.turn_started or now()) < 1.5 then
+                state.reason = "Waiting for all 12 balloons of this round"
+                return
+            end
+            if state.balloon_best_key ~= key then
+                state.balloon_picked = {}
+                state.balloon_best = balloon_shot(self, fight_state, true)
+                state.balloon_best_key = key
+            end
+            if not prepare_buffs(self, {id = -1, position = {x = list[1].x, y = list[1].y}}, fight_state) then return end
+            local with_trident = false
+            for _, id in ipairs(state.confirmed_props or {}) do
+                if id == trident.id then with_trident = true end
+            end
+            state.balloon_trident = with_trident
+            -- 1º tiro do turno: nada foi pego ainda (um tiro recusado pelo servidor volta aqui e não conta).
+            state.balloon_picked = {}
+            local best = state.balloon_best
+            if not with_trident then best = balloon_shot(self, fight_state, false) end
+            if not best then
+                state.reason = "Waiting for the balloons of this round"
+                return
+            end
+            for _, id in ipairs(best.ids) do state.balloon_picked[id] = true end
+            local positives = 0
+            for _, b in ipairs(list) do if b.value > 0 then positives = positives + b.value end end
+            state.balloon_note = string.format("turn %d: score %.1f of %d (%d balloons) trident=%s [%s] angle=%d force=%d wind=%s me@%d,%d points=%s",
+                state.my_turns[tostring(fight_state.map_id)] or 0, best.score, positives, #list, tostring(with_trident),
+                table.concat(best.ids, ","), best.angle, best.shot.force, tostring(state.wind_used), self.position.x, self.position.y, tostring(state.balloon_points))
+            table.insert(state.balloon_log, 1, state.balloon_note)
+            state.balloon_log[21] = nil
+            local elapsed = math.min(127, math.floor((now() - state.turn_started)))
+            send(fight.face, {direction = best.direction})
+            send(fight.shoot_tag, {started = true, shot_type = elapsed})
+            send(fight.shoot, best.shot)
+            state.shot_action = state.last_action
+            state.shot_followup = false
+            state.shot_sent_at = now()
+            cronometrar(string.format("%s balões %.2fs nota=%.1f itens=%d", tostring(fight_state.map_id),
+                now() - state.turn_started, best.score, #(state.confirmed_props or {})))
+            state.attack_mode = "balloons"
+            state.fired_turn = key
+            state.target_id = -1
+            state.shot = best.shot
+            state.reason = "Waiting for the shot result and next turn"
+            return
+        end

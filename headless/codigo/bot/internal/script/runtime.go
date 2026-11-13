@@ -22,6 +22,53 @@ type Runtime struct {
 	timeout       time.Duration
 	started       time.Time
 	report        *StatusReport
+	// luaCache: tabelas Lua já convertidas de fight.state()/fight.actors(), refeitas só quando a
+	// view do jogo muda (10/11/2026: montar e converter a tabela a cada tick era ~25% da CPU e,
+	// com o GC, deixava o Formigueiro no Fly acima da CPU garantida, que então era segurada).
+	luaCache map[string]cachedLua
+}
+
+type cachedLua struct {
+	version uint64
+	value   lua.LValue
+}
+
+// pushCached reaproveita a tabela Lua enquanto a view não muda. Cada chamada recebe uma cópia
+// rasa do nível de cima (mudar um campo dela não afeta a próxima leitura); as tabelas internas
+// (atores, cartas, turno) são compartilhadas e os scripts só as leem.
+func (r *Runtime) pushCached(key string, build func() any) int {
+	version := r.session.ViewVersion()
+	if cached, ok := r.luaCache[key]; ok && cached.version == version {
+		r.state.Push(shallowCopy(r.state, cached.value))
+
+		return 1
+	}
+
+	converted, err := r.convert(build())
+	if err != nil {
+		return fail(r.state, err)
+	}
+
+	if r.luaCache == nil {
+		r.luaCache = map[string]cachedLua{}
+	}
+
+	r.luaCache[key] = cachedLua{version: version, value: converted}
+	r.state.Push(shallowCopy(r.state, converted))
+
+	return 1
+}
+
+func shallowCopy(l *lua.LState, value lua.LValue) lua.LValue {
+	table, ok := value.(*lua.LTable)
+	if !ok {
+		return value
+	}
+
+	copia := l.CreateTable(table.Len(), 0)
+	table.ForEach(func(k, v lua.LValue) { copia.RawSet(k, v) })
+
+	return copia
 }
 
 func NewRuntime(session *game.Session, source []byte, output io.Writer, timeout time.Duration) (*Runtime, error) {

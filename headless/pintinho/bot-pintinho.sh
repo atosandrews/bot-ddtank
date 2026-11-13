@@ -5,13 +5,14 @@
 # original; os arquivos Lua do Pintinho são copiados por cima em /tmp/lua, sem tocar em /ws.
 set -u
 SCRIPT=${SCRIPT:-pintinho-forte.lua}
-rm -rf /tmp/ddctl /tmp/cfg /tmp/lua /tmp/*.log && mkdir -p -m 700 /tmp/ddctl && mkdir -p /tmp/cfg && cp /secret/pintinho/sessao.json /secret/pintinho/headless-bot.yaml /secret/pintinho/convidadas.yaml /secret/bot.yaml /tmp/cfg/ || exit 1
-# Convidadas: cookie do farm, o mais novo entre o salvo à mão, o renovado pelo Formigueiro e o renovado aqui.
-cp /secret/sessao.json /tmp/cfg/sessao_farm.json || exit 1
-for c in /ws/run/sessao_atual.json /cache/sessao_farm.json; do
-  if [ -f "$c" ] && [ "$c" -nt /tmp/cfg/sessao_farm.json ]; then cp "$c" /tmp/cfg/sessao_farm.json || exit 1; fi
+rm -rf /tmp/ddctl /tmp/cfg /tmp/lua /tmp/*.log && mkdir -p -m 700 /tmp/ddctl && mkdir -p /tmp/cfg && cp /secret/pintinho/sessao.json /secret/pintinho/headless-bot.yaml /secret/pintinho/convidadas.yaml /secret/pintinho/convidadas2.yaml /secret/bot.yaml /tmp/cfg/ || exit 1
+# 09/11: convidadas atos1+atos2 (login sessao_novas.json) e atos3 (login sessao_atos3.json); as contas do
+# farm voltaram ao Formigueiro. Cada cookie: o mais novo entre o salvo à mão e o renovado aqui (/cache).
+for s in sessao_novas sessao_atos3; do
+  cp "/secret/pintinho/$s.json" "/tmp/cfg/$s.json" || exit 1
+  if [ -f "/cache/$s.json" ] && [ "/cache/$s.json" -nt "/secret/pintinho/$s.json" ]; then cp "/cache/$s.json" "/tmp/cfg/$s.json" || exit 1; fi
+  chmod 600 "/tmp/cfg/$s.json" || exit 1
 done
-chmod 600 /tmp/cfg/sessao_farm.json || exit 1
 cp /secret/pintinho/relay.yaml /tmp/cfg/relay.yaml && cp "/secret/pintinho/$SCRIPT" /tmp/cfg/script.lua || exit 1
 if [ -f /cache/sessao_pintinho.json ] && [ /cache/sessao_pintinho.json -nt /secret/pintinho/sessao.json ]; then
   cp /cache/sessao_pintinho.json /tmp/cfg/sessao.json || exit 1
@@ -33,9 +34,10 @@ esperar "bot listening" /tmp/bot.log
 esperar "relay listening" /tmp/relay.log
 /tmp/ddrelay login -config /tmp/cfg/headless-bot.yaml > /tmp/login.log 2>&1 &
 /tmp/ddrelay login -config /tmp/cfg/convidadas.yaml > /tmp/login-convidadas.log 2>&1 &
-tail -F /tmp/bot.log /tmp/relay.log /tmp/login.log /tmp/login-convidadas.log &
+/tmp/ddrelay login -config /tmp/cfg/convidadas2.yaml > /tmp/login-convidadas2.log 2>&1 &
+tail -F /tmp/bot.log /tmp/relay.log /tmp/login.log /tmp/login-convidadas.log /tmp/login-convidadas2.log &
 SEM_PROGRESSO=${SEM_PROGRESSO:-300}
-PERSONAGENS=$(cat /tmp/cfg/headless-bot.yaml /tmp/cfg/convidadas.yaml | grep -c '^  - name:')
+PERSONAGENS=$(cat /tmp/cfg/headless-bot.yaml /tmp/cfg/convidadas.yaml /tmp/cfg/convidadas2.yaml | grep -c '^  - name:')
 # Toda consulta ao relay tem prazo: um comando preso não pode travar o vigia.
 ctl() { timeout 15 /tmp/ddrelay control -socket /tmp/ddctl/ddrelay.sock "$@"; }
 conectados() {
@@ -78,14 +80,15 @@ confirmacoes=0; confirmacoes_hora=$(date +%s)
 RENOVAR_COOKIE=${RENOVAR_COOKIE:-21600}
 renovar() {
   timeout 120 python3 -I /secret/pintinho/renovar_cookie.py /tmp/cfg/sessao.json /cache/sessao_pintinho.json
-  timeout 120 python3 -I /secret/pintinho/renovar_cookie.py /tmp/cfg/sessao_farm.json /cache/sessao_farm.json
+  timeout 120 python3 -I /secret/pintinho/renovar_cookie.py /tmp/cfg/sessao_novas.json /cache/sessao_novas.json
+  timeout 120 python3 -I /secret/pintinho/renovar_cookie.py /tmp/cfg/sessao_atos3.json /cache/sessao_atos3.json
 }
 sleep 20 && renovar
 renovado=$(date +%s)
 # 07/11: o usuário quer os 4 sempre juntos e falha corrigida na hora: o vigia confere a cada 20 s.
 while sleep 20; do
   if [ $(( $(date +%s) - renovado )) -ge "$RENOVAR_COOKIE" ]; then renovar; renovado=$(date +%s); fi
-  for p in "ddbot serve" "ddrelay run" "ddrelay login -config /tmp/cfg/headless-bot" "ddrelay login -config /tmp/cfg/convidadas"; do
+  for p in "ddbot serve" "ddrelay run" "ddrelay login -config /tmp/cfg/headless-bot" "ddrelay login -config /tmp/cfg/convidadas.yaml" "ddrelay login -config /tmp/cfg/convidadas2"; do
     if ! pgrep -f "/tmp/$p" > /dev/null; then echo "vigia: processo '$p' parou; reiniciando o grupo"; exit 1; fi
   done
   online=$(conectados | wc -w)

@@ -26,7 +26,12 @@ local acumulado = {runs = 0, wins = 0, losses = 0, mailed = 0, undelivered = 0, 
 local recuperacoes = {}
 local parado_desde
 
+-- Só reconta quando a mochila muda (inventory_revision): ler a mochila inteira custa CPU (09/11).
+local mochila_revisao
 local function contar_mochila()
+    local revisao = player.state().inventory_revision
+    if revisao and revisao == mochila_revisao then return end
+    mochila_revisao = revisao
     local itens, equipamentos = 0, 0
     for _, item in ipairs(player.inventory()) do
         if item.bag_type == 1 then

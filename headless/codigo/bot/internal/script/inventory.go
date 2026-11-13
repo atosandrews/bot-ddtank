@@ -10,7 +10,7 @@ import (
 
 func (r *Runtime) bagRevisions() map[string]uint64 {
 	revisions := make(map[string]uint64)
-	for bag, revision := range r.session.Snapshot().Player.BagRevisions {
+	for bag, revision := range r.session.View().Player.BagRevisions {
 		revisions[strconv.FormatInt(int64(bag), 10)] = revision
 	}
 
@@ -18,7 +18,7 @@ func (r *Runtime) bagRevisions() map[string]uint64 {
 }
 
 func (r *Runtime) bagLock() map[string]any {
-	state := r.session.Snapshot().Player.BagLock
+	state := r.session.View().Player.BagLock
 	if state == nil {
 		return map[string]any{"known": false}
 	}
@@ -31,7 +31,7 @@ func (r *Runtime) bagLock() map[string]any {
 
 func (r *Runtime) inventory() []map[string]any {
 	items := make([]player.Item, 0)
-	for _, slots := range r.session.Snapshot().Player.Inventory {
+	for _, slots := range r.session.View().Player.Inventory {
 		for _, item := range slots {
 			items = append(items, item)
 		}
@@ -58,7 +58,7 @@ func (r *Runtime) inventory() []map[string]any {
 
 func (r *Runtime) playerBuffs() []map[string]any {
 	buffs := make([]player.Buff, 0)
-	for _, buff := range r.session.Snapshot().Player.Buffs {
+	for _, buff := range r.session.View().Player.Buffs {
 		buffs = append(buffs, buff)
 	}
 

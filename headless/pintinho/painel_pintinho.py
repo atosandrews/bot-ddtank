@@ -5,6 +5,7 @@ Lutas e recompensas só aparecem quando o bot jogar instâncias; o modo login ap
 """
 import html
 import json
+import os
 import re
 import subprocess
 import sys
@@ -13,7 +14,15 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-PASTA = Path(__file__).parent
+# 10/11: o painel roda DENTRO da máquina do Fly (PAINEL_MAQUINA=/data/painel, iniciado pelo iniciar.sh), então a
+# contagem continua com o PC desligado; farm.json e painel.html ficam no volume. O PC só baixa o painel.html pronto
+# (ver_paineis.py). Sem a variável, roda no PC como antes (lendo o Fly por ssh).
+MAQUINA = os.environ.get("PAINEL_MAQUINA")
+AQUI = Path(__file__).parent
+PASTA = Path(MAQUINA) if MAQUINA else AQUI
+CONFIG = Path("/tmp/cfg") if MAQUINA else AQUI  # headless-bot.yaml e convidadas*.yaml
+if MAQUINA:
+    PASTA.mkdir(parents=True, exist_ok=True)
 
 # Rodando com pythonw (sem janela), cada "docker" abriria um console piscando: roda todos sem janela.
 if sys.platform == "win32":
@@ -24,21 +33,32 @@ if sys.platform == "win32":
         return _run(*args, **kwargs)
 
     subprocess.run = _run_sem_janela
-CONTAINER = "ddbot-pintinho"
-ATUALIZAR = 30  # segundos entre atualizações no modo --ao-vivo (08/11: era 15; cada sessão aceita só 4096 consultas)
-CONTROLE = ["docker", "exec", CONTAINER, "/tmp/ddrelay", "control", "-socket", "/tmp/ddctl/ddrelay.sock"]
+# 09/11: o Pintinho roda no Fly.io (app ddbot-pintinho); os dados vêm por UMA conexão ssh por atualização,
+# rodando coletor_fly.py lá dentro. Versão que lia o Docker do PC: painel_pintinho.py.antes-fly.
+CONTAINER = "Fly ddbot-pintinho"
+APP = "ddbot-pintinho"
+FLY = str(Path.home() / ".fly" / "bin" / "flyctl.exe")
+ATUALIZAR = 60  # segundos entre atualizações no modo --ao-vivo
+COLETOR = AQUI / "coletor_fly.py"
+_COLETA = {}
 # Contadores vêm de grupo_status().total, que soma os Formigueiros recriados pela recuperação.
 CONSULTA = ("local s = pintinho_status and pintinho_status() or {}; "
             "local g = grupo_status and grupo_status() or {}; local t = g.total or {}; "
+            # 11/11: a lista de entregas desde o login passou do limite de tamanho da resposta (19 h de
+            # Formigueiro); soma por item no bot e devolve uma entrega só.
+            "local soma = {}; for _, e in pairs(t.deliveries or {}) do if type(e) == 'table' and type(e.received) == 'table' then "
+            "for k, q in pairs(e.received) do if type(q) == 'number' and q > 0 then soma[tostring(k)] = (soma[tostring(k)] or 0) + q end end end end; "
             "return {id = player.state().id, phase = s.phase, reason = s.reason, derrotas = s.defeat_notes, "
-            "runs = t.runs, wins = t.wins, losses = t.losses, deliveries = t.deliveries, "
+            "runs = t.runs, wins = t.wins, losses = t.losses, deliveries = {total = {received = soma}}, "
             "grupo = {mochila = g.mochila, recuperacoes = g.recuperacoes, captchas = g.captchas and {aceitos = g.captchas.aceitos, recusados = g.captchas.recusados}, carteira = g.carteira}}")
 ITENS = Path(r"C:\Users\ATOS I\Downloads\bot\bot\lua\data\items")
 OURO_GANHO = "Ouro ganho na carteira"
 
 
 def nomes_itens():
-    """Mapa template -> nome, lido dos arquivos de dados do bot."""
+    """Mapa template -> nome, lido dos arquivos de dados do bot (na máquina: nomes.json gerado no PC)."""
+    if MAQUINA:
+        return json.loads((AQUI / "nomes.json").read_text(encoding="utf-8"))
     nomes = {}
     for arquivo in ITENS.rglob("*.lua"):
         texto = arquivo.read_text(encoding="utf-8", errors="replace")[:400]
@@ -49,23 +69,31 @@ def nomes_itens():
     return nomes
 
 
-def formigueiro():
-    """Fase e contadores do Formigueiro de cada personagem, pela sessão do relay."""
-    por_id = {}
-    saida = subprocess.run(CONTROLE + ["-sessions"], capture_output=True, text=True)
+def coletar():
+    """Roda coletor_fly.py na máquina do Fly e guarda {estado, login, bot} em _COLETA."""
+    import base64
+    fonte = COLETOR.read_bytes().replace(b"__CONSULTA__", CONSULTA.encode())
+    if MAQUINA:
+        Path("/tmp/coletor.py").write_bytes(fonte)
+        argumentos = ["python3", "-I", "/tmp/coletor.py"]
+    else:
+        codigo = base64.b64encode(fonte).decode()
+        comando = f"sh -c 'echo {codigo} | base64 -d > /tmp/coletor.py && python3 -I /tmp/coletor.py'"
+        argumentos = [FLY, "ssh", "console", "-a", APP, "-C", comando]
     try:
-        sessoes = json.loads(saida.stdout)["value"]
-    except (json.JSONDecodeError, KeyError):
-        return por_id
-    for sessao in sessoes:
-        resposta = subprocess.run(CONTROLE + ["-session", str(sessao["session"]), "-eval", CONSULTA], capture_output=True, text=True)
-        try:
-            valor = json.loads(resposta.stdout.splitlines()[0])["value"]
-        except (json.JSONDecodeError, KeyError, IndexError):
-            continue
-        if valor.get("id"):
-            por_id[valor["id"]] = valor
-    return por_id
+        saida = subprocess.run(argumentos, capture_output=True,
+                               text=True, encoding="utf-8", errors="replace", timeout=150)
+        linha = next(l for l in saida.stdout.splitlines() if l.startswith("{"))
+        _COLETA.clear()
+        _COLETA.update(json.loads(linha))
+    except (StopIteration, json.JSONDecodeError, subprocess.TimeoutExpired):
+        _COLETA.clear()
+        _COLETA.update({"estado": "sem resposta", "login": [], "bot": {}})
+
+
+def formigueiro():
+    """Fase e contadores de cada personagem (já coletados)."""
+    return {int(k): v for k, v in (_COLETA.get("bot") or {}).items()}
 
 
 def drops(deliveries, nomes):
@@ -83,7 +111,7 @@ def drops(deliveries, nomes):
 
 def personagens():
     lista, atual = [], {}
-    texto = chr(10).join((PASTA / n).read_text(encoding="utf-8") for n in ("headless-bot.yaml", "convidadas.yaml"))
+    texto = chr(10).join((CONFIG / n).read_text(encoding="utf-8") for n in ("headless-bot.yaml", "convidadas.yaml", "convidadas2.yaml") if (CONFIG / n).exists())
     for linha in texto.splitlines():
         linha = linha.strip()
         if linha.startswith("- name:"):
@@ -96,10 +124,10 @@ def personagens():
 
 
 def eventos():
-    saida = subprocess.run(["docker", "logs", CONTAINER], capture_output=True, text=True, encoding="utf-8", errors="replace")
-    estado = subprocess.run(["docker", "inspect", "-f", "{{.State.Status}}", CONTAINER], capture_output=True, text=True).stdout.strip()
+    coletar()
+    estado = _COLETA.get("estado", "sem resposta")
     linhas = []
-    for linha in (saida.stdout + saida.stderr).splitlines():
+    for linha in _COLETA.get("login") or []:
         if linha.startswith("{"):
             try:
                 linhas.append(json.loads(linha))
@@ -221,8 +249,7 @@ def main():
         f"Atualizado: {agora:%d/%m/%Y %H:%M:%S}",
         "",
         f"Fights desde {inicio_farm():%d/%m %H:%M}: {total['fights']}",
-        f"Partidas por hora: {total['fights'] / horas:.1f}" if horas > 0.05 else "Partidas por hora: -",
-        f"Tempo médio por partida: {horas * 60 / total['fights']:.1f} min" if total["fights"] else "Tempo médio por partida: -",
+    ] + tempo_real(total["fights"], agora) + [
         "",
     ] + ([f"{nome} × {q}" for nome, q in sorted(itens_total.items()) if q > 0] or ["Recompensas: nenhuma ainda"])
       + resumo_derrotas()))
@@ -356,6 +383,26 @@ def resumo_derrotas():
 def farm_de(nome):
     p = ler_farm()["personagens"].get(nome, {})
     return somar(p.get("base", {}), p.get("ultimo", {}))
+
+
+def tempo_real(partidas, agora):
+    """Tempo real por partida: guarda em farm.json a hora em que o total de partidas mudou e mede
+    da 1ª partida concluída até a última (não conta login nem partida pela metade). Precisão de
+    ±1 atualização do painel por marca; melhora com mais partidas."""
+    farm = ler_farm()
+    marcos = farm.setdefault("marcos", [])
+    if partidas and (not marcos or marcos[-1][1] != partidas):
+        marcos.append([agora.isoformat(), partidas])
+        gravar_farm(farm)
+    if len(marcos) < 2:
+        return ["Tempo real por partida: medindo (precisa de 2 partidas concluídas)"]
+    t0, n0 = datetime.fromisoformat(marcos[0][0]), marcos[0][1]
+    t1, n1 = datetime.fromisoformat(marcos[-1][0]), marcos[-1][1]
+    ta, na = datetime.fromisoformat(marcos[-2][0]), marcos[-2][1]
+    media = (t1 - t0).total_seconds() / 60 / (n1 - n0)
+    ultima = (t1 - ta).total_seconds() / 60 / (n1 - na)
+    return [f"Tempo real por partida: {media:.1f} min (média de {n1 - n0}; última {ultima:.1f} min)",
+            f"Partidas por hora (real): {60 / media:.1f}"]
 
 
 def zerar_farm():

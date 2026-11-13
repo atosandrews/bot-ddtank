@@ -17,7 +17,7 @@ leitura e copia `pintinho/lua/` por cima da biblioteca Lua em `/tmp/lua`.
 
 ## Fluxo atual (05/11/2026, testado no jogo)
 
-Srmaniaco (ID no jogo 14065; login próprio em `sessao.json`) lidera e é a
+Srmaniaco (ID 14065, cartão "Oeliseu", website_id 14715; login próprio em `sessao.json`) lidera e é a
 única que ataca. fakeddt1, eliseu e Guestf95c4 (sessão do farm, `convidadas.yaml`) ficam na sala a
 partida inteira e passam a vez na hora (`attack_policy = "leader"`, `party.lua` original só leitura).
 

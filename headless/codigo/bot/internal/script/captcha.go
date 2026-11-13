@@ -10,7 +10,7 @@ func (r *Runtime) captchaBindings() map[string]lua.LGFunction {
 	return map[string]lua.LGFunction{
 		"solve": r.solveCaptcha,
 		"state": func(l *lua.LState) int {
-			state := r.session.Snapshot().Captcha
+			state := r.session.View().Captcha
 			if r.captchaJob != nil && r.captchaJob.revision != state.Revision {
 				r.cancelCaptcha()
 			}

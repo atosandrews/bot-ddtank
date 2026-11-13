@@ -1,0 +1,82 @@
+    local config = {
+        room_name = "Olimpiadas",
+        password = "olimp",
+        map_id = 6,
+        difficulty = 1,
+        stage_maps = {1165, 1167, 1168},
+        stage_order = {1165, 1167, 1168},
+        trident_maps = {},
+        cluster_maps = {},
+        -- Pedido do usuário (12/11): estágio 1 = tridente + 2 (as 4 contas); estágio 2 = +1 + tridente + dano
+        -- máximo (só a líder); estágio 3 = todo o dano (+2 e a sobra de energia em dano; só a líder).
+        stage_extra_props = {
+            ["1165"] = {from_turn = 1, trident = true, "extra_attack_2"},
+            -- 12/11: sem tridente o boxeador tomava 0-1,3 mil por turno; com +1 + tridente + dano, ~7 mil (regra original).
+            ["1167"] = {from_turn = 1, trident = true, "extra_attack"},
+            ["1168"] = {from_turn = 1, trident = false, "extra_attack_2"},
+        },
+        -- Balões: sem dano extra (não muda os pontos).
+        no_damage_maps = {["1165"] = true},
+        -- Mapas em que todas as contas atacam (no resto, só a líder).
+        all_attack_maps = {["1165"] = true},
+        -- Balões (estágio 1): raio de "pega" em volta da trajetória (40 medido; 38 por margem). Usuário (12/11): pode pegar
+        -- verde se o total do tiro for maior, então o verde conta só o valor dele (peso 1). Peso dos verdes
+        -- (negativos) e valor do florido (0 no pacote).
+        balloon_maps = {["1165"] = {radius = 38, negative_weight = 1, zero_value = 1, ground_y = 720}},
+        -- Estágio 3: a vitória vem ao matar a "Mesa dos Juízes" (1500, aparece por um turno no lugar do chefe), não o
+        -- Grupo de Fans (vitórias com ele em 25 mil, 15 mil, 9 mil...). Mesa primeiro.
+        target_first = {"Mesa dos Ju", "Meka 6132", "Grupo de Fans"},
+        target_last = {},
+        -- Estágio 2: só o boxeador (o campeão, 18 mil); estágio 3: só o Grupo de Fans.
+        target_only = {["1167"] = "Meka 6132"},
+        -- Estágio 2 (pedido do usuário, 12/11): a líder fica o mais perto possível do boxeador: voa no 1º turno.
+        -- 12/11: com 60 px ela pousou colada (x=1590, boxeador em 1650) e morreu com os próprios tiros (18 mil intactos).
+        -- 12/11: o voo (60 e 260 px) a deixou em cima do boxeador e ela morreu em 3 turnos com 18 mil intactos: sem voo
+        -- até entender a distância certa com o usuário.
+        -- 12/11: ela nasce em lugares diferentes; colada no boxeador (x=1600, ele em 1650) se explode e ele fica intacto.
+        -- Só quando nascer a menos de "only_within" px, voa para o lado oposto, a "standoff" px dele (de 650 px, 3 turnos).
+        -- (o voo para longe não adiantou: no turno seguinte ela estava colada de novo; agora vale o close_step)
+        fly_maps = {},
+        fly_prop = 10016,
+        -- Chefe perto (usuário, 12/11: "afastar um pouco e bater na cabeça"): a menos de "radius" px anda até "max_walk"
+        -- px para longe (2 de energia por px, guardando "keep_energy" para os itens) e mira na cabeça, com tiro alto.
+        close_step = {
+            ["1167"] = {target = "Meka 6132", radius = 150, max_walk = 70, keep_energy = 220, settle = 1.2,
+                head = {only = "Meka 6132", dx = 0, dy = 70, angles = {80, 75, 70, 65, 60}}},
+            ["1168"] = {target = "Grupo de Fans", skip_when = "Mesa dos Ju", radius = 150, max_walk = 70, keep_energy = 195, settle = 1.2,
+                head = {only = "Grupo de Fans", dx = 0, dy = 70, angles = {80, 75, 70, 65, 60}}},
+        },
+        -- Estágio 3 (usuário: "dano em cima da cabeça dele ou nas costas"): de frente o tiro tira 1-3 mil; de costas
+        -- tirou 12 mil (12/11). Mira dx px atrás e dy px acima do ponto do servidor, ângulos altos primeiro.
+        -- Mesa dos Juízes: tiro alto caindo em cima dela (12/11: de plataforma, tiro baixo de 25° bateu no chefe 3x e ela
+        -- tomou 2 golpes de ~7 mil do chefe com a Mesa viva).
+        aim_offset_maps = {["1168"] = {
+            {only = "Mesa dos Ju", back = "Grupo de Fans", dx = 30, dy = 0, angles = {65, 70, 60, 75, 55, 50}},
+            {only = "Grupo de Fans", back = "Grupo de Fans", dx = 35, dy = 60, angles = {70, 65, 75, 60, 55, 50}},
+        }},
+        walk_back = {},
+        -- Chefes: itens sempre, mesmo sem tiro limpo (antes atirava sem itens no "close_shot").
+        full_maps = {["1167"] = 1, ["1168"] = 1},
+        -- Só para registrar os tiros do estágio 2 na nota de derrota (o giro de mira só começaria no turno 1000).
+        stuck_turns = {["1167"] = 1000, ["1168"] = 1000},
+        close_kill = {},
+        fly_projectile = 3,
+        aim_height = 18,
+        aim_radius = 12,
+        max_steps = 300,
+        angles = {25, 35, 45, 60, 75},
+        buff_timeout = 3,
+        fallback_wind = 0,
+        final_cards = 3,
+        extra_card_timeout = 3,
+        extra_retry_runs = 10,
+        followup_delay = 0.3,
+        retry_delay = 0.1,
+        room_retry_limit = 5,
+        room_retry_max_delay = 1,
+        start_timeout = 15,
+        single_shot_clearance = 120,
+        self_clearance = 180,
+        nearby_actor_radius = 40,
+        attack_policy = "all",
+    }
