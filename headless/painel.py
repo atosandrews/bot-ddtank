@@ -39,23 +39,73 @@ def nomes_itens():
     return nomes
 
 
-def formigueiro():
-    """Fase e contadores do Formigueiro de cada personagem, pela sessão do relay."""
-    por_id = {}
-    saida = subprocess.run(CONTROLE + ["-sessions"], capture_output=True, text=True)
+def sessoes_prontas():
+    """Current character -> relay session mapping, independent of Lua request availability."""
     try:
+        saida = subprocess.run(CONTROLE + ["-sessions"], capture_output=True, text=True, timeout=15)
         sessoes = json.loads(saida.stdout)["value"]
-    except (json.JSONDecodeError, KeyError):
-        return por_id
+    except (OSError, subprocess.SubprocessError, json.JSONDecodeError, KeyError, TypeError):
+        return {}
+    if not isinstance(sessoes, list):
+        return {}
+    prontas = {}
     for sessao in sessoes:
-        resposta = subprocess.run(CONTROLE + ["-session", str(sessao["session"]), "-eval", CONSULTA], capture_output=True, text=True)
-        try:
-            valor = json.loads(resposta.stdout.splitlines()[0])["value"]
-        except (json.JSONDecodeError, KeyError, IndexError):
+        if not isinstance(sessao, dict) or not sessao.get("game_ready"):
             continue
-        if valor.get("id"):
-            por_id[valor["id"]] = valor
+        ident, session = sessao.get("character_id"), sessao.get("session")
+        if type(ident) is int and ident > 0 and type(session) is int and session > 0:
+            prontas[ident] = session
+    return prontas
+
+
+def formigueiro(sessoes=None):
+    """Counters from available Lua projections; missing projections never imply disconnection."""
+    por_id = {}
+    sessoes = sessoes_prontas() if sessoes is None else sessoes
+    for ident, session in sessoes.items():
+        try:
+            resposta = subprocess.run(CONTROLE + ["-session", str(session), "-eval", CONSULTA], capture_output=True, text=True, timeout=15)
+            valor = json.loads(resposta.stdout.splitlines()[0])["value"]
+        except (OSError, subprocess.SubprocessError, json.JSONDecodeError, KeyError, IndexError, TypeError):
+            continue
+        if isinstance(valor, dict) and valor.get("id") == ident:
+            por_id[ident] = valor
     return por_id
+
+
+def autenticacao():
+    """Read the current private login heartbeat; historical logs cannot prove liveness."""
+    try:
+        reply = subprocess.run(["docker", "exec", CONTAINER, "cat", "/tmp/ddctl/auth-main.json"],
+                               capture_output=True, text=True, timeout=5)
+        if reply.returncode or len(reply.stdout) > 65536:
+            return {}
+        snapshot = json.loads(reply.stdout)
+        updated = datetime.fromisoformat(snapshot["updated_at"].replace("Z", "+00:00"))
+        age = (datetime.now(timezone.utc) - updated).total_seconds()
+        if snapshot.get("version") != 1 or not -5 <= age <= 60:
+            return {}
+        return {character["id"]: character for character in snapshot["characters"]
+                if isinstance(character, dict) and type(character.get("id")) is int}
+    except (OSError, subprocess.SubprocessError, ValueError, KeyError, TypeError):
+        return {}
+
+
+def situacao(estado, pronto, auth):
+    if estado != "running":
+        return "desconectado"
+    if pronto:
+        return "online"
+    phase = auth.get("phase")
+    if phase == "blocked":
+        return "login bloqueado"
+    if phase == "session_required":
+        return "aguardando sessão"
+    if phase in {"starting", "queued", "authenticating", "connecting", "backoff", "online"}:
+        return "reconectando"
+    if phase == "failed":
+        return "falha de autenticação"
+    return "estado atual indisponível"
 
 
 def drops(deliveries, nomes):
@@ -103,7 +153,9 @@ def hora(texto):
 
 def main():
     estado, linhas = eventos()
-    bot = formigueiro() if estado == "running" else {}
+    prontas = sessoes_prontas() if estado == "running" else {}
+    bot = formigueiro(prontas) if estado == "running" else {}
+    auth = autenticacao() if estado == "running" else {}
     nomes = nomes_itens()
     agora = datetime.now().astimezone()
     painel = []
@@ -112,17 +164,10 @@ def main():
     for p in personagens():
         cid = int(p["id"])
         meus = [e for e in linhas if e.get("character_id") == cid]
-        http = next((e for e in meus if e["msg"] == "headless HTTP login confirmed"), None)
-        jogo = next((e for e in meus if e["msg"] == "headless game login confirmed"), None)
-        erros = [e for e in meus if e.get("level") == "ERROR"]
-        if erros:
-            status = "erro: " + erros[-1].get("error", "?")
-        elif jogo and estado == "running":
-            status = "online"
-        elif jogo:
-            status = "desconectado"
-        else:
-            status = "entrando..."
+        http = next((e for e in reversed(meus) if e.get("msg") == "headless HTTP login confirmed"), None)
+        jogo = next((e for e in reversed(meus) if e.get("msg") == "headless game login confirmed"), None)
+        atual = auth.get(cid, {})
+        status = situacao(estado, cid in prontas, atual)
         linhas_p = [
             f"Status: {status}",
             f"ID no jogo: {cid}",
@@ -131,10 +176,17 @@ def main():
             f"Login HTTP: {hora(http['time']):%H:%M:%S}" if http else "Login HTTP: -",
             f"Login no jogo: {hora(jogo['time']):%H:%M:%S}" if jogo else "Login no jogo: -",
         ]
-        if jogo and estado == "running":
-            minutos = int((agora - hora(jogo["time"])).total_seconds() // 60)
-            linhas_p.append(f"Tempo online: {minutos // 60}h{minutos % 60:02d}min")
+        if atual.get("next_attempt_at"):
+            try:
+                tentativa = datetime.fromisoformat(atual["next_attempt_at"].replace("Z", "+00:00")).astimezone()
+                linhas_p.append(f"Próxima tentativa: {tentativa:%d/%m %H:%M:%S}")
+            except (ValueError, TypeError):
+                pass
+        if status == "online":
             total["online"] += 1
+            if jogo:
+                minutos = max(0, int((agora - hora(jogo["time"])).total_seconds() // 60))
+                linhas_p.append(f"Tempo online: {minutos // 60}h{minutos % 60:02d}min")
         info = bot.get(cid, {})
         runs = int(info.get("runs") or 0)
         grupo = info.get("grupo") or {}
@@ -292,23 +344,28 @@ def manter_acordado():
         print("PC mantido acordado enquanto o painel estiver aberto (a tela pode apagar).", flush=True)
 
 
-if "--zerar" in sys.argv:
-    zerar_farm()
-    print("contagem do farm zerada")
-elif "--relatorio" in sys.argv:
-    try:
-        main()
-    except Exception as erro:  # noqa: BLE001 - o relatório usa o que já foi gravado
-        print("painel não atualizado antes do relatório:", erro, flush=True)
-    relatorio()
-elif "--ao-vivo" in sys.argv:
-    # Regera o painel sem parar; a página se recarrega sozinha a cada ATUALIZAR segundos.
-    manter_acordado()
-    while True:
+def executar():
+    if "--zerar" in sys.argv:
+        zerar_farm()
+        print("contagem do farm zerada")
+    elif "--relatorio" in sys.argv:
         try:
             main()
-        except Exception as erro:  # noqa: BLE001 - o painel não deve cair por uma leitura falha
-            print("falha ao atualizar o painel:", erro, flush=True)
-        time.sleep(ATUALIZAR)
-else:
-    main()
+        except Exception as erro:  # noqa: BLE001 - o relatório usa o que já foi gravado
+            print("painel não atualizado antes do relatório:", erro, flush=True)
+        relatorio()
+    elif "--ao-vivo" in sys.argv:
+        # Regera o painel sem parar; a página se recarrega a cada ATUALIZAR segundos.
+        manter_acordado()
+        while True:
+            try:
+                main()
+            except Exception as erro:  # noqa: BLE001 - o painel não deve cair por uma leitura falha
+                print("falha ao atualizar o painel:", erro, flush=True)
+            time.sleep(ATUALIZAR)
+    else:
+        main()
+
+
+if __name__ == "__main__":
+    executar()

@@ -31,6 +31,11 @@ func NewPeer(authenticator *Authenticator, dialer *net.Dialer, logger *slog.Logg
 }
 
 func (p *Peer) Run(ctx context.Context, ticket Ticket) (result error) {
+	return p.RunWithReady(ctx, ticket, nil)
+}
+
+// RunWithReady reports readiness after the game accepts this character and the first heartbeat is written.
+func (p *Peer) RunWithReady(ctx context.Context, ticket Ticket, ready func()) (result error) {
 	connection, err := p.dialer.DialContext(ctx, "tcp4", ticket.Character.Upstream)
 	if err != nil {
 		return &Error{Operation: "connect", Reason: "game connection failed", Cause: err}
@@ -111,6 +116,9 @@ func (p *Peer) Run(ctx context.Context, ticket Ticket) (result error) {
 				// waiting for the server's first heartbeat.
 				if err := heartbeat(); err != nil {
 					return err
+				}
+				if ready != nil {
+					ready()
 				}
 			case 4:
 				if err := heartbeat(); err != nil {

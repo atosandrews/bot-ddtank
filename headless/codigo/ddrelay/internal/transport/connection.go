@@ -42,6 +42,7 @@ type Connection struct {
 	calls              chan controlCall
 	done               chan struct{}
 	gameReady          bool
+	characterID        int32
 	closing            bool
 	clientEOF          bool
 	serverEOF          bool
@@ -216,6 +217,10 @@ func (c *Connection) observeCommand(ctx context.Context, record capture.Record, 
 
 		if record.Direction == capture.ServerToClient && segment.Frame.Header.Code == 1 && results[i].Status == "decoded" {
 			c.gameReady = results[i].Fields["status"] == int8(0)
+			c.characterID = 0
+			if c.gameReady {
+				c.characterID = segment.Frame.Header.ClientID
+			}
 		}
 
 		c.sequence++

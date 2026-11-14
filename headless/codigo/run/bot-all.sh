@@ -23,7 +23,10 @@ esperar() { i=0; until grep -q "$1" "$2"; do i=$((i + 1)); [ $i -gt 900 ] && { e
 esperar "bot listening" /tmp/bot.log
 /tmp/ddrelay run -config /tmp/cfg/relay.yaml > /tmp/relay.log 2>&1 &
 esperar "relay listening" /tmp/relay.log
-/tmp/ddrelay login -config /tmp/cfg/headless-bot.yaml > /tmp/login.log 2>&1 &
+# Keep the existing transport until the candidate passes a real authentication check.
+AUTH_TRANSPORT=${AUTH_TRANSPORT:-standard}
+AUTH_COORDINATION_DIR=${AUTH_COORDINATION_DIR:-/tmp/dd-auth-coordination}
+/tmp/ddrelay login -config /tmp/cfg/headless-bot.yaml -transport "$AUTH_TRANSPORT" -status-file /tmp/ddctl/auth-main.json -coordination-dir "$AUTH_COORDINATION_DIR" > /tmp/login.log 2>&1 &
 tail -F /tmp/bot.log /tmp/relay.log /tmp/login.log &
 
 # Vigia: com o contêiner em --restart unless-stopped, sair daqui reinicia tudo (login novo).
@@ -31,14 +34,16 @@ tail -F /tmp/bot.log /tmp/relay.log /tmp/login.log &
 # (uma partida leva ~2,6 min; 7 min sem nenhuma é sinal de grupo travado).
 SEM_PROGRESSO=${SEM_PROGRESSO:-420}
 PERSONAGENS=$(grep -c '^  - name:' /tmp/cfg/headless-bot.yaml)
+ctl() { timeout 15 /tmp/ddrelay control -socket /tmp/ddctl/ddrelay.sock "$@"; }
+controle_saude() { ctl -sessions > /dev/null 2>&1; }
 conectados() {
-  /tmp/ddrelay control -socket /tmp/ddctl/ddrelay.sock -sessions 2>/dev/null \
+  ctl -sessions 2>/dev/null \
     | python3 -I -c 'import json,sys; v=json.load(sys.stdin).get("value") or []; print(" ".join(str(s["session"]) for s in v if s.get("game_ready")))' 2>/dev/null
 }
 partidas() {
   total=0
   for n in $(conectados); do
-    v=$(/tmp/ddrelay control -socket /tmp/ddctl/ddrelay.sock -session $n -eval 'return grupo_status and grupo_status().total.runs or 0' 2>/dev/null | grep -o '"value":[0-9]*' | cut -d: -f2)
+    v=$(ctl -session $n -eval 'return grupo_status and grupo_status().total.runs or 0' 2>/dev/null | grep -o '"value":[0-9]*' | cut -d: -f2)
     total=$(( total + ${v:-0} ))
   done
   echo "$total"
@@ -58,6 +63,15 @@ while sleep 60; do
   for p in "ddbot serve" "ddrelay run" "ddrelay login"; do
     if ! pgrep -f "/tmp/$p" > /dev/null; then echo "vigia: processo '$p' parou; reiniciando o grupo"; exit 1; fi
   done
+  if ! controle_saude; then echo "vigia: controle do relay indisponível; reiniciando o grupo"; exit 1; fi
+  python3 -I /ws/run/auth_watchdog.py /tmp/ddctl/auth-main.json
+  auth_estado=$?
+  if [ "$auth_estado" -ne 0 ] && [ "$auth_estado" -ne 1 ]; then echo "vigia: estado de autenticação ausente, vencido ou travado; reiniciando o grupo"; exit 1; fi
+  if [ "$auth_estado" -eq 0 ]; then
+    echo "vigia: autenticação aguardando recuperação; preservando as sessões conectadas"
+    faltando=0; ultimo=-1; desde=$(date +%s)
+    continue
+  fi
   # Um personagem que cai sozinho (ex.: a conta entrou por outro lugar) deixa o grupo esperando o
   # convite dele; dois minutos seguidos sem os PERSONAGENS conectados reiniciam o login de todos.
   online=$(conectados | wc -w)

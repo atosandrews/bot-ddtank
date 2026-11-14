@@ -33,3 +33,7 @@ em 31/10/2026. Compila e roda no Docker (`Dockerfile` nesta pasta, imagem `ddbot
 | `ddrelay/internal/link/connection.go`, `run.go` | motivo de desconexão e de falha do script aparece no status da sessão |
 
 `bot/internal/captcha/amostras*_debug_test.go` são diagnósticos com captchas reais; pulam sem as variáveis `AMOSTRAS`/`OCR_WORKER`.
+
+## Login e recuperação — 13/11/2026
+
+O relay passou a oferecer transporte candidato `launcher_chromium87`, diagnóstico `-check-auth`, autenticação/reconexão por personagem, releitura do cookie e circuito compartilhado contra bloqueios HTTP. Os supervisores locais consultam snapshots privados antes de decidir reiniciar; o painel usa prontidão corrente do relay, cujo snapshot agora inclui `character_id`. Configuração, comandos de testes e limitações da validação no Fly estão em [LOGIN_HEADLESS.md](../LOGIN_HEADLESS.md). O transporte padrão continua `standard` até validação real do candidato.

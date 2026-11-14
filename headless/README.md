@@ -4,6 +4,8 @@ Grupo de 4 personagens farmando o Formigueiro / Normal em loop, sem o cliente do
 (`codigo/bot`) decide e mira, o relay (`codigo/ddrelay`) fala com o servidor, e tudo roda num
 contêiner Docker. Diferente do bot Python deste repositório, que vê a tela e usa mouse/teclado.
 
+Login, transporte candidato, recuperação de bloqueios e integração pendente no Fly: [LOGIN_HEADLESS.md](LOGIN_HEADLESS.md). O transporte alternativo exige validação real antes de promoção; testes offline não comprovam aceitação pelo Cloudflare.
+
 Esta pasta é uma cópia versionada da instalação em uso, `C:\Users\ATOS I\ddbot\` (os scripts
 apontam para esse caminho). Origem do código: zips `bot`, `ddrelay`, `proto` e `contract`;
 o que foi criado ou alterado está em [codigo/LEIA-ME.md](codigo/LEIA-ME.md).

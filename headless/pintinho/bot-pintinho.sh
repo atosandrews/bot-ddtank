@@ -31,13 +31,16 @@ esperar() { i=0; until grep -q "$1" "$2"; do i=$((i + 1)); [ $i -gt 900 ] && { e
 esperar "bot listening" /tmp/bot.log
 /tmp/ddrelay run -config /tmp/cfg/relay.yaml > /tmp/relay.log 2>&1 &
 esperar "relay listening" /tmp/relay.log
-/tmp/ddrelay login -config /tmp/cfg/headless-bot.yaml > /tmp/login.log 2>&1 &
-/tmp/ddrelay login -config /tmp/cfg/convidadas.yaml > /tmp/login-convidadas.log 2>&1 &
+AUTH_TRANSPORT=${AUTH_TRANSPORT:-standard}
+AUTH_COORDINATION_DIR=${AUTH_COORDINATION_DIR:-/tmp/dd-auth-coordination}
+/tmp/ddrelay login -config /tmp/cfg/headless-bot.yaml -transport "$AUTH_TRANSPORT" -status-file /tmp/ddctl/auth-main.json -coordination-dir "$AUTH_COORDINATION_DIR" > /tmp/login.log 2>&1 &
+/tmp/ddrelay login -config /tmp/cfg/convidadas.yaml -transport "$AUTH_TRANSPORT" -status-file /tmp/ddctl/auth-guests.json -coordination-dir "$AUTH_COORDINATION_DIR" > /tmp/login-convidadas.log 2>&1 &
 tail -F /tmp/bot.log /tmp/relay.log /tmp/login.log /tmp/login-convidadas.log &
 SEM_PROGRESSO=${SEM_PROGRESSO:-300}
 PERSONAGENS=$(cat /tmp/cfg/headless-bot.yaml /tmp/cfg/convidadas.yaml | grep -c '^  - name:')
 # Toda consulta ao relay tem prazo: um comando preso não pode travar o vigia.
 ctl() { timeout 15 /tmp/ddrelay control -socket /tmp/ddctl/ddrelay.sock "$@"; }
+controle_saude() { ctl -sessions > /dev/null 2>&1; }
 conectados() {
   ctl -sessions 2>/dev/null \
     | python3 -I -c 'import json,sys; v=json.load(sys.stdin).get("value") or []; print(" ".join(str(s["session"]) for s in v if s.get("game_ready")))' 2>/dev/null
@@ -88,10 +91,22 @@ while sleep 20; do
   for p in "ddbot serve" "ddrelay run" "ddrelay login -config /tmp/cfg/headless-bot" "ddrelay login -config /tmp/cfg/convidadas"; do
     if ! pgrep -f "/tmp/$p" > /dev/null; then echo "vigia: processo '$p' parou; reiniciando o grupo"; exit 1; fi
   done
+  if ! controle_saude; then echo "vigia: controle do relay indisponível; reiniciando o grupo"; exit 1; fi
+  python3 -I /ws/run/auth_watchdog.py /tmp/ddctl/auth-main.json /tmp/ddctl/auth-guests.json
+  auth_estado=$?
+  if [ "$auth_estado" -ne 0 ] && [ "$auth_estado" -ne 1 ]; then echo "vigia: autenticação ausente, vencida ou travada; reiniciando o grupo"; exit 1; fi
+  # Queue exhaustion remains an operational failure even during authentication recovery.
+  coletar
+  if [ "$auth_estado" -eq 0 ]; then
+    if fila_cheia; then echo "vigia: fila de consultas cheia durante recuperação; reiniciando o grupo"; exit 1; fi
+    echo "vigia: autenticação aguardando recuperação; preservando as sessões conectadas"
+    faltando=0; ultimo=-1; desde=$(date +%s); sala=0; partida=$(date +%s)
+    confirmacoes=$(sem_confirmacao); confirmacoes_hora=$(date +%s)
+    continue
+  fi
   online=$(conectados | wc -w)
   if [ "$online" -lt "$PERSONAGENS" ]; then faltando=$((faltando + 1)); else faltando=0; fi
   if [ "$faltando" -ge 3 ]; then echo "vigia: só $online de $PERSONAGENS personagens conectados há 1 min; reiniciando o grupo"; exit 1; fi
-  coletar
   if fila_cheia; then
     [ "$cheia" = 0 ] && { cheia=$(date +%s); echo "vigia: fila de consultas cheia; reinicio na próxima troca de partida"; }
     if ! em_partida || [ $(( $(date +%s) - cheia )) -ge 900 ]; then echo "vigia: fila de consultas cheia; reiniciando o grupo entre partidas"; exit 1; fi

@@ -434,3 +434,13 @@ Comparado com o bot e confirmado pelo usuário:
 3. Acertou os 4 e não confirmou: o Confirmar dependia da análise do teclado, que às vezes dava
    "Roda ambígua". Código, casas, Confirmar e Resetar usam análise leve (sem teclado).
 - Folga mínima da rotação da roda: 0,15 → 0,08 (no log a folga ficava em 0,09–0,15).
+
+## 2026-11-13 — login headless: implementação e validação offline
+
+- Implementado transporte candidato Go `launcher_chromium87` (opt-in), diagnóstico HTTP `-check-auth`, erros seguros e descompressão HTTP por streaming. O protocolo do jogo foi preservado. O cookie do arquivo é relido antes de cada tentativa permitida e prevalece sobre o jar no host do site.
+- Inicialização/reconexão por personagem; bloqueios abrem circuito compartilhado de 5/10/15 minutos com jitter. Snapshots privados com heartbeat e prazos permitem aos vigias suspender reinícios dependentes do jogo, preservando verificação de processos e controle do relay. Painel usa prontidão corrente; o snapshot de sessões ganhou `character_id`.
+- Ambiente observado: Docker Linux, imagem `golang:1.26`, Go **1.26.11 linux/amd64**; `.venv` criado com **Python 3.13.1**. Nenhum driver de tela, script completo de inicialização, cookie real, endpoint do DDClássico ou sessão real de jogo foi executado.
+- **Aprovado offline (saída 0):** `go test ./ddrelay/... ./api/... ./bot/...` em `headless/codigo`; `go test -race ./... -count=1` em `headless/codigo/ddrelay`; `go build -o /tmp/ddrelay ./cmd/ddrelay` no contêiner. A última alteração de diagnóstico também passou em `go test -race ./internal/app -count=1`.
+- **Aprovado offline (saída 0):** `.venv/Scripts/python.exe -I -m unittest discover -s headless -p test_painel_auth.py` (**10 testes**) e `.venv/Scripts/python.exe -I -m unittest discover -s headless/codigo/run -p 'test_*auth*.py'` (**19 testes**). Os testes dos vigias executam apenas os loops em shell isolado com comandos simulados.
+- **Conferido estaticamente (saída 0):** `sh -n` dos dois supervisores e `git diff --check`. Revisão independente sem pendências críticas/importantes após as correções.
+- **Não executado:** aceitação do perfil pelo Cloudflare, login/TCP no jogo, comparação com launcher aceito e implantação/observação no Fly. `iniciar.sh` e os manifestos de produção estão fora deste checkout. Roteiro e condições de promoção em [LOGIN_HEADLESS.md](headless/LOGIN_HEADLESS.md).

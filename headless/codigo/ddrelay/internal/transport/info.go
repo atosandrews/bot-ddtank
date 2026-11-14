@@ -13,6 +13,7 @@ type Info struct {
 	CipherReady       bool             `json:"cipher_ready"`
 	BotAttached       bool             `json:"bot_attached"`
 	GameReady         bool             `json:"game_ready"`
+	CharacterID       int32            `json:"character_id"`
 	BotSessionID      string           `json:"bot_session_id"`
 	Generation        uint64           `json:"binding_generation"`
 	Reason            string           `json:"reason,omitempty"`

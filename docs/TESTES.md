@@ -68,3 +68,23 @@ P0 bloqueia uso do fluxo alterado; P1 cobre comportamento principal; P2 cobre ro
 Registre data, commit, interpretador/versões, comando completo, cwd, fixture, parâmetros alterados, resultado esperado/obtido e código de saída. Em sessão real, inclua título/dimensão/DPI da janela, modo solo/grupo, horário da ocorrência e screenshots/logs relevantes. Use **aprovado**, **falhou** ou **não executado**, acrescentando o motivo quando houver bloqueio de ambiente. Para inspeção, use **conferido estaticamente**, sem aprovação funcional.
 
 A preparação inicial realizou somente inspeção/metadados. A integração posterior executou testes simulados, regressão e inferência offline conforme [o registro atualizado](VERIFICACAO_OCR.md); jogo, captura ao vivo e aceitação real continuam não executados.
+
+## Login headless Go — 2026-11-13
+
+O código headless tem suíte própria, independente dos drivers Python. Veja [LOGIN_HEADLESS.md](../headless/LOGIN_HEADLESS.md) para configuração, diagnóstico HTTP sem TCP, estado dos processos e implantação pendente no Fly.
+
+No workspace `headless/codigo`, usando Linux e Go 1.26:
+
+```sh
+go test ./ddrelay/... ./api/... ./bot/...
+go test -race ./ddrelay/...
+```
+
+Na raiz, com Python 3.13 do ambiente próprio:
+
+```powershell
+.venv/Scripts/python.exe -I -m unittest discover -s headless -p test_painel_auth.py
+.venv/Scripts/python.exe -I -m unittest discover -s headless/codigo/run -p 'test_*auth*.py'
+```
+
+Os testes HTTP/TCP usam servidores locais, chaves e cookies fictícios. Os testes de supervisores executam somente os loops com comandos simulados; no Windows usam `golang:1.26` sem rede e sem volumes. Não executar os scripts completos de inicialização como teste offline. Aceitação pelo Cloudflare, conta real e prontidão no jogo precisam de validação separada.

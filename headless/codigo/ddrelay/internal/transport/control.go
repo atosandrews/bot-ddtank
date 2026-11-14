@@ -84,6 +84,10 @@ func (c *Connection) handleControl(request controlCall) error {
 	switch request.operation {
 	case inspectOperation:
 		state := c.automation.State()
+		characterID := c.characterID
+		if !c.gameReady || c.closing {
+			characterID = 0
+		}
 		request.response <- controlReply{info: Info{
 			Diagnostics:       state.Diagnostics,
 			EventSequence:     c.sequence,
@@ -94,6 +98,7 @@ func (c *Connection) handleControl(request controlCall) error {
 			Upstream:          c.server.RemoteAddr().String(),
 			CipherReady:       !c.closing && c.relay.Ready(),
 			GameReady:         c.gameReady && !c.closing,
+			CharacterID:       characterID,
 			BotAttached:       state.Attached,
 			BotSessionID:      state.BotSessionID,
 			Generation:        state.Generation,
